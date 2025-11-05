@@ -54,7 +54,7 @@ class RepositoryServiceProvider extends ServiceProvider
     }
 
     // USERS MANAGEMENT
-    public function index(): void 
+    public function index(): void
     {
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
     }
@@ -62,11 +62,15 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
     }
-    public function show(): void 
+    public function show(): void
     {
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
     }
-     public function createUpdate(): void 
+    public function createUpdate(): void
+    {
+        $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
+    }
+    public function destroy(): void
     {
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
     }

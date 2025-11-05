@@ -12,12 +12,10 @@ class CheckUserPermission
     {
         $requestedUserId = (int) $request->id;
         $authenticatedUser = $request->user();
-       dd($requestedUserId, $authenticatedUser);
         // Admin có quyền xem tất cả users
         if ($authenticatedUser->role === 'admin' || $authenticatedUser->id === $requestedUserId) {
             return $next($request);
         }
-
         // Nếu không có quyền
         return response()->json([
             'success' => false,

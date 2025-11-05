@@ -11,16 +11,15 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
+        // Kiểm tra đăng nhập
         if (!$request->user()) {
             return ApiResponse::error('Unauthorized', 403);
         }
 
-        // Lấy role của user
+        // Kiểm tra quyền truy cập
         $userRole = $request->user()->role;
-
-        // Nếu user role không nằm trong danh sách cho phép
         if (!in_array($userRole, $roles)) {
-            return ApiResponse::error('Unauthorized', 403);
+            return ApiResponse::error('Bạn không có quyền truy cập.', 403);
         }
 
         return $next($request);

@@ -1,15 +1,14 @@
 <?php
-
 namespace App\Services;
 
 use App\Helpers\ApiResponse;
 use App\Repositories\UsersRepository\UsersRepositoryInterface;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthService
 {
@@ -22,7 +21,7 @@ class AuthService
 
     public function register($request)
     {
-        return  $this->usersRepository->create([
+        return $this->usersRepository->create([
             'name'     => $request->input('name'),
             'email'    => $request->input('email'),
             'phone'    => $request->input('phone'),
@@ -36,11 +35,29 @@ class AuthService
     {
         $credentials = [
             'email'    => $request->input('email'),
-            'password' => $request->input('password')
+            'password' => $request->input('password'),
         ];
 
         if (Auth::attempt($credentials)) {
-            $user  = Auth::user();
+            $user = Auth::user();
+
+            // Kiểm tra và xóa token cũ nếu vượt quá giới hạn
+            $maxTokens     = config('security.token.max_tokens_per_user', 5);
+            $currentTokens = \Laravel\Sanctum\PersonalAccessToken::where('tokenable_id', $user->id)
+                ->where('tokenable_type', get_class($user))
+                ->count();
+
+            if ($currentTokens >= $maxTokens) {
+                $oldestToken = \Laravel\Sanctum\PersonalAccessToken::where('tokenable_id', $user->id)
+                    ->where('tokenable_type', get_class($user))
+                    ->orderBy('created_at', 'asc')
+                    ->first();
+
+                if ($oldestToken) {
+                    $oldestToken->delete();
+                }
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
             return $token;
         }
@@ -61,11 +78,11 @@ class AuthService
     public function refresh(Request $request)
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return null;
         }
         $token = $user->currentAccessToken();
-        if (!$token || !$token instanceof PersonalAccessToken) {
+        if (! $token || ! $token instanceof PersonalAccessToken) {
             return null;
         }
         $token->delete();
@@ -74,7 +91,7 @@ class AuthService
     public function me(Request $request)
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return null;
         }
         return $user;
@@ -93,7 +110,7 @@ class AuthService
                 $request->only('email', 'password', 'password_confirmation', 'token'),
                 function ($user, $password) {
                     $user->forceFill([
-                        'password' => Hash::make($password),
+                        'password'       => Hash::make($password),
                         'remember_token' => Str::random(60),
                     ])->save();
                 }

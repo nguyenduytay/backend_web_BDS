@@ -35,7 +35,12 @@ class AuthController extends Controller
             else
                 return ApiResponse::error('Đăng ký thất bại', null, 400);
         } catch (\Exception $e) {
-            return ApiResponse::error('Đăng ký thất bại: ' . $e->getMessage(), null, 400);
+            \Log::error('Registration failed', [
+                'email' => $request->input('email'),
+                'error' => $e->getMessage(),
+                'ip' => $request->ip()
+            ]);
+            return ApiResponse::error('Đăng ký thất bại. Vui lòng thử lại sau.', null, 400);
         }
     }
     // Đăng nhập (API)
@@ -53,7 +58,12 @@ class AuthController extends Controller
                 return ApiResponse::error('Đăng nhập thất bại', null, 401);
             }
         } catch (\Exception $e) {
-            return ApiResponse::error('Đăng nhập thất bại: ' . $e->getMessage(), null, 400);
+            \Log::error('Login failed', [
+                'email' => $request->input('email'),
+                'error' => $e->getMessage(),
+                'ip' => $request->ip()
+            ]);
+            return ApiResponse::error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.', null, 400);
         }
     }
     public function logout(Request $request)

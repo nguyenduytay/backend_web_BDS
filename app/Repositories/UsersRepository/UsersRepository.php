@@ -43,4 +43,12 @@ class UsersRepository extends BaseRepository implements UsersRepositoryInterface
 
         return $user;
     }
+    public function deleteById($id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            return null;
+        }
+        return $user->delete();
+    }
 }

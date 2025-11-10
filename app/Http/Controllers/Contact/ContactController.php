@@ -24,8 +24,7 @@ class ContactController extends Controller
     public function all()
     {
         $data =  $this->contactService->getAllContacts();
-        if($data != null)
-        {
+        if ($data != null) {
             return ApiResponse::success($data);
         }
         return ApiResponse::error('Không có dữ liệu', 404);
@@ -72,14 +71,14 @@ class ContactController extends Controller
 
     public function delete($id)
     {
-       $vali = $this->contactValidation->checkIdValidation($id, 'contacts');
-       if ($vali->fails()) {
-           return ApiResponse::error($vali->errors(), 422);
-       }
-       $status = $this->contactService->delete($id);
-       if ($status) {
-           return ApiResponse::success('Xóa liên hệ thành công', 200);
-       }
-       return ApiResponse::error('Xóa liên hệ thất bại', 500);
+        $vali = $this->contactValidation->checkIdValidation($id, 'contacts');
+        if ($vali->fails()) {
+            return ApiResponse::error($vali->errors(), 422);
+        }
+        $status = $this->contactService->delete($id);
+        if ($status) {
+            return ApiResponse::success('Xóa liên hệ thành công', 200);
+        }
+        return ApiResponse::error('Xóa liên hệ thất bại', 500);
     }
 }

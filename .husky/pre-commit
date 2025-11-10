@@ -1,0 +1,9 @@
+npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+
+# composer phpstan
+
+# composer phpcbf
+
+# composer phpcs
+
+# php ./vendor/bin/phpunit

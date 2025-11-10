@@ -7,7 +7,8 @@ use App\Repositories\BaseRepository;
 
 class FeatureRepository extends BaseRepository implements FeatureRepositoryInterface
 {
-    public function getModel(){
+    public function getModel()
+    {
         return Feature::class;
     }
 }

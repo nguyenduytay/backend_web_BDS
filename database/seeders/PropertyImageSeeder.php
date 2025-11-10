@@ -21,7 +21,7 @@ class PropertyImageSeeder extends Seeder
             $primary  = $faker->numberBetween(1, $imgCount);
 
             $rows = [];
-            for ($i=1; $i<=$imgCount; $i++) {
+            for ($i = 1; $i <= $imgCount; $i++) {
                 $rows[] = [
                     'property_id' => $pid,
                     'image_path'  => "storage/properties/{$pid}/image_{$i}.jpg",

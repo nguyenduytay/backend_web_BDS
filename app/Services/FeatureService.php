@@ -48,20 +48,20 @@ class FeatureService
 
     public function update(Request $request, $id)
     {
-        try{
+        try {
             $updated = $this->featureRepository->update($id, $request->all());
             return $updated;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return null;
         }
     }
 
     public function delete($id)
     {
-       try{
+        try {
             $status = $this->featureRepository->delete($id);
             return $status;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return null;
         }
     }

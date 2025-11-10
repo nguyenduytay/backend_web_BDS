@@ -21,52 +21,51 @@ class PropertyTypeService
 
     public function getAll()
     {
-        try{
+        try {
             return $this->propertyTypeRepository->all();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return null;
         }
     }
 
     public function getByType(Request $request)
     {
-        try{
+        try {
             $typeObj = $this->propertyTypeRepository->find($request);
             return $typeObj;
-        }catch(Exception){
+        } catch (Exception) {
             return null;
         }
-
     }
 
     public function create(Request $request)
     {
-        try{
+        try {
             $data = $request->all();
             $propertyType = $this->propertyTypeRepository->create($data);
             return $propertyType;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return null;
         }
     }
 
     public function update(Request $request, $id)
     {
-        try{
+        try {
             $data = $request->all();
             $updated = $this->propertyTypeRepository->update($id, $data);
             return $updated;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return null;
         }
     }
 
     public function delete($id)
     {
-        try{
+        try {
              $status = $this->propertyTypeRepository->delete($id);
             return $status;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return null;
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use App\Helpers\ApiResponse;
@@ -123,7 +124,6 @@ class FileUploadSecurity
             if ($imageInfo[0] > $maxWidth || $imageInfo[1] > $maxHeight) {
                 throw new \Exception("Kích thước ảnh quá lớn. Tối đa: {$maxWidth}x{$maxHeight}px");
             }
-
         } catch (\Exception $e) {
             throw new \Exception('File ảnh không hợp lệ: ' . $e->getMessage());
         }

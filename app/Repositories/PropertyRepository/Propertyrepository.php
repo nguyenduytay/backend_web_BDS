@@ -102,7 +102,8 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
         return $properties;
     }
 
-    public function allByOutstand($request) {
+    public function allByOutstand($request)
+    {
         $page = $request->get('page', 1);
         $perPage = $request->get('per_page', 10);
 

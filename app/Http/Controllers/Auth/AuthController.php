@@ -30,10 +30,11 @@ class AuthController extends Controller
                 return ApiResponse::error($vali->errors(), 422);
             }
             $user = $this->authService->register($request);
-            if ($user != null)
+            if ($user != null) {
                 return ApiResponse::success(null, 'Đăng ký thành công', 201);
-            else
+            } else {
                 return ApiResponse::error('Đăng ký thất bại', null, 400);
+            }
         } catch (\Exception $e) {
             \Log::error('Registration failed', [
                 'email' => $request->input('email'),
@@ -78,10 +79,11 @@ class AuthController extends Controller
                 return ApiResponse::error('Token không hợp lệ hoặc đã hết hạn.', null, 401);
             }
             $check = $this->authService->logout($accessToken);
-            if ($check)
+            if ($check) {
                 return ApiResponse::success(null, 'Đăng xuất thành công.', 200);
-            else
+            } else {
                 return ApiResponse::error('Đăng xuất thất bại.', null, 500);
+            }
         } catch (\Exception $e) {
             return ApiResponse::error('Đăng xuất thất bại: ' . $e->getMessage(), null, 500);
         }

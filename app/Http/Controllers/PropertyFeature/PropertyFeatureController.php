@@ -23,10 +23,11 @@ class PropertyFeatureController extends Controller
     public function all($propertyId)
     {
         $valiPropertyId = $this->propertyFeatureValidation->checkIdValidation($propertyId, 'properties', 'id');
-        if ($valiPropertyId->fails())
+        if ($valiPropertyId->fails()) {
             return ApiResponse::error(
                 $valiPropertyId->errors()->first()
             );
+        }
         $data = $this->propertyFeatureService->getFeaturesByProperty($propertyId);
         if ($data != null) {
             return ApiResponse::success(
@@ -41,15 +42,17 @@ class PropertyFeatureController extends Controller
     public function create(Request $request, $propertyId)
     {
         $valiPropertyId = $this->propertyFeatureValidation->checkIdValidation($propertyId, 'properties', 'id');
-        if ($valiPropertyId->fails())
+        if ($valiPropertyId->fails()) {
             return ApiResponse::error(
                 $valiPropertyId->errors()->first()
             );
+        }
         $valiFeatureId = $this->propertyFeatureValidation->checkIdValidation($request->feature_id, 'features', 'id');
-        if ($valiFeatureId->fails())
+        if ($valiFeatureId->fails()) {
             return ApiResponse::error(
                 $valiFeatureId->errors()->first()
             );
+        }
         $data = $this->propertyFeatureService->addFeatureToProperty($propertyId, $request->all());
         if ($data != null) {
             if ($data === false) {
@@ -69,10 +72,11 @@ class PropertyFeatureController extends Controller
     public function sync(Request $request, $propertyId)
     {
         $valiPropertyId = $this->propertyFeatureValidation->checkIdValidation($propertyId, 'properties', 'id');
-        if ($valiPropertyId->fails())
+        if ($valiPropertyId->fails()) {
             return ApiResponse::error(
                 $valiPropertyId->errors()->first()
             );
+        }
         $data = $this->propertyFeatureService->syncFeaturesToProperty($propertyId, $request);
         if ($data != null) {
             if ($data === false) {

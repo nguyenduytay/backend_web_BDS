@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\ContactRepository;
+
 use App\Repositories\BaseRepository;
 use App\Models\Contact;
 
@@ -12,7 +13,7 @@ class ContactRepository extends BaseRepository implements ContactRepositoryInter
     }
     public function searchContact($request)
     {
-       $query = $this->model::query();
+        $query = $this->model::query();
 
         if ($request->id) {
             $query->where('id', $request->id);

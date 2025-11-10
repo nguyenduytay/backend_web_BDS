@@ -30,15 +30,16 @@ class FeatureValidation extends Validation
             'icon.required' => 'Icon là bắt buộc',
         ]);
     }
-   public function updateValidate(Request $request, $id){
-    // Lấy bản ghi hiện tại
-    $feature = \App\Models\Feature::find($id);
+    public function updateValidate(Request $request, $id)
+    {
+     // Lấy bản ghi hiện tại
+        $feature = \App\Models\Feature::find($id);
 
-    return Validator::make(array_merge($request->all(),['id' => $id]), [
+        return Validator::make(array_merge($request->all(), ['id' => $id]), [
         'id' => [
             'required',
             'integer',
-            function($attribute, $value, $fail) use ($feature) {
+            function ($attribute, $value, $fail) use ($feature) {
                 if ($feature && $value != $feature->id) {
                     $fail('ID không được thay đổi.');
                 }
@@ -48,14 +49,14 @@ class FeatureValidation extends Validation
             'required',
             'string',
             'max:100',
-            function($attribute, $value, $fail) use ($feature) {
+            function ($attribute, $value, $fail) use ($feature) {
                 if ($feature && $value != $feature->name) {
                     $fail('Tên không được thay đổi.');
                 }
             }
         ],
         'icon' => 'required|string',
-    ], [
+        ], [
         'id.required' => 'ID là bắt buộc',
         'id.integer'  => 'ID phải là một số nguyên',
         'name.required' => 'Tên là bắt buộc',
@@ -63,7 +64,6 @@ class FeatureValidation extends Validation
         'name.max'      => 'Tên không được vượt quá 100 ký tự',
         'icon.required' => 'Icon là bắt buộc',
         'icon.string'   => 'Icon phải là một chuỗi',
-    ]);
-}
-
+        ]);
+    }
 }

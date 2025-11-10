@@ -23,7 +23,6 @@ class PropertyService
             $data = $this->propertyRepository->allProperty($request);
             return $data;
         } catch (Exception $e) {
-
             return null;
         }
     }
@@ -46,18 +45,20 @@ class PropertyService
             return null;
         }
     }
-    public function allByLoaction($request){
-        try{
+    public function allByLoaction($request)
+    {
+        try {
             return $this->propertyRepository->allByLoaction($request);
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             dd($e->getMessage());
             return null;
         }
     }
-    public function allByOutstand($request){
-         try{
+    public function allByOutstand($request)
+    {
+        try {
             return $this->propertyRepository->allByOutstand($request);
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             dd($e->getMessage());
             return null;
         }

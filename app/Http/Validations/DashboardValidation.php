@@ -2,4 +2,6 @@
 
 namespace App\Http\Validations;
 
-class DashBoardValidation extends Validation {}
+class DashBoardValidation extends Validation
+{
+}

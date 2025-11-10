@@ -7,7 +7,6 @@ use App\Repositories\RepositoryInterface;
 
 interface LocationRepositoryInterface extends RepositoryInterface
 {
-
     public function find($id);
 
     public function findByCity($city);

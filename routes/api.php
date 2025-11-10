@@ -217,5 +217,4 @@ Route::middleware(['api.versioning'])->group(function () {
     Route::get('/debug', function () {
         return response()->json(['status' => 'API is working!']);
     });
-
 }); // End API Versioning Middleware

@@ -27,13 +27,13 @@ class UserSeeder extends Seeder
 
         // Agents
         $agents = [];
-        for ($i=1; $i<=10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $agents[] = [
                 'name'           => "Agent $i",
                 'email'          => "agent$i@example.com",
                 'password'       => Hash::make('password'),
                 'role'           => 'agent',
-                'phone'          => '09'.rand(00000000, 99999999),
+                'phone'          => '09' . rand(00000000, 99999999),
                 'remember_token' => Str::random(10),
                 'created_at'     => $now,
                 'updated_at'     => $now,
@@ -43,13 +43,13 @@ class UserSeeder extends Seeder
 
         // Users
         $users = [];
-        for ($i=1; $i<=50; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             $users[] = [
                 'name'           => "User $i",
                 'email'          => "user$i@example.com",
                 'password'       => Hash::make('password'),
                 'role'           => 'user',
-                'phone'          => '09'.rand(00000000, 99999999),
+                'phone'          => '09' . rand(00000000, 99999999),
                 'remember_token' => Str::random(10),
                 'created_at'     => $now,
                 'updated_at'     => $now,

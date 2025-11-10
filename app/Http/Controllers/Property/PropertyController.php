@@ -53,16 +53,18 @@ class PropertyController extends Controller
         }
         return ApiResponse::error('Không tìm thấy property');
     }
-    public function allByLoaction(Request $request){
+    public function allByLoaction(Request $request)
+    {
         $data = $this->propertyService->allByLoaction($request);
-        if($data !=null){
+        if ($data != null) {
             return ApiResponse::success($data, 'Lấy danh sách thành công');
         }
         return ApiResponse::error('Không tìm thấy dữ liệu');
     }
-    public function allByOutstand(Request $request){
+    public function allByOutstand(Request $request)
+    {
          $data = $this->propertyService->allByOutstand($request);
-        if($data !=null){
+        if ($data != null) {
             return ApiResponse::success($data, 'Lấy danh sách thành công');
         }
         return ApiResponse::error('Không tìm thấy dữ liệu');

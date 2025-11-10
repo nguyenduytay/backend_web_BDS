@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Lang;
 
 class BusinessException extends Exception
 {
-
     public function render($request)
     {
         $errorCode = $this->getMessage();

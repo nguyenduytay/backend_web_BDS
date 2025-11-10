@@ -41,10 +41,10 @@ class ContactValidation extends Validation
         ]);
     }
     public function updateValidation($request, $id)
-{
-    $contact = \App\Models\Contact::find($id);
+    {
+        $contact = \App\Models\Contact::find($id);
 
-    return Validator::make(array_merge($request->all(), ['id' => $id]), [
+        return Validator::make(array_merge($request->all(), ['id' => $id]), [
         'id' => 'required|integer|exists:contacts,id',
         'name' => 'required|string|max:255',
         'phone' => 'required|string|max:20',
@@ -58,7 +58,7 @@ class ContactValidation extends Validation
                 }
             },
         ],
-    ], [
+        ], [
         'id.required' => 'ID là bắt buộc',
         'id.integer' => 'ID phải là một số nguyên',
         'id.exists' => 'Liên hệ không tồn tại',
@@ -72,7 +72,6 @@ class ContactValidation extends Validation
         'email.max' => 'Email không được vượt quá 255 ký tự',
         'user_id.required' => 'Người dùng là bắt buộc',
         'user_id.exists' => 'Người dùng không tồn tại',
-    ]);
-}
-
+        ]);
+    }
 }

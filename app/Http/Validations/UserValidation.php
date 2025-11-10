@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Validations;
 
 use App\Rules\StrongPassword;

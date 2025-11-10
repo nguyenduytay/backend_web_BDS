@@ -73,5 +73,4 @@ class PropertyTypeValidation extends Validation
             'name.max' => 'Tên loại bất động sản không được vượt quá 100 ký tự',
         ]);
     }
-
 }

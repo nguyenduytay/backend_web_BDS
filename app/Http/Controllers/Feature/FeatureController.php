@@ -23,7 +23,7 @@ class FeatureController extends Controller
     public function all()
     {
         $all = $this->featureService->getAllFeatures();
-        if($all != null){
+        if ($all != null) {
             return ApiResponse::success($all);
         }
         return ApiResponse::error('Không tìm thấy dữ liệu', 404);
@@ -36,7 +36,7 @@ class FeatureController extends Controller
             return ApiResponse::error($validator->errors()->first(), 422);
         }
         $data =  $this->featureService->SearchId($id);
-        if($data != null){
+        if ($data != null) {
             return ApiResponse::success($data);
         }
         return ApiResponse::error('Không tìm thấy dữ liệu', 404);
@@ -49,9 +49,8 @@ class FeatureController extends Controller
             return ApiResponse::error($vali->errors()->first(), 422);
         }
         $status = $this->featureService->create($request);
-        if($status != null)
-        {
-            if($status === false){
+        if ($status != null) {
+            if ($status === false) {
                 return ApiResponse::error('Tạo mới thất bại', 400);
             }
             return ApiResponse::success($status);
@@ -67,9 +66,8 @@ class FeatureController extends Controller
             return ApiResponse::error($vali->errors()->first(), 422);
         }
         $status =  $this->featureService->update($request, $id);
-        if($status != null)
-        {
-            if($status === false){
+        if ($status != null) {
+            if ($status === false) {
                 return ApiResponse::error('Cập nhật thất bại', 400);
             }
             return ApiResponse::success($status);
@@ -84,9 +82,8 @@ class FeatureController extends Controller
             return ApiResponse::error($validator->errors()->first(), 422);
         }
         $status = $this->featureService->delete($id);
-        if($status != null)
-        {
-            if($status === false){
+        if ($status != null) {
+            if ($status === false) {
                 return ApiResponse::error('Xóa thất bại', 400);
             }
             return ApiResponse::success($status);

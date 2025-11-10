@@ -9,4 +9,3 @@ interface ContactRepositoryInterface extends RepositoryInterface
 {
     public function searchContact($request);
 }
-

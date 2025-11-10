@@ -29,7 +29,7 @@ class PropertySeeder extends Seeder
 
         $statuses = ['available', 'sold', 'rented', 'pending'];
 
-        for ($i=1; $i<=300; $i++) {
+        for ($i = 1; $i <= 300; $i++) {
             // Lấy random id + type
             $typeId = $faker->randomElement(array_keys($types));
             $type   = $types[$typeId];
@@ -50,7 +50,7 @@ class PropertySeeder extends Seeder
                 : null;
 
             $propertyId = DB::table('properties')->insertGetId([
-                'title'            => ucfirst($faker->words(3, true)).' - '.$faker->city(),
+                'title'            => ucfirst($faker->words(3, true)) . ' - ' . $faker->city(),
                 'description'      => $faker->optional(0.8)->paragraphs(3, true),
                 'location_id'      => $faker->randomElement($locationIds),
                 'property_type_id' => $typeId, // ✅ đúng cột
@@ -76,7 +76,7 @@ class PropertySeeder extends Seeder
             $imgCount = $faker->numberBetween(3, 7);
             $primaryIndex = $faker->numberBetween(1, $imgCount);
             $images = [];
-            for ($j=1; $j<=$imgCount; $j++) {
+            for ($j = 1; $j <= $imgCount; $j++) {
                 $images[] = [
                     'property_id' => $propertyId,
                     'image_path'  => "storage/properties/{$propertyId}/image_{$j}.jpg",

@@ -17,10 +17,10 @@ class ContactSeeder extends Seeder
         $userIds = DB::table('users')->pluck('id')->all();
 
         $rows = [];
-        for ($i=1; $i<=120; $i++) {
+        for ($i = 1; $i <= 120; $i++) {
             $rows[] = [
                 'name'       => $faker->name(),
-                'phone'      => '09'.rand(00000000, 99999999),
+                'phone'      => '09' . rand(00000000, 99999999),
                 'email'      => $faker->optional(0.7)->safeEmail(),
                 'user_id'    => $faker->boolean(60) ? $faker->randomElement($userIds) : null,
                 'created_at' => $now,

@@ -12,10 +12,10 @@ use App\Models\Feature;
 use App\Models\PropertyType;
 use App\Models\User;
 
-
 class Property extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'properties';
 

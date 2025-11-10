@@ -2,4 +2,6 @@
 
 namespace App\Http\Validations;
 
-class FavoriteValidation extends Validation {}
+class FavoriteValidation extends Validation
+{
+}

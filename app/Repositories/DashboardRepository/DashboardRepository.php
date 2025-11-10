@@ -10,7 +10,6 @@ use Carbon\Carbon;
 
 class DashboardRepository extends BaseRepository implements DashboardRepositoryInterface
 {
-
     public function getModel()
     {
         return DashboardStats::class;

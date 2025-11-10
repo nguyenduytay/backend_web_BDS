@@ -27,7 +27,7 @@ class LocationSeeder extends Seeder
                 $rows[] = [
                     'city'       => $city,
                     'district'   => $district,
-                    'slug'       => Str::slug($city.'-'.$district),
+                    'slug'       => Str::slug($city . '-' . $district),
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

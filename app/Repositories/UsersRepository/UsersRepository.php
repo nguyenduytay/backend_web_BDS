@@ -12,7 +12,7 @@ class UsersRepository extends BaseRepository implements UsersRepositoryInterface
     {
         return User::class;
     }
-     public function createUser(array $attributes)
+    public function createUser(array $attributes)
     {
         $attributes['password'] = Hash::make($attributes['password']);
         return $this->model->create($attributes);
@@ -27,7 +27,7 @@ class UsersRepository extends BaseRepository implements UsersRepositoryInterface
         return $this->model->select('id', 'name', 'email', 'role', 'created_at', 'updated_at')
                           ->find($id);
     }
-     public function updateUser($id, array $data)
+    public function updateUser($id, array $data)
     {
         $user = $this->find($id);
         if (!$user) {

@@ -16,16 +16,16 @@ use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 // API Versioning Middleware
-Route::middleware(['api.versioning'])->group(function () {
+Route::middleware(['api'])->group(function () {
 
-// ----------------- AUTH -----------------
+    // ----------------- AUTH -----------------
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register'])->middleware('rate.limit:5,1'); // 5 requests per minute
         Route::post('login', [AuthController::class, 'login'])->middleware('rate.limit:10,1');      // 10 requests per minute
 
-                                                                                                                 // note: cần xem xét
+        // note: cần xem xét
         Route::post('forgot_password', [AuthController::class, 'forgotPassword'])->middleware('rate.limit:3,5'); // 3 requests per 5 minutes
-                                                                                                                 // note:cần xem xét
+        // note:cần xem xét
         Route::post('reset_password', [AuthController::class, 'resetPassword'])->middleware('rate.limit:5,10');  // 5 requests per 10 minutes
 
         // Routes yêu cầu xác thực Sanctum
@@ -37,12 +37,12 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- USER MANAGEMENT -----------------
+    // ----------------- USER MANAGEMENT -----------------
     Route::prefix('users')->group(function () {
         Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-                                                                      // Xem danh sách người dùng
+            // Xem danh sách người dùng
             Route::get('/index', [UserController::class, 'index']);   // Lấy danh sách user
-                                                                      // Tạo người dùng mới
+            // Tạo người dùng mới
             Route::post('/create', [UserController::class, 'store']); // Tạo user mới
         });
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
@@ -55,7 +55,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- LOCATIONS -----------------
+    // ----------------- LOCATIONS -----------------
     Route::prefix('locations')->group(function () {
         // Lấy tất cả locations
         Route::get('/all', [LocationController::class, 'all']);
@@ -81,7 +81,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- PROPERTY TYPES -----------------
+    // ----------------- PROPERTY TYPES -----------------
     Route::prefix('property_types')->group(function () {
         // Lấy tất cả property type
         Route::get('/all', [PropertyTypeController::class, 'all']);
@@ -102,7 +102,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- Features -----------------
+    // ----------------- Features -----------------
 
     Route::prefix('features')->group(function () {
         // Lấy tất cả features
@@ -119,7 +119,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- Contacts -----------------
+    // ----------------- Contacts -----------------
     Route::prefix('contacts')->group(function () {
         Route::middleware(['auth:sanctum', 'admin'])->group(function () {
             Route::get('/all', [ContactController::class, 'all']);
@@ -130,11 +130,11 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- Property API -----------------
+    // ----------------- Property API -----------------
     Route::prefix('properties')->group(function () {
         Route::get('/all', [PropertyController::class, 'all']);              // Lấy danh sách properties
         Route::get('/search/{id}', [PropertyController::class, 'searchId']); // Chi tiết property
-                                                                             //lấy thông tin hình ảnh danh sách bất động sản dành cho bạn
+        //lấy thông tin hình ảnh danh sách bất động sản dành cho bạn
         Route::get('/all/property_type/{property_type_id}', [PropertyController::class, 'allByPropertyType']);
         // lây thông tin hình ảnh danh sách bất động sản theo địa điểm
         Route::get('/all/location', [PropertyController::class, 'allByLoaction']);
@@ -150,7 +150,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- Property Image -----------------
+    // ----------------- Property Image -----------------
     Route::prefix('property_image/{propertyId}')->group(function () {
         Route::get('/all', [PropertyImageController::class, 'all']); // Lấy images của property
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
@@ -158,7 +158,7 @@ Route::middleware(['api.versioning'])->group(function () {
             Route::get('/show/{imageId}', [PropertyImageController::class, 'show']);        // Lấy image cụ thể
             Route::post('/update/{imageId}', [PropertyImageController::class, 'update']);   // Cập nhật image
             Route::delete('/delete/{imageId}', [PropertyImageController::class, 'delete']); // Xóa image
-                                                                                            // xóa nhiều ảnh
+            // xóa nhiều ảnh
             Route::post('/delete_multiple', [PropertyImageController::class, 'deleteMultiple']);
         });
     });
@@ -166,7 +166,7 @@ Route::middleware(['api.versioning'])->group(function () {
         Route::get('/home_avatars', [PropertyImageController::class, 'homeAvatars']);
     });
 
-// ----------------- PROPERTY FEATURE-----------------
+    // ----------------- PROPERTY FEATURE-----------------
     Route::prefix('properties/{propertyId}/features')->group(function () {
         Route::get('/all', [PropertyFeatureController::class, 'all']); // Lấy danh sách feature của 1 property
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
@@ -176,7 +176,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// ----------------- FAVORITE/BOOKMARK APIs  -----------------
+    // ----------------- FAVORITE/BOOKMARK APIs  -----------------
     Route::prefix('users/{userId}')->group(function () {
         Route::get('/favorites/all', [FavoriteController::class, 'all']);
     });
@@ -189,7 +189,7 @@ Route::middleware(['api.versioning'])->group(function () {
         });
     });
 
-// -----------------SEARCH & FILTER APIs  ---------------
+    // -----------------SEARCH & FILTER APIs  ---------------
     Route::prefix('search')->group(function () {
         Route::get('/properties', [SearchController::class, 'search']);
         Route::get('/filter', [SearchController::class, 'filter']);
@@ -197,7 +197,7 @@ Route::middleware(['api.versioning'])->group(function () {
         Route::get('/nearby', [SearchController::class, 'nearby']);
     });
 
-// -----------------DASHBOARD & ANALYTICS APIs  ---------------
+    // -----------------DASHBOARD & ANALYTICS APIs  ---------------
     Route::prefix('admin/dashboard')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/stats', [DashboardController::class, 'getStats']);
         Route::get('/property_stats', [DashboardController::class, 'getPropertyStats']);
@@ -206,7 +206,7 @@ Route::middleware(['api.versioning'])->group(function () {
         Route::get('/recent_users', [DashboardController::class, 'getRecentUsers']);
     });
 
-// -------------------REPORT APIs -------------------
+    // -------------------REPORT APIs -------------------
     Route::prefix('admin/reports')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/properties_monthly', [ReportController::class, 'getPropertiesMonthly']);
         Route::get('/users_monthly', [ReportController::class, 'getUsersMonthly']);

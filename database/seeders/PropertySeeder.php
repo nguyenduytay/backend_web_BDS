@@ -1,25 +1,26 @@
 <?php
-
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Faker\Factory as Faker;
-use Carbon\Carbon;
 
 class PropertySeeder extends Seeder
 {
     public function run(): void
     {
         $faker = Faker::create('vi_VN');
-        $now = Carbon::now();
+        $now   = Carbon::now();
 
+        $this->command->info('   → Đang tải dữ liệu tham chiếu...');
         $locationIds = DB::table('locations')->pluck('id')->all();
         $contactIds  = DB::table('contacts')->pluck('id')->all();
         $featureIds  = DB::table('features')->pluck('id')->all();
         $types       = DB::table('property_types')->pluck('type', 'id')->toArray(); // [id => type]
         $agentIds    = DB::table('users')->where('role', 'agent')->pluck('id')->all();
         $adminId     = DB::table('users')->where('role', 'admin')->value('id');
+        $this->command->line('   ✓ Đã tải dữ liệu tham chiếu');
 
         // Phạm vi toạ độ Việt Nam (xấp xỉ)
         $latMin = 8.179;
@@ -27,9 +28,16 @@ class PropertySeeder extends Seeder
         $lngMin = 102.144;
         $lngMax = 109.469;
 
-        $statuses = ['available', 'sold', 'rented', 'pending'];
+        $statuses        = ['available', 'sold', 'rented', 'pending'];
+        $totalProperties = 300;
 
-        for ($i = 1; $i <= 300; $i++) {
+        $this->command->info("   → Đang tạo {$totalProperties} bất động sản...");
+        $bar = $this->command->getOutput()->createProgressBar($totalProperties);
+        $bar->setFormat('   %current%/%max% [%bar%] %percent:3s%% %message%');
+        $bar->setMessage('Đang xử lý...');
+        $bar->start();
+
+        for ($i = 1; $i <= $totalProperties; $i++) {
             // Lấy random id + type
             $typeId = $faker->randomElement(array_keys($types));
             $type   = $types[$typeId];
@@ -64,7 +72,7 @@ class PropertySeeder extends Seeder
                 'postal_code'      => $faker->postcode(),
                 'latitude'         => $faker->randomFloat(8, $latMin, $latMax),
                 'longitude'        => $faker->randomFloat(8, $lngMin, $lngMax),
-                'year_built'       => $faker->optional(0.8)->numberBetween(1990, (int)date('Y')),
+                'year_built'       => $faker->optional(0.8)->numberBetween(1990, (int) date('Y')),
                 'contact_id'       => $faker->randomElement($contactIds),
                 'created_by'       => $createdBy,
                 'updated_by'       => $faker->optional(0.5)->randomElement(array_merge($agentIds, [$adminId])),
@@ -73,24 +81,24 @@ class PropertySeeder extends Seeder
             ]);
 
             // Ảnh BĐS (3-7 ảnh)
-            $imgCount = $faker->numberBetween(3, 7);
+            $imgCount     = $faker->numberBetween(3, 7);
             $primaryIndex = $faker->numberBetween(1, $imgCount);
-            $images = [];
+            $images       = [];
             for ($j = 1; $j <= $imgCount; $j++) {
                 $images[] = [
                     'property_id' => $propertyId,
                     'image_path'  => "storage/properties/{$propertyId}/image_{$j}.jpg",
-                    'image_name'  => "image_{$j}.jpg",
-                    'is_primary'  => $j === $primaryIndex,
-                    'sort_order'  => $j,
-                    'created_at'  => $now,
-                    'updated_at'  => $now,
+                    'image_name' => "image_{$j}.jpg",
+                    'is_primary' => $j === $primaryIndex,
+                    'sort_order' => $j,
+                    'created_at' => $now,
+                    'updated_at' => $now,
                 ];
             }
             DB::table('property_images')->insert($images);
 
             // Tính năng ngẫu nhiên (3-7)
-            $pick = $faker->randomElements($featureIds, $faker->numberBetween(3, 7));
+            $pick      = $faker->randomElements($featureIds, $faker->numberBetween(3, 7));
             $pivotRows = [];
             foreach ($pick as $fid) {
                 $pivotRows[] = [
@@ -99,6 +107,17 @@ class PropertySeeder extends Seeder
                 ];
             }
             DB::table('property_features')->insert($pivotRows);
+
+            // Cập nhật progress bar
+            if ($i % 50 == 0) {
+                $bar->setMessage("Đã tạo {$i}/{$totalProperties} bất động sản");
+            }
+            $bar->advance();
         }
+
+        $bar->setMessage('Hoàn thành!');
+        $bar->finish();
+        $this->command->newLine();
+        $this->command->line("   ✓ Đã tạo {$totalProperties} bất động sản với đầy đủ hình ảnh và tính năng");
     }
 }

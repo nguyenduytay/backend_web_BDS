@@ -11,6 +11,8 @@ class PropertyTypeSeeder extends Seeder
     {
         $now = now();
 
+        $this->command->info('   → Đang tạo loại bất động sản...');
+
         $types = [
             [
                 'type'       => 'apartment',
@@ -51,5 +53,6 @@ class PropertyTypeSeeder extends Seeder
         ];
 
         DB::table('property_types')->insert($types);
+        $this->command->line('   ✓ Đã tạo ' . count($types) . ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Shophouse, Đất nền, Văn phòng');
     }
 }

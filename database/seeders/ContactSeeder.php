@@ -14,13 +14,16 @@ class ContactSeeder extends Seeder
         $faker = Faker::create('vi_VN');
         $now = Carbon::now();
 
+        $this->command->info('   → Đang tạo thông tin liên hệ (120 bản ghi)...');
+
         $userIds = DB::table('users')->pluck('id')->all();
 
         $rows = [];
-        for ($i = 1; $i <= 120; $i++) {
+        $totalContacts = 120;
+        for ($i = 1; $i <= $totalContacts; $i++) {
             $rows[] = [
                 'name'       => $faker->name(),
-                'phone'      => '09' . rand(00000000, 99999999),
+                'phone'      => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                 'email'      => $faker->optional(0.7)->safeEmail(),
                 'user_id'    => $faker->boolean(60) ? $faker->randomElement($userIds) : null,
                 'created_at' => $now,
@@ -29,5 +32,6 @@ class ContactSeeder extends Seeder
         }
 
         DB::table('contacts')->insert($rows);
+        $this->command->line("   ✓ Đã tạo {$totalContacts} thông tin liên hệ");
     }
 }

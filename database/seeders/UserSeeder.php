@@ -7,54 +7,76 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $faker = Faker::create('vi_VN');
         $now = Carbon::now();
 
-        // Admin
-        DB::table('users')->insert([
-            'name'              => 'Super Admin',
-            'email'             => 'admin@example.com',
-            'password'          => Hash::make('admin123'),
-            'role'              => 'admin',
-            'remember_token'    => Str::random(10),
-            'created_at'        => $now,
-            'updated_at'        => $now,
-        ]);
+        $this->command->info('   → Đang tạo tài khoản Admin...');
+        
+        // Tài khoản Admin cố định
+        DB::table('users')->updateOrInsert(
+            ['email' => 'admin@example.com'],
+            [
+                'name'              => 'Quản trị viên',
+                'email'             => 'admin@example.com',
+                'password'          => Hash::make('password'),
+                'role'              => 'admin',
+                'phone'             => '0900000000',
+                'remember_token'    => Str::random(10),
+                'created_at'        => $now,
+                'updated_at'        => $now,
+            ]
+        );
+        $this->command->line('   ✓ Đã tạo tài khoản Admin (admin@example.com / password)');
 
+        $this->command->info('   → Đang tạo tài khoản Agent (10 tài khoản)...');
         // Agents
         $agents = [];
-        for ($i = 1; $i <= 10; $i++) {
+        $agentNames = [
+            'Nguyễn Văn An', 'Trần Thị Bình', 'Lê Văn Cường', 'Phạm Thị Dung',
+            'Hoàng Văn Em', 'Vũ Thị Phương', 'Đặng Văn Giang', 'Bùi Thị Hoa',
+            'Đỗ Văn Hùng', 'Ngô Thị Lan'
+        ];
+        
+        for ($i = 0; $i < 10; $i++) {
             $agents[] = [
-                'name'           => "Agent $i",
-                'email'          => "agent$i@example.com",
+                'name'           => $agentNames[$i] ?? "Agent " . ($i + 1),
+                'email'          => "agent" . ($i + 1) . "@example.com",
                 'password'       => Hash::make('password'),
                 'role'           => 'agent',
-                'phone'          => '09' . rand(00000000, 99999999),
+                'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                 'remember_token' => Str::random(10),
                 'created_at'     => $now,
                 'updated_at'     => $now,
             ];
         }
         DB::table('users')->insert($agents);
+        $this->command->line('   ✓ Đã tạo 10 tài khoản Agent');
 
+        $this->command->info('   → Đang tạo tài khoản User (50 tài khoản)...');
         // Users
         $users = [];
         for ($i = 1; $i <= 50; $i++) {
             $users[] = [
-                'name'           => "User $i",
-                'email'          => "user$i@example.com",
+                'name'           => $faker->name(),
+                'email'          => "user{$i}@example.com",
                 'password'       => Hash::make('password'),
                 'role'           => 'user',
-                'phone'          => '09' . rand(00000000, 99999999),
+                'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                 'remember_token' => Str::random(10),
                 'created_at'     => $now,
                 'updated_at'     => $now,
             ];
         }
         DB::table('users')->insert($users);
+        $this->command->line('   ✓ Đã tạo 50 tài khoản User');
+
+        $totalUsers = DB::table('users')->count();
+        $this->command->info("   📊 Tổng cộng: {$totalUsers} tài khoản đã được tạo");
     }
 }

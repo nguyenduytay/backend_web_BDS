@@ -13,6 +13,8 @@ class LocationSeeder extends Seeder
     {
         $now = Carbon::now();
 
+        $this->command->info('   → Đang tạo dữ liệu địa điểm...');
+
         $data = [
             'Hà Nội' => ['Ba Đình', 'Hoàn Kiếm', 'Cầu Giấy', 'Đống Đa', 'Hai Bà Trưng', 'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hà Đông'],
             'Hồ Chí Minh' => ['Quận 1', 'Quận 3', 'Quận 7', 'Quận 10', 'Bình Thạnh', 'Phú Nhuận', 'Tân Bình', 'Tân Phú', 'Thủ Đức'],
@@ -22,6 +24,7 @@ class LocationSeeder extends Seeder
         ];
 
         $rows = [];
+        $totalLocations = 0;
         foreach ($data as $city => $districts) {
             foreach ($districts as $district) {
                 $rows[] = [
@@ -31,9 +34,11 @@ class LocationSeeder extends Seeder
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
+                $totalLocations++;
             }
         }
 
         DB::table('locations')->insert($rows);
+        $this->command->line("   ✓ Đã tạo {$totalLocations} địa điểm từ " . count($data) . " thành phố");
     }
 }

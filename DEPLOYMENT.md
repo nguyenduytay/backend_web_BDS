@@ -3,6 +3,7 @@
 ## 🐳 Chạy với Docker (Local)
 
 ### Quick Start
+
 ```bash
 # 1. Tạo file .env
 cp .env.example .env
@@ -30,6 +31,7 @@ Xem chi tiết trong [DOCKER.md](./DOCKER.md)
 ## ☁️ Deploy lên Render
 
 ### Quick Start
+
 1. Push code lên GitHub/GitLab
 2. Tạo MySQL Database trên Render
 3. Tạo Web Service với Docker
@@ -39,6 +41,7 @@ Xem chi tiết trong [DOCKER.md](./DOCKER.md)
 Xem chi tiết trong [RENDER.md](./RENDER.md)
 
 ### Sử dụng render.yaml (Tự động)
+
 1. Push code có file `render.yaml`
 2. Tạo Blueprint trên Render
 3. Render tự động tạo services
@@ -47,11 +50,13 @@ Xem chi tiết trong [RENDER.md](./RENDER.md)
 ## 📝 Checklist trước khi deploy
 
 ### Local (Docker)
+
 - [ ] File `.env` đã được tạo và cấu hình
 - [ ] Docker và Docker Compose đã cài đặt
 - [ ] Port 8080 và 3306 chưa được sử dụng
 
 ### Render
+
 - [ ] Code đã push lên Git repository
 - [ ] Database service đã được tạo
 - [ ] Environment variables đã được set
@@ -62,11 +67,13 @@ Xem chi tiết trong [RENDER.md](./RENDER.md)
 ## 🔧 Troubleshooting
 
 ### Docker
+
 - **Port đã được sử dụng**: Đổi port trong `docker-compose.yml`
 - **Permission denied**: Chạy `chmod -R 755 storage bootstrap/cache`
 - **Database connection error**: Kiểm tra DB_HOST trong `.env`
 
 ### Render
+
 - **502 Bad Gateway**: Kiểm tra logs, đảm bảo APP_KEY đã set
 - **Database connection**: Kiểm tra Internal Database URL
 - **Build failed**: Kiểm tra composer.json và PHP version
@@ -75,4 +82,3 @@ Xem chi tiết trong [RENDER.md](./RENDER.md)
 
 - [DOCKER.md](./DOCKER.md) - Hướng dẫn chi tiết Docker
 - [RENDER.md](./RENDER.md) - Hướng dẫn chi tiết Render
-

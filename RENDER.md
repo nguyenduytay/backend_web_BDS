@@ -37,11 +37,13 @@
 ### Build & Start Commands
 
 **Build Command:**
+
 ```bash
 composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
 **Start Command:**
+
 ```bash
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 ```
@@ -51,6 +53,7 @@ composer install --no-dev --optimize-autoloader && php artisan config:cache && p
 Thêm các biến môi trường sau trong Render Dashboard:
 
 ### App Settings
+
 ```
 APP_NAME=Laravel
 APP_ENV=production
@@ -61,6 +64,7 @@ LOG_LEVEL=error
 ```
 
 ### Database Settings (tự động từ database service)
+
 ```
 DB_CONNECTION=mysql
 DB_HOST=<từ database service>
@@ -71,6 +75,7 @@ DB_PASSWORD=<từ database service>
 ```
 
 ### Cache & Session
+
 ```
 CACHE_DRIVER=file
 SESSION_DRIVER=file
@@ -79,15 +84,19 @@ FILESYSTEM_DISK=local
 ```
 
 ### Broadcast
+
 ```
 BROADCAST_DRIVER=log
 ```
 
 ### Generate APP_KEY
+
 Chạy lệnh sau trong Shell của Render hoặc local:
+
 ```bash
 php artisan key:generate --show
 ```
+
 Copy key và thêm vào `APP_KEY` trong Environment Variables.
 
 ## Bước 4: Chạy Migrations và Seeders
@@ -95,15 +104,19 @@ Copy key và thêm vào `APP_KEY` trong Environment Variables.
 Sau khi deploy thành công, chạy migrations:
 
 ### Cách 1: Sử dụng Render Shell
+
 1. Vào Web Service → **"Shell"**
 2. Chạy:
+
 ```bash
 php artisan migrate --force
 php artisan db:seed --force
 ```
 
 ### Cách 2: Thêm vào Build Command
+
 Cập nhật Build Command:
+
 ```bash
 composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
@@ -117,45 +130,56 @@ composer install --no-dev --optimize-autoloader && php artisan migrate --force &
 ## Lưu ý quan trọng
 
 ### 1. Storage
+
 Render sử dụng ephemeral filesystem, nên files upload sẽ mất khi restart. Cần:
+
 - Sử dụng Cloudinary (đã có trong project)
 - Hoặc S3/Spaces cho file storage
 
 ### 2. Database Migrations
+
 - Chạy migrations sau mỗi lần deploy có thay đổi database
 - Sử dụng `--force` flag trong production
 
 ### 3. Caching
+
 - Enable config, route, view caching trong production
 - Clear cache khi cần: `php artisan cache:clear`
 
 ### 4. Auto-deploy
+
 - Render tự động deploy khi có push mới lên branch đã cấu hình
 - Có thể tắt auto-deploy trong settings
 
 ### 5. Health Checks
+
 Render tự động check health tại root URL. Đảm bảo route `/` trả về 200 OK.
 
 ## Troubleshooting
 
 ### Lỗi 502 Bad Gateway
+
 - Kiểm tra logs trong Render Dashboard
 - Đảm bảo APP_KEY đã được set
 - Kiểm tra database connection
 
 ### Lỗi Database Connection
+
 - Kiểm tra DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 - Đảm bảo database service đã running
 - Kiểm tra Internal Database URL trong Render
 
 ### Lỗi Permission Denied
+
 - Kiểm tra quyền storage và bootstrap/cache
 - Thêm vào Build Command:
+
 ```bash
 chmod -R 755 storage bootstrap/cache
 ```
 
 ### Lỗi Composer
+
 - Kiểm tra composer.json và composer.lock
 - Đảm bảo PHP version phù hợp (8.1+)
 
@@ -169,6 +193,6 @@ Nếu sử dụng `render.yaml`, Render sẽ tự động tạo services:
 4. Render sẽ tự động tạo services theo `render.yaml`
 
 Sau đó chỉ cần:
+
 - Set `APP_KEY` manually
 - Chạy migrations và seeders
-

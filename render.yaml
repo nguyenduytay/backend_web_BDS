@@ -1,0 +1,77 @@
+services:
+  # Web Service - Laravel Application
+  - type: web
+    name: laravel-backend
+    env: docker
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    plan: starter
+    region: singapore
+    branch: main
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader --no-interaction
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+    startCommand: /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    envVars:
+      - key: APP_NAME
+        value: Laravel
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        fromService:
+          type: web
+          name: laravel-backend
+          property: host
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: laravel-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: laravel-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: laravel-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: laravel-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: laravel-db
+          property: password
+      - key: BROADCAST_DRIVER
+        value: log
+      - key: CACHE_DRIVER
+        value: file
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_LIFETIME
+        value: 120
+
+  # Database Service - MySQL
+  - type: pserv
+    name: laravel-db
+    plan: starter
+    region: singapore
+    databaseName: laravel_db
+    databaseUser: laravel_user
+    ipAllowList: []

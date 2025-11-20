@@ -41,17 +41,7 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('🏘️ Đang tạo bất động sản (có thể mất vài phút)...');
         $this->call(PropertySeeder::class);
-        $this->command->info('✅ Hoàn thành tạo bất động sản');
-        $this->command->newLine();
-
-        $this->command->info('🖼️ Đang tạo hình ảnh bất động sản...');
-        $this->call(PropertyImageSeeder::class);
-        $this->command->info('✅ Hoàn thành tạo hình ảnh bất động sản');
-        $this->command->newLine();
-
-        $this->command->info('🔗 Đang liên kết tính năng với bất động sản...');
-        $this->call(PropertyFeatureSeeder::class);
-        $this->command->info('✅ Hoàn thành liên kết tính năng');
+        $this->command->info('✅ Hoàn thành tạo bất động sản (bao gồm hình ảnh và tính năng)');
         $this->command->newLine();
 
         $this->command->info('❤️ Đang tạo danh sách yêu thích...');
@@ -62,7 +52,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🎉 Hoàn tất seed dữ liệu! Database đã được tạo thành công.');
         $this->command->newLine();
         $this->command->info('📝 Thông tin đăng nhập Admin:');
-        $this->command->line('   Email: admin@example.com');
+        $this->command->line('   Email: admin@gmail.com');
         $this->command->line('   Mật khẩu: password');
     }
 }

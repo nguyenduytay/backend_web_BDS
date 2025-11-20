@@ -31,6 +31,73 @@ class PropertySeeder extends Seeder
         $statuses        = ['available', 'sold', 'rented', 'pending'];
         $totalProperties = 300;
 
+        // Mẫu title và description bằng tiếng Việt
+        $titleTemplates = [
+            'apartment' => [
+                'Căn hộ cao cấp', 'Căn hộ hiện đại', 'Căn hộ view đẹp', 'Căn hộ tiện nghi',
+                'Căn hộ sang trọng', 'Căn hộ mới xây', 'Căn hộ full nội thất', 'Căn hộ giá tốt'
+            ],
+            'house' => [
+                'Nhà phố mặt tiền', 'Nhà phố 3 tầng', 'Nhà phố hiện đại', 'Nhà phố kinh doanh',
+                'Nhà phố mới xây', 'Nhà phố giá rẻ', 'Nhà phố đẹp', 'Nhà phố tiện nghi'
+            ],
+            'villa' => [
+                'Biệt thự sang trọng', 'Biệt thự view biển', 'Biệt thự hiện đại', 'Biệt thự cao cấp',
+                'Biệt thự mới xây', 'Biệt thự đẹp', 'Biệt thự tiện nghi', 'Biệt thự độc đáo'
+            ],
+            'shophouse' => [
+                'Shophouse mặt tiền', 'Shophouse kinh doanh', 'Shophouse hiện đại', 'Shophouse giá tốt',
+                'Shophouse mới xây', 'Shophouse đẹp', 'Shophouse tiện nghi', 'Shophouse vị trí đẹp'
+            ],
+            'land' => [
+                'Đất nền mặt tiền', 'Đất nền giá tốt', 'Đất nền vị trí đẹp', 'Đất nền đầu tư',
+                'Đất nền pháp lý rõ', 'Đất nền tiềm năng', 'Đất nền thổ cư', 'Đất nền dự án'
+            ],
+            'office' => [
+                'Văn phòng cho thuê', 'Văn phòng hiện đại', 'Văn phòng giá tốt', 'Văn phòng vị trí đẹp',
+                'Văn phòng cao cấp', 'Văn phòng tiện nghi', 'Văn phòng mới', 'Văn phòng đẹp'
+            ]
+        ];
+
+        $descriptionTemplates = [
+            'apartment' => [
+                'Căn hộ đẹp, thiết kế hiện đại, đầy đủ tiện nghi. Vị trí thuận lợi, gần trung tâm, giao thông thuận tiện. Phù hợp cho gia đình trẻ hoặc người độc thân.',
+                'Căn hộ cao cấp với view đẹp, không gian thoáng mát. Nội thất đầy đủ, sẵn sàng vào ở ngay. An ninh tốt, tiện ích xung quanh đầy đủ.',
+                'Căn hộ mới xây, thiết kế tối ưu không gian. Gần trường học, bệnh viện, siêu thị. Phù hợp đầu tư hoặc ở.',
+                'Căn hộ sang trọng, đầy đủ tiện ích: hồ bơi, gym, sân vườn. Vị trí đắc địa, giá trị đầu tư cao.'
+            ],
+            'house' => [
+                'Nhà phố đẹp, thiết kế hiện đại, phù hợp ở hoặc kinh doanh. Mặt tiền rộng, vị trí đẹp, giá trị đầu tư cao.',
+                'Nhà phố mới xây, kiến trúc đẹp, không gian rộng rãi. Gần trung tâm, giao thông thuận tiện. Phù hợp gia đình đông người.',
+                'Nhà phố mặt tiền, kinh doanh tốt. Thiết kế tối ưu, đầy đủ tiện nghi. Vị trí đắc địa, tiềm năng sinh lời cao.',
+                'Nhà phố hiện đại, nội thất đầy đủ. Sân vườn rộng, không gian thoáng mát. Phù hợp ở hoặc cho thuê.'
+            ],
+            'villa' => [
+                'Biệt thự sang trọng, thiết kế độc đáo. Diện tích rộng, sân vườn đẹp, hồ bơi riêng. Vị trí đắc địa, giá trị cao.',
+                'Biệt thự cao cấp, view đẹp, không gian thoáng mát. Nội thất sang trọng, đầy đủ tiện ích. Phù hợp gia đình thượng lưu.',
+                'Biệt thự mới xây, kiến trúc hiện đại. Sân vườn rộng, hồ bơi, phòng gym. An ninh tốt, tiện ích đầy đủ.',
+                'Biệt thự đẹp, thiết kế tinh tế. Không gian sống cao cấp, đầy đủ tiện nghi. Vị trí yên tĩnh, phù hợp nghỉ dưỡng.'
+            ],
+            'shophouse' => [
+                'Shophouse mặt tiền, kinh doanh tốt. Thiết kế hiện đại, không gian rộng. Vị trí đắc địa, tiềm năng sinh lời cao.',
+                'Shophouse mới xây, kiến trúc đẹp. Phù hợp mở cửa hàng, văn phòng. Giao thông thuận tiện, đông dân cư.',
+                'Shophouse giá tốt, đầu tư hiệu quả. Mặt tiền rộng, thiết kế tối ưu. Vị trí trung tâm, tiềm năng phát triển.',
+                'Shophouse cao cấp, thiết kế sang trọng. Phù hợp kinh doanh cao cấp. Vị trí đẹp, giá trị đầu tư cao.'
+            ],
+            'land' => [
+                'Đất nền mặt tiền, pháp lý rõ ràng. Vị trí đẹp, tiềm năng phát triển cao. Phù hợp đầu tư hoặc xây dựng.',
+                'Đất nền giá tốt, đầu tư hiệu quả. Gần trung tâm, hạ tầng đầy đủ. Pháp lý minh bạch, sổ đỏ chính chủ.',
+                'Đất nền vị trí đắc địa, tiềm năng tăng giá. Giao thông thuận tiện, hạ tầng tốt. Phù hợp xây nhà hoặc đầu tư.',
+                'Đất nền thổ cư, pháp lý đầy đủ. Diện tích đẹp, mặt tiền rộng. Vị trí yên tĩnh, phù hợp xây biệt thự.'
+            ],
+            'office' => [
+                'Văn phòng cho thuê, vị trí đẹp. Thiết kế hiện đại, không gian rộng rãi. Phù hợp công ty vừa và nhỏ.',
+                'Văn phòng cao cấp, đầy đủ tiện ích. Gần trung tâm, giao thông thuận tiện. Giá thuê hợp lý, phù hợp doanh nghiệp.',
+                'Văn phòng mới, thiết kế tối ưu. Không gian làm việc thoáng mát. Tiện ích đầy đủ: bãi đỗ xe, thang máy.',
+                'Văn phòng hiện đại, giá tốt. Vị trí thuận lợi, dễ tìm. Phù hợp startup hoặc công ty mới thành lập.'
+            ]
+        ];
+
         $this->command->info("   → Đang tạo {$totalProperties} bất động sản...");
         $bar = $this->command->getOutput()->createProgressBar($totalProperties);
         $bar->setFormat('   %current%/%max% [%bar%] %percent:3s%% %message%');
@@ -41,6 +108,17 @@ class PropertySeeder extends Seeder
             // Lấy random id + type
             $typeId = $faker->randomElement(array_keys($types));
             $type   = $types[$typeId];
+
+            // Lấy location để tạo title phù hợp
+            $locationId = $faker->randomElement($locationIds);
+            $location = DB::table('locations')->where('id', $locationId)->first();
+            $cityName = $location ? $location->city : '';
+
+            // Tạo title và description bằng tiếng Việt
+            $titleTemplate = $faker->randomElement($titleTemplates[$type] ?? $titleTemplates['apartment']);
+            $title = $titleTemplate . ' tại ' . $cityName;
+            
+            $description = $faker->optional(0.9)->randomElement($descriptionTemplates[$type] ?? $descriptionTemplates['apartment']);
 
             // Giá gợi ý theo loại
             $price = match ($type) {
@@ -58,9 +136,9 @@ class PropertySeeder extends Seeder
                 : null;
 
             $propertyId = DB::table('properties')->insertGetId([
-                'title'            => ucfirst($faker->words(3, true)) . ' - ' . $faker->city(),
-                'description'      => $faker->optional(0.8)->paragraphs(3, true),
-                'location_id'      => $faker->randomElement($locationIds),
+                'title'            => $title,
+                'description'      => $description,
+                'location_id'      => $locationId,
                 'property_type_id' => $typeId, // ✅ đúng cột
                 'status'           => $faker->randomElement($statuses),
                 'price'            => $price,

@@ -20,10 +20,10 @@ class UserSeeder extends Seeder
         
         // Tài khoản Admin cố định
         DB::table('users')->updateOrInsert(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@gmail.com'],
             [
                 'name'              => 'Quản trị viên',
-                'email'             => 'admin@example.com',
+                'email'             => 'admin@gmail.com',
                 'password'          => Hash::make('password'),
                 'role'              => 'admin',
                 'phone'             => '0900000000',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'updated_at'        => $now,
             ]
         );
-        $this->command->line('   ✓ Đã tạo tài khoản Admin (admin@example.com / password)');
+        $this->command->line('   ✓ Đã tạo tài khoản Admin (admin@gmail.com / password)');
 
         $this->command->info('   → Đang tạo tài khoản Agent (10 tài khoản)...');
         // Agents

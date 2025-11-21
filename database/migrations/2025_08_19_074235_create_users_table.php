@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -19,10 +20,15 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone', 20)->nullable();
             $table->string('avatar')->nullable();
-            $table->enum('role', ['admin', 'agent', 'user'])->default('user');
+            $table->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
+        
+        // Add CHECK constraint for PostgreSQL compatibility
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'agent', 'user'))");
+        }
     }
 
 

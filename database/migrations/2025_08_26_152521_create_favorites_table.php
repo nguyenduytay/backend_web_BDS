@@ -9,23 +9,13 @@ return new class extends Migration {
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('property_id');
-
-            // Chỉ cần 1 lần timestamps
-            $table->timestamps();
-
-            // Ràng buộc quan hệ
-            $table->foreign('user_id')
-                  ->references('id')->on('users')
-                  ->onDelete('cascade');
-
-            $table->foreign('property_id')
-                  ->references(columns: 'id')->on('properties')
-                  ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('property_id')->constrained('properties')->onDelete('cascade');
 
             // Một user chỉ có thể favorite 1 property duy nhất
             $table->unique(['user_id', 'property_id']);
+            
+            $table->timestamps();
         });
     }
 

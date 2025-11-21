@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->string('city', 100)->collation('utf8mb4_bin');
-            $table->string('district', 100)->collation('utf8mb4_bin');
+            $table->string('city', 100);
+            $table->string('district', 100);
             $table->string('slug', 120);
             $table->unique(['city', 'district']);
             $table->timestamps();

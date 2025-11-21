@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->foreignId('location_id')->constrained('locations');
             $table->foreignId('property_type_id')->constrained('property_types');
 
-            $table->enum('status', ['available', 'sold', 'rented', 'pending'])->default('available');
+            $table->string('status')->default('available');
             $table->decimal('price', 15, 2);
             $table->decimal('area', 10, 2);
             $table->integer('bedrooms')->default(0);
@@ -39,6 +40,11 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+        
+        // Add CHECK constraint for PostgreSQL compatibility
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE properties ADD CONSTRAINT properties_status_check CHECK (status IN ('available', 'sold', 'rented', 'pending'))");
+        }
     }
 
     /**

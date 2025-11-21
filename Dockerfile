@@ -14,13 +14,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy composer files để cache
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist
+RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts
 
 # Copy source code
 COPY . .
 
-# Dump autoload
-RUN composer dump-autoload --optimize
+# Chạy composer scripts sau khi có source code
+RUN composer dump-autoload --optimize && \
+    php artisan package:discover --ansi
 
 # Quyền
 RUN chown -R www-data:www-data /var/www/html \

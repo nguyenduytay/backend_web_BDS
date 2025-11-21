@@ -3,7 +3,7 @@ services:
   - type: web
     name: laravel-backend
     env: docker
-    dockerfilePath: ./Dockerfile.render
+    dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: starter
     region: singapore
@@ -13,7 +13,7 @@ services:
       php artisan config:cache
       php artisan route:cache
       php artisan view:cache
-    startCommand: /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    startCommand: /usr/local/bin/start.sh
     envVars:
       - key: APP_NAME
         value: Laravel
@@ -33,7 +33,7 @@ services:
       - key: LOG_LEVEL
         value: error
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
       - key: DB_HOST
         fromDatabase:
           name: laravel-db
@@ -66,8 +66,10 @@ services:
         value: file
       - key: SESSION_LIFETIME
         value: 120
+      - key: RUN_SEEDERS
+        value: "true"
 
-  # Database Service - MySQL
+  # Database Service - PostgreSQL
   - type: pserv
     name: laravel-db
     plan: starter

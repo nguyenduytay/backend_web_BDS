@@ -28,8 +28,12 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Port
+# Port (Render sẽ tự động set PORT env variable)
 EXPOSE 80
 
-# CMD chạy Laravel trực tiếp
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=80
+# Copy và set quyền cho start script
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# CMD chạy Laravel với migrations và seeders
+CMD ["/usr/local/bin/start.sh"]

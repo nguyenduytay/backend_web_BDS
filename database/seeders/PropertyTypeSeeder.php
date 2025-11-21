@@ -52,7 +52,12 @@ class PropertyTypeSeeder extends Seeder
             ],
         ];
 
-        DB::table('property_types')->insert($types);
+        foreach ($types as $type) {
+            DB::table('property_types')->updateOrInsert(
+                ['type' => $type['type']],
+                $type
+            );
+        }
         $this->command->line('   ✓ Đã tạo ' . count($types) . ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Shophouse, Đất nền, Văn phòng');
     }
 }

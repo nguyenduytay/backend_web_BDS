@@ -28,8 +28,25 @@ class PropertySeeder extends Seeder
         $lngMin = 102.144;
         $lngMax = 109.469;
 
+        // Kiểm tra xem đã có properties chưa
+        $existingCount = DB::table('properties')->count();
+        if ($existingCount >= 300) {
+            $this->command->line("   ℹ️  Đã có {$existingCount} properties, bỏ qua seeding");
+            return;
+        }
+
         $statuses        = ['available', 'sold', 'rented', 'pending'];
-        $totalProperties = 300;
+        $totalProperties = 300 - $existingCount;
+
+        // Mẫu đường phố tiếng Việt
+        $streetNames = [
+            'Đường Nguyễn Huệ', 'Đường Lê Lợi', 'Đường Trần Hưng Đạo', 'Đường Lý Thường Kiệt',
+            'Đường Hoàng Diệu', 'Đường Phạm Ngũ Lão', 'Đường Bà Triệu', 'Đường Hai Bà Trưng',
+            'Đường Lê Duẩn', 'Đường Nguyễn Trãi', 'Đường Võ Thị Sáu', 'Đường Điện Biên Phủ',
+            'Đường Cách Mạng Tháng Tám', 'Đường Nguyễn Thị Minh Khai', 'Đường Pasteur',
+            'Đường Nam Kỳ Khởi Nghĩa', 'Đường Võ Văn Tần', 'Đường Nguyễn Đình Chiểu',
+            'Đường Đinh Tiên Hoàng', 'Đường Lý Tự Trọng', 'Đường Nguyễn Văn Cừ'
+        ];
 
         // Mẫu title và description bằng tiếng Việt
         $titleTemplates = [
@@ -146,8 +163,8 @@ class PropertySeeder extends Seeder
                 'bedrooms'         => $faker->numberBetween(0, 6),
                 'bathrooms'        => $faker->numberBetween(1, 5),
                 'floors'           => $faker->numberBetween(1, 5),
-                'address'          => $faker->streetAddress(),
-                'postal_code'      => $faker->postcode(),
+                'address'          => $faker->randomElement($streetNames) . ' ' . $faker->numberBetween(1, 500) . ', ' . $location->district . ', ' . $location->city,
+                'postal_code'      => str_pad($faker->numberBetween(10000, 99999), 5, '0', STR_PAD_LEFT),
                 'latitude'         => $faker->randomFloat(8, $latMin, $latMax),
                 'longitude'        => $faker->randomFloat(8, $lngMin, $lngMax),
                 'year_built'       => $faker->optional(0.8)->numberBetween(1990, (int) date('Y')),

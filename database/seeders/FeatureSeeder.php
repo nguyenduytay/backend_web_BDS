@@ -25,7 +25,12 @@ class FeatureSeeder extends Seeder
             ['name' => 'View biển', 'icon' => 'fa-water', 'created_at' => $now, 'updated_at' => $now],
         ];
 
-        DB::table('features')->insert($features);
+        foreach ($features as $feature) {
+            DB::table('features')->updateOrInsert(
+                ['name' => $feature['name']],
+                $feature
+            );
+        }
         $this->command->line('   ✓ Đã tạo ' . count($features) . ' tính năng bất động sản');
     }
 }

@@ -44,36 +44,41 @@ class UserSeeder extends Seeder
         ];
         
         for ($i = 0; $i < 10; $i++) {
-            $agents[] = [
-                'name'           => $agentNames[$i] ?? "Agent " . ($i + 1),
-                'email'          => "agent" . ($i + 1) . "@example.com",
-                'password'       => Hash::make('password'),
-                'role'           => 'agent',
-                'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
-                'remember_token' => Str::random(10),
-                'created_at'     => $now,
-                'updated_at'     => $now,
-            ];
+            $email = "agent" . ($i + 1) . "@example.com";
+            DB::table('users')->updateOrInsert(
+                ['email' => $email],
+                [
+                    'name'           => $agentNames[$i] ?? "Agent " . ($i + 1),
+                    'email'          => $email,
+                    'password'       => Hash::make('password'),
+                    'role'           => 'agent',
+                    'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                    'remember_token' => Str::random(10),
+                    'created_at'     => $now,
+                    'updated_at'     => $now,
+                ]
+            );
         }
-        DB::table('users')->insert($agents);
         $this->command->line('   ✓ Đã tạo 10 tài khoản Agent');
 
         $this->command->info('   → Đang tạo tài khoản User (50 tài khoản)...');
         // Users
-        $users = [];
         for ($i = 1; $i <= 50; $i++) {
-            $users[] = [
-                'name'           => $faker->name(),
-                'email'          => "user{$i}@example.com",
-                'password'       => Hash::make('password'),
-                'role'           => 'user',
-                'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
-                'remember_token' => Str::random(10),
-                'created_at'     => $now,
-                'updated_at'     => $now,
-            ];
+            $email = "user{$i}@example.com";
+            DB::table('users')->updateOrInsert(
+                ['email' => $email],
+                [
+                    'name'           => $faker->name(),
+                    'email'          => $email,
+                    'password'       => Hash::make('password'),
+                    'role'           => 'user',
+                    'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                    'remember_token' => Str::random(10),
+                    'created_at'     => $now,
+                    'updated_at'     => $now,
+                ]
+            );
         }
-        DB::table('users')->insert($users);
         $this->command->line('   ✓ Đã tạo 50 tài khoản User');
 
         $totalUsers = DB::table('users')->count();

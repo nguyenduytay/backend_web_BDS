@@ -23,8 +23,15 @@ class FavoritesSeeder extends Seeder
             return;
         }
 
+        // Kiểm tra xem đã có favorites chưa
+        $existingCount = DB::table('favorites')->count();
+        if ($existingCount >= 100) {
+            $this->command->line("   ℹ️  Đã có {$existingCount} favorites, bỏ qua seeding");
+            return;
+        }
+
         $favorites      = [];
-        $totalFavorites = 100;
+        $totalFavorites = 100 - $existingCount;
 
         // Dùng set để tránh trùng user_id + property_id
         $usedPairs = [];
@@ -34,16 +41,24 @@ class FavoritesSeeder extends Seeder
         $bar->setMessage('Đang xử lý...');
         $bar->start();
 
-        for ($i = 0; $i < $totalFavorites; $i++) {
+        $attempts = 0;
+        $maxAttempts = $totalFavorites * 10; // Giới hạn số lần thử
+        
+        for ($i = 0; $i < $totalFavorites && $attempts < $maxAttempts; $attempts++) {
             $userId     = $faker->randomElement($userIds);
             $propertyId = $faker->randomElement($propertyIds);
 
             $pair = $userId . '-' . $propertyId;
 
-            // Nếu đã tồn tại thì bỏ qua, tìm cái khác
-            if (isset($usedPairs[$pair])) {
-                $i--;
-                continue;
+            // Kiểm tra xem đã tồn tại trong database hoặc trong batch hiện tại chưa
+            $exists = isset($usedPairs[$pair]) || 
+                     DB::table('favorites')
+                       ->where('user_id', $userId)
+                       ->where('property_id', $propertyId)
+                       ->exists();
+
+            if ($exists) {
+                continue; // Bỏ qua và thử lại
             }
 
             $usedPairs[$pair] = true;
@@ -59,9 +74,20 @@ class FavoritesSeeder extends Seeder
                 $bar->setMessage("Đã tạo " . ($i + 1) . "/{$totalFavorites} yêu thích");
             }
             $bar->advance();
+            $i++;
         }
 
-        DB::table('favorites')->insert($favorites);
+        if (!empty($favorites)) {
+            foreach ($favorites as $favorite) {
+                DB::table('favorites')->updateOrInsert(
+                    [
+                        'user_id' => $favorite['user_id'],
+                        'property_id' => $favorite['property_id'],
+                    ],
+                    $favorite
+                );
+            }
+        }
 
         $bar->setMessage('Hoàn thành!');
         $bar->finish();

@@ -23,22 +23,25 @@ class LocationSeeder extends Seeder
             'Hải Phòng' => ['Hồng Bàng', 'Ngô Quyền', 'Lê Chân', 'Hải An'],
         ];
 
-        $rows = [];
         $totalLocations = 0;
         foreach ($data as $city => $districts) {
             foreach ($districts as $district) {
-                $rows[] = [
-                    'city'       => $city,
-                    'district'   => $district,
-                    'slug'       => Str::slug($city . '-' . $district),
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
+                DB::table('locations')->updateOrInsert(
+                    [
+                        'city'     => $city,
+                        'district' => $district,
+                    ],
+                    [
+                        'city'       => $city,
+                        'district'   => $district,
+                        'slug'       => Str::slug($city . '-' . $district),
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
                 $totalLocations++;
             }
         }
-
-        DB::table('locations')->insert($rows);
         $this->command->line("   ✓ Đã tạo {$totalLocations} địa điểm từ " . count($data) . " thành phố");
     }
 }

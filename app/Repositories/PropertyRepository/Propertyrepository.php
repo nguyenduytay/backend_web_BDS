@@ -48,17 +48,9 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
     }
     public function allByPropertyType($propertyTypeId, $request)
     {
-        Log::info('allByPropertyType START', [
-            'property_type_id' => $propertyTypeId,
-            'page' => $request->get('page', 1),
-            'per_page' => $request->get('per_page', 10)
-        ]);
-        
         try {
             $page = $request->get('page', 1);
             $perPage = $request->get('per_page', 10);
-
-            Log::info('allByPropertyType: Building query', ['property_type_id' => $propertyTypeId]);
 
             $query = $this->model::where('properties.property_type_id', $propertyTypeId)
                 ->where('properties.status', 'available')
@@ -66,27 +58,12 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                 ->select('properties.id', 'properties.title')
                 ->with(['images']);
 
-            Log::info('allByPropertyType: Executing query', [
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-            ]);
-
             $data = $query->paginate($perPage, ['*'], 'page', $page);
-
-            Log::info('allByPropertyType SUCCESS', [
-                'property_type_id' => $propertyTypeId,
-                'total' => $data->total(),
-                'count' => $data->count()
-            ]);
 
             return $data;
         } catch (\Exception $e) {
             Log::error('allByPropertyType repository error', [
-                'property_type_id' => $propertyTypeId,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'error' => $e->getMessage()
             ]);
             // Fallback: trả về empty pagination
             try {
@@ -104,11 +81,11 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
         try {
             $page = $request->get('page', 1);
             $perPage = $request->get('per_page', 10);
-            
+
             // Đơn giản hóa query: Lấy properties theo location, nhóm theo city
             // Lấy property có giá cao nhất trong mỗi city bằng cách sử dụng DISTINCT ON (PostgreSQL)
             // Hoặc đơn giản hơn: lấy tất cả properties và group trong code
-            
+
             // Sử dụng query đơn giản hơn, tương thích với cả MySQL và PostgreSQL
             $properties = $this->model
                 ->select(
@@ -149,8 +126,8 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
 
             return $properties;
         } catch (\Exception $e) {
-            Log::error('allByLoaction repository error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            Log::error('allByLoaction repository error', [
+                'error' => $e->getMessage()
             ]);
             // Fallback: trả về properties đơn giản nhất
             try {
@@ -164,7 +141,9 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                     ->orderBy('properties.price', 'desc')
                     ->paginate($perPage, ['*'], 'page', $page);
             } catch (\Exception $fallbackError) {
-                Log::error('allByLoaction fallback error: ' . $fallbackError->getMessage());
+                Log::error('allByLoaction fallback error', [
+                    'error' => $fallbackError->getMessage()
+                ]);
                 // Trả về empty pagination
                 return $this->model->where('id', 0)->paginate($perPage, ['*'], 'page', $page);
             }
@@ -173,16 +152,9 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
 
     public function allByOutstand($request)
     {
-        Log::info('allByOutstand START', [
-            'page' => $request->get('page', 1),
-            'per_page' => $request->get('per_page', 10)
-        ]);
-        
         try {
             $page = $request->get('page', 1);
             $perPage = $request->get('per_page', 10);
-
-            Log::info('allByOutstand: Building query');
 
             $query = $this->model
                 ->select('properties.id', 'properties.title', 'properties.description', 'properties.price')
@@ -192,43 +164,22 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                 ->limit(5)
                 ->with(['primaryImage']);
 
-            Log::info('allByOutstand: Executing query', [
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-            ]);
-
             // Nếu cần pagination, dùng paginate, nếu không thì get
             if ($perPage > 0) {
-                $data = $query->paginate($perPage, ['*'], 'page', $page);
-                Log::info('allByOutstand SUCCESS (paginated)', [
-                    'total' => $data->total(),
-                    'count' => $data->count()
-                ]);
-                return $data;
+                return $query->paginate($perPage, ['*'], 'page', $page);
             } else {
-                $data = $query->get();
-                Log::info('allByOutstand SUCCESS (collection)', [
-                    'count' => $data->count()
-                ]);
-                return $data;
+                return $query->get();
             }
         } catch (\Exception $e) {
             Log::error('allByOutstand repository error', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'error' => $e->getMessage()
             ]);
             // Fallback: trả về empty collection hoặc pagination
             try {
-                $fallbackData = $this->model->where('id', 0)->paginate($perPage ?? 10, ['*'], 'page', $page ?? 1);
-                Log::info('allByOutstand: Using fallback (empty pagination)');
-                return $fallbackData;
+                return $this->model->where('id', 0)->paginate($perPage ?? 10, ['*'], 'page', $page ?? 1);
             } catch (\Exception $fallbackError) {
                 Log::error('allByOutstand fallback error', [
-                    'error' => $fallbackError->getMessage(),
-                    'file' => $fallbackError->getFile(),
-                    'line' => $fallbackError->getLine()
+                    'error' => $fallbackError->getMessage()
                 ]);
                 throw $e; // Re-throw original error
             }

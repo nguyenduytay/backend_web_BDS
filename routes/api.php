@@ -134,7 +134,7 @@ Route::middleware(['api'])->group(function () {
     Route::prefix('properties')->group(function () {
         // Đặt các route cụ thể (dài hơn) trước để tránh conflict với /all
         // Lấy danh sách properties theo loại
-        Route::get('/by-type/{property_type_id}', [PropertyController::class, 'allByPropertyType']);
+        Route::get('/by-type/{property_type_id}', [PropertyController::class, 'allByPropertyType'])->whereNumber('property_type_id');
         // Lấy danh sách properties theo địa điểm
         Route::get('/by-location', [PropertyController::class, 'allByLoaction']);
         // Lấy danh sách properties nổi bật

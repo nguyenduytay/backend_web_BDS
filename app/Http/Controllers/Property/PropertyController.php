@@ -44,55 +44,20 @@ class PropertyController extends Controller
     }
     public function allByPropertyType($propertyTypeId, Request $request)
     {
-        Log::info('PropertyController::allByPropertyType START', [
-            'property_type_id' => $propertyTypeId,
-            'request_params' => $request->all()
-        ]);
-
         try {
-            Log::info('PropertyController::allByPropertyType: Validating', [
-                'property_type_id' => $propertyTypeId
-            ]);
-
             $vali = $this->propertyValidation->checkIdValidation($propertyTypeId, 'property_types', 'id');
             if ($vali->fails()) {
-                Log::warning('PropertyController::allByPropertyType: Validation failed', [
-                    'property_type_id' => $propertyTypeId,
-                    'errors' => $vali->errors()->toArray()
-                ]);
                 return ApiResponse::error($vali->errors(), 422);
             }
 
-            Log::info('PropertyController::allByPropertyType: Calling service', [
-                'property_type_id' => $propertyTypeId
-            ]);
-
             $data = $this->propertyService->allByPropertyType($propertyTypeId, $request);
-
-            Log::info('PropertyController::allByPropertyType: Service returned', [
-                'property_type_id' => $propertyTypeId,
-                'data_is_null' => $data === null,
-                'data_type' => gettype($data)
-            ]);
-
             if ($data != null) {
-                Log::info('PropertyController::allByPropertyType SUCCESS', [
-                    'property_type_id' => $propertyTypeId
-                ]);
                 return ApiResponse::success($data, 'Lấy danh sách properties thành công');
             }
-
-            Log::warning('PropertyController::allByPropertyType: No data found', [
-                'property_type_id' => $propertyTypeId
-            ]);
             return ApiResponse::error('Không tìm thấy property', 404);
         } catch (\Exception $e) {
-            Log::error('PropertyController::allByPropertyType ERROR', [
-                'property_type_id' => $propertyTypeId,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+            Log::error('allByPropertyType controller error', [
+                'error' => $e->getMessage()
             ]);
             return ApiResponse::error('Lỗi khi lấy danh sách properties', 500);
         }
@@ -106,53 +71,23 @@ class PropertyController extends Controller
             }
             return ApiResponse::error('Không tìm thấy dữ liệu', 404);
         } catch (\Exception $e) {
-            Log::error('allByLoaction controller error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            Log::error('allByLoaction controller error', [
+                'error' => $e->getMessage()
             ]);
             return ApiResponse::error('Lỗi khi lấy danh sách properties theo location', 500);
         }
     }
     public function allByOutstand(Request $request)
     {
-        Log::info('PropertyController::allByOutstand START', [
-            'request_params' => $request->all()
-        ]);
-
         try {
-            Log::info('PropertyController::allByOutstand: Calling service');
-
             $data = $this->propertyService->allByOutstand($request);
-
-            Log::info('PropertyController::allByOutstand: Service returned', [
-                'data_is_null' => $data === null,
-                'data_type' => gettype($data),
-                'has_count' => method_exists($data, 'count'),
-                'has_total' => method_exists($data, 'total')
-            ]);
-
-            if ($data != null) {
-                $count = method_exists($data, 'count') ? $data->count() : 0;
-                $total = method_exists($data, 'total') ? $data->total() : 0;
-
-                Log::info('PropertyController::allByOutstand: Data details', [
-                    'count' => $count,
-                    'total' => $total
-                ]);
-
-                if ($count > 0 || $total > 0) {
-                    Log::info('PropertyController::allByOutstand SUCCESS');
-                    return ApiResponse::success($data, 'Lấy danh sách thành công');
-                }
+            if ($data != null && ($data->count() > 0 || (method_exists($data, 'total') && $data->total() > 0))) {
+                return ApiResponse::success($data, 'Lấy danh sách thành công');
             }
-
-            Log::warning('PropertyController::allByOutstand: No data found');
             return ApiResponse::error('Không tìm thấy dữ liệu', 404);
         } catch (\Exception $e) {
-            Log::error('PropertyController::allByOutstand ERROR', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+            Log::error('allByOutstand controller error', [
+                'error' => $e->getMessage()
             ]);
             return ApiResponse::error('Lỗi khi lấy danh sách properties nổi bật', 500);
         }

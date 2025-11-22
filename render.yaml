@@ -11,6 +11,7 @@ services:
     healthCheckPath: /health
     buildCommand: |
       composer install --no-dev --optimize-autoloader --no-interaction
+      composer dump-autoload --optimize
       php artisan optimize:clear
       php artisan config:cache
       php artisan route:cache

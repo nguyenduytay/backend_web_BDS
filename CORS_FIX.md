@@ -3,6 +3,7 @@
 ## 🔍 Nguyên nhân lỗi CORS
 
 Lỗi CORS xảy ra khi:
+
 1. Frontend gọi API từ domain khác (cross-origin)
 2. Backend không cho phép origin của frontend trong `allowed_origins`
 3. Content Security Policy (CSP) quá chặt chẽ
@@ -10,11 +11,13 @@ Lỗi CORS xảy ra khi:
 ## ✅ Đã sửa
 
 ### 1. Cấu hình CORS (`config/cors.php`)
+
 - ✅ Đã thêm patterns cho các platform phổ biến (Render, Vercel, Netlify, Railway)
 - ✅ Hỗ trợ environment variable `CORS_ALLOWED_ORIGINS`
 - ✅ Cho phép localhost với mọi port
 
 ### 2. Content Security Policy
+
 - ✅ Không áp dụng CSP cho API routes (`api/*`)
 - ✅ CSP chỉ áp dụng cho web routes
 
@@ -71,6 +74,7 @@ curl -H "Origin: https://your-frontend.com" \
 ```
 
 Phải thấy header:
+
 ```
 Access-Control-Allow-Origin: https://your-frontend.com
 Access-Control-Allow-Methods: POST, GET, OPTIONS
@@ -84,11 +88,11 @@ fetch('https://backend-web-bds.onrender.com/api/properties/all', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 })
-.then(res => res.json())
-.then(data => console.log(data))
-.catch(err => console.error('CORS Error:', err));
+  .then((res) => res.json())
+  .then((data) => console.log(data))
+  .catch((err) => console.error('CORS Error:', err));
 ```
 
 ## 📝 Cấu hình cho Render
@@ -107,6 +111,7 @@ CORS_ALLOWED_ORIGINS=https://frontend1.com,https://frontend2.com
 **Nguyên nhân:** Origin của bạn không có trong `allowed_origins`
 
 **Giải pháp:**
+
 1. Kiểm tra origin của frontend (xem trong Network tab)
 2. Thêm origin vào `allowed_origins` hoặc `allowed_origins_patterns`
 3. Clear cache: `php artisan config:clear`
@@ -116,6 +121,7 @@ CORS_ALLOWED_ORIGINS=https://frontend1.com,https://frontend2.com
 **Nguyên nhân:** OPTIONS request bị chặn
 
 **Giải pháp:**
+
 1. Đảm bảo `allowed_methods` có `OPTIONS`
 2. Kiểm tra middleware CORS đã được thêm vào Kernel
 
@@ -124,6 +130,7 @@ CORS_ALLOWED_ORIGINS=https://frontend1.com,https://frontend2.com
 **Nguyên nhân:** Frontend gửi `credentials: 'include'` nhưng backend không cho phép
 
 **Giải pháp:**
+
 1. Đảm bảo `supports_credentials` = `true` trong `config/cors.php`
 2. Không dùng `allowed_origins: ['*']` khi `supports_credentials: true`
 
@@ -139,6 +146,7 @@ CORS_ALLOWED_ORIGINS=https://frontend1.com,https://frontend2.com
 ## 🎯 Ví dụ cấu hình hoàn chỉnh
 
 ### Development (.env)
+
 ```env
 FRONTEND_URL=http://localhost:3000
 ADMIN_URL=http://localhost:3001
@@ -146,6 +154,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://127.0.0.
 ```
 
 ### Production (.env trên Render)
+
 ```env
 FRONTEND_URL=https://your-frontend.com
 ADMIN_URL=https://admin.your-frontend.com
@@ -156,4 +165,3 @@ CORS_ALLOWED_ORIGINS=https://your-frontend.com,https://admin.your-frontend.com
 
 - Laravel CORS: https://laravel.com/docs/cors
 - MDN CORS: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-

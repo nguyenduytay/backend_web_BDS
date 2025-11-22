@@ -47,17 +47,27 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
     }
     public function allByPropertyType($propertyTypeId, $request)
     {
-        $page = $request->get('page', 1);
-        $perPage = $request->get('per_page', 10);
+        try {
+            $page = $request->get('page', 1);
+            $perPage = $request->get('per_page', 10);
 
-        $query = $this->model::where('property_type_id', $propertyTypeId)
-            ->select('id', 'title')
-            ->where('properties.status', 'available')
-            ->with(['images']);
+            $query = $this->model::where('properties.property_type_id', $propertyTypeId)
+                ->where('properties.status', 'available')
+                ->whereNull('properties.deleted_at')
+                ->select('properties.id', 'properties.title')
+                ->with(['images']);
 
-        $data = $query->paginate($perPage, ['*'], 'page', $page);
+            $data = $query->paginate($perPage, ['*'], 'page', $page);
 
-        return $data;
+            return $data;
+        } catch (\Exception $e) {
+            \Log::error('allByPropertyType repository error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'property_type_id' => $propertyTypeId
+            ]);
+            // Fallback: trả về empty pagination
+            return $this->model::where('id', 0)->paginate($perPage, ['*'], 'page', $page);
+        }
     }
     public function allByLoaction($request)
     {
@@ -66,7 +76,10 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             $perPage = $request->get('per_page', 10);
             
             // Đơn giản hóa query: Lấy properties theo location, nhóm theo city
-            // Lấy property có giá cao nhất trong mỗi city
+            // Lấy property có giá cao nhất trong mỗi city bằng cách sử dụng DISTINCT ON (PostgreSQL)
+            // Hoặc đơn giản hơn: lấy tất cả properties và group trong code
+            
+            // Sử dụng query đơn giản hơn, tương thích với cả MySQL và PostgreSQL
             $properties = $this->model
                 ->select(
                     'properties.id',
@@ -74,60 +87,92 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                     'properties.price',
                     'properties.location_id',
                     'locations.city',
-                    DB::raw('(
-                        SELECT COUNT(*) 
-                        FROM properties p2 
-                        INNER JOIN locations l2 ON l2.id = p2.location_id
-                        WHERE l2.city = locations.city
-                        AND p2.status = \'available\' 
-                        AND p2.deleted_at IS NULL
-                    ) as total_properties')
+                    'locations.district'
                 )
                 ->join('locations', 'locations.id', '=', 'properties.location_id')
                 ->where('properties.status', 'available')
                 ->whereNull('properties.deleted_at')
-                ->whereRaw('properties.price = (
-                    SELECT MAX(p3.price)
-                    FROM properties p3
-                    INNER JOIN locations l3 ON l3.id = p3.location_id
-                    WHERE l3.city = locations.city
-                    AND p3.status = \'available\'
-                    AND p3.deleted_at IS NULL
-                )')
                 ->with(['primaryImage'])
                 ->orderBy('locations.city')
                 ->orderBy('properties.price', 'desc')
                 ->paginate($perPage, ['*'], 'page', $page);
+
+            // Thêm total_properties cho mỗi city (tính trong code để tránh subquery phức tạp)
+            if ($properties->count() > 0) {
+                $cities = $properties->pluck('city')->unique();
+                $cityCounts = DB::table('properties')
+                    ->join('locations', 'locations.id', '=', 'properties.location_id')
+                    ->where('properties.status', 'available')
+                    ->whereNull('properties.deleted_at')
+                    ->whereIn('locations.city', $cities)
+                    ->select('locations.city', DB::raw('COUNT(*) as total'))
+                    ->groupBy('locations.city')
+                    ->pluck('total', 'city')
+                    ->toArray();
+
+                // Thêm total_properties vào mỗi property
+                $properties->getCollection()->transform(function ($property) use ($cityCounts) {
+                    $property->total_properties = $cityCounts[$property->city] ?? 0;
+                    return $property;
+                });
+            }
 
             return $properties;
         } catch (\Exception $e) {
             \Log::error('allByLoaction repository error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            // Fallback: trả về properties đơn giản hơn
-            return $this->model
-                ->select('properties.*', 'locations.city')
-                ->join('locations', 'locations.id', '=', 'properties.location_id')
-                ->where('properties.status', 'available')
-                ->whereNull('properties.deleted_at')
-                ->with(['primaryImage'])
-                ->orderBy('locations.city')
-                ->orderBy('properties.price', 'desc')
-                ->paginate($perPage, ['*'], 'page', $page);
+            // Fallback: trả về properties đơn giản nhất
+            try {
+                return $this->model
+                    ->select('properties.*', 'locations.city', 'locations.district')
+                    ->join('locations', 'locations.id', '=', 'properties.location_id')
+                    ->where('properties.status', 'available')
+                    ->whereNull('properties.deleted_at')
+                    ->with(['primaryImage'])
+                    ->orderBy('locations.city')
+                    ->orderBy('properties.price', 'desc')
+                    ->paginate($perPage, ['*'], 'page', $page);
+            } catch (\Exception $fallbackError) {
+                \Log::error('allByLoaction fallback error: ' . $fallbackError->getMessage());
+                // Trả về empty pagination
+                return $this->model->where('id', 0)->paginate($perPage, ['*'], 'page', $page);
+            }
         }
     }
 
     public function allByOutstand($request)
     {
-        $page = $request->get('page', 1);
-        $perPage = $request->get('per_page', 10);
+        try {
+            $page = $request->get('page', 1);
+            $perPage = $request->get('per_page', 10);
 
-        return $this->model->select('id', 'title', 'description')
-        ->where('properties.status', 'available')
-        ->orderBy('price', 'desc')
-        ->take(5)
-        ->with(['primaryImage'])
-        ->paginate($perPage, ['*'], 'page', $page);
+            $query = $this->model
+                ->select('properties.id', 'properties.title', 'properties.description', 'properties.price')
+                ->where('properties.status', 'available')
+                ->whereNull('properties.deleted_at')
+                ->orderBy('properties.price', 'desc')
+                ->limit(5)
+                ->with(['primaryImage']);
+
+            // Nếu cần pagination, dùng paginate, nếu không thì get
+            if ($perPage > 0) {
+                return $query->paginate($perPage, ['*'], 'page', $page);
+            } else {
+                return $query->get();
+            }
+        } catch (\Exception $e) {
+            \Log::error('allByOutstand repository error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            // Fallback: trả về empty collection hoặc pagination
+            try {
+                return $this->model->where('id', 0)->paginate($perPage ?? 10, ['*'], 'page', $page ?? 1);
+            } catch (\Exception $fallbackError) {
+                \Log::error('allByOutstand fallback error: ' . $fallbackError->getMessage());
+                return collect([]);
+            }
+        }
     }
 
     public function restore($id)

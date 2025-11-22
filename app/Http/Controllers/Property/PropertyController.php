@@ -43,31 +43,53 @@ class PropertyController extends Controller
     }
     public function allByPropertyType($propertyTypeId, Request $request)
     {
-        $vali = $this->propertyValidation->checkIdValidation($propertyTypeId, 'property_types', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        try {
+            $vali = $this->propertyValidation->checkIdValidation($propertyTypeId, 'property_types', 'id');
+            if ($vali->fails()) {
+                return ApiResponse::error($vali->errors(), 422);
+            }
+            $data = $this->propertyService->allByPropertyType($propertyTypeId, $request);
+            if ($data != null) {
+                return ApiResponse::success($data, 'Lấy danh sách properties thành công');
+            }
+            return ApiResponse::error('Không tìm thấy property', 404);
+        } catch (\Exception $e) {
+            \Log::error('allByPropertyType controller error: ' . $e->getMessage(), [
+                'property_type_id' => $propertyTypeId,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return ApiResponse::error('Lỗi khi lấy danh sách properties', 500);
         }
-        $data = $this->propertyService->allByPropertyType($propertyTypeId, $request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách properties thành công');
-        }
-        return ApiResponse::error('Không tìm thấy property');
     }
     public function allByLoaction(Request $request)
     {
-        $data = $this->propertyService->allByLoaction($request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách thành công');
+        try {
+            $data = $this->propertyService->allByLoaction($request);
+            if ($data != null) {
+                return ApiResponse::success($data, 'Lấy danh sách thành công');
+            }
+            return ApiResponse::error('Không tìm thấy dữ liệu', 404);
+        } catch (\Exception $e) {
+            \Log::error('allByLoaction controller error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return ApiResponse::error('Lỗi khi lấy danh sách properties theo location', 500);
         }
-        return ApiResponse::error('Không tìm thấy dữ liệu');
     }
     public function allByOutstand(Request $request)
     {
-         $data = $this->propertyService->allByOutstand($request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách thành công');
+        try {
+            $data = $this->propertyService->allByOutstand($request);
+            if ($data != null && ($data->count() > 0 || (method_exists($data, 'total') && $data->total() > 0))) {
+                return ApiResponse::success($data, 'Lấy danh sách thành công');
+            }
+            return ApiResponse::error('Không tìm thấy dữ liệu', 404);
+        } catch (\Exception $e) {
+            \Log::error('allByOutstand controller error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return ApiResponse::error('Lỗi khi lấy danh sách properties nổi bật', 500);
         }
-        return ApiResponse::error('Không tìm thấy dữ liệu');
     }
 
     public function create(Request $request)

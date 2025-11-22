@@ -2,7 +2,6 @@
 
 namespace App\Repositories\PropertyRepository;
 
-use App\Models\Property;
 use App\Repositories\RepositoryInterface;
 
 interface PropertyRepositoryInterface extends RepositoryInterface
@@ -15,3 +14,4 @@ interface PropertyRepositoryInterface extends RepositoryInterface
     public function forceDelete($id);
     public function getPropertiesByUser($userId);
 }
+

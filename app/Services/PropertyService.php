@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\PropertyRepository\PropertyRepository;
 use Illuminate\Http\Request;
-use App\Models\Property;
 use App\Repositories\PropertyRepository\PropertyRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Log;

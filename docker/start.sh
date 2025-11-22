@@ -3,6 +3,17 @@ set -e
 
 echo "🚀 Starting Laravel application..." >&2
 
+# Regenerate autoloader để đảm bảo tất cả classes được load đúng
+echo "🔄 Regenerating autoloader..." >&2
+composer dump-autoload --optimize --no-interaction
+
+# Clear và cache config
+echo "📦 Clearing and caching config..." >&2
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 # Chạy migrations
 echo "📊 Running migrations..." >&2
 php artisan migrate --force

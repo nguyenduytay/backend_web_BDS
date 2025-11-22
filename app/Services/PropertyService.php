@@ -41,7 +41,7 @@ class PropertyService
         try {
             return $this->propertyRepository->allByPropertyType($propertyTypeId, $request);
         } catch (Exception $e) {
-            dd($e->getMessage());
+            \Log::error('allByPropertyType error: ' . $e->getMessage());
             return null;
         }
     }
@@ -50,7 +50,9 @@ class PropertyService
         try {
             return $this->propertyRepository->allByLoaction($request);
         } catch (Exception $e) {
-            dd($e->getMessage());
+            \Log::error('allByLoaction error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }
@@ -59,7 +61,7 @@ class PropertyService
         try {
             return $this->propertyRepository->allByOutstand($request);
         } catch (Exception $e) {
-            dd($e->getMessage());
+            \Log::error('allByOutstand error: ' . $e->getMessage());
             return null;
         }
     }

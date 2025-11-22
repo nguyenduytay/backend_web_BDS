@@ -225,7 +225,9 @@ class PropertyImageService
         try {
             return $this->propertyImageRepository->getAllHomeAvatars();
         } catch (Exception $e) {
-            dd($e->getMessage());
+            Log::error('getAllHomeAvatars error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }

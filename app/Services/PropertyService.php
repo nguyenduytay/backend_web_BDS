@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Repositories\PropertyRepository\PropertyRepositoryInterface;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class PropertyService
 {
@@ -38,19 +39,19 @@ class PropertyService
     }
     public function allByPropertyType($propertyTypeId, $request)
     {
-        \Log::info('PropertyService::allByPropertyType START', [
+        Log::info('PropertyService::allByPropertyType START', [
             'property_type_id' => $propertyTypeId
         ]);
-        
+
         try {
             $result = $this->propertyRepository->allByPropertyType($propertyTypeId, $request);
-            \Log::info('PropertyService::allByPropertyType SUCCESS', [
+            Log::info('PropertyService::allByPropertyType SUCCESS', [
                 'property_type_id' => $propertyTypeId,
                 'result_not_null' => $result !== null
             ]);
             return $result;
         } catch (Exception $e) {
-            \Log::error('PropertyService::allByPropertyType error', [
+            Log::error('PropertyService::allByPropertyType error', [
                 'property_type_id' => $propertyTypeId,
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -65,7 +66,7 @@ class PropertyService
         try {
             return $this->propertyRepository->allByLoaction($request);
         } catch (Exception $e) {
-            \Log::error('allByLoaction error: ' . $e->getMessage(), [
+            Log::error('allByLoaction error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
             return null;
@@ -73,16 +74,16 @@ class PropertyService
     }
     public function allByOutstand($request)
     {
-        \Log::info('PropertyService::allByOutstand START');
-        
+        Log::info('PropertyService::allByOutstand START');
+
         try {
             $result = $this->propertyRepository->allByOutstand($request);
-            \Log::info('PropertyService::allByOutstand SUCCESS', [
+            Log::info('PropertyService::allByOutstand SUCCESS', [
                 'result_not_null' => $result !== null
             ]);
             return $result;
         } catch (Exception $e) {
-            \Log::error('PropertyService::allByOutstand error', [
+            Log::error('PropertyService::allByOutstand error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),

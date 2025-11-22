@@ -5,6 +5,7 @@ namespace App\Repositories\PropertyRepository;
 use App\Models\Property;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PropertyRepository extends BaseRepository implements PropertyRepositoryInterface
 {
@@ -47,7 +48,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
     }
     public function allByPropertyType($propertyTypeId, $request)
     {
-        \Log::info('allByPropertyType START', [
+        Log::info('allByPropertyType START', [
             'property_type_id' => $propertyTypeId,
             'page' => $request->get('page', 1),
             'per_page' => $request->get('per_page', 10)
@@ -57,7 +58,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             $page = $request->get('page', 1);
             $perPage = $request->get('per_page', 10);
 
-            \Log::info('allByPropertyType: Building query', ['property_type_id' => $propertyTypeId]);
+            Log::info('allByPropertyType: Building query', ['property_type_id' => $propertyTypeId]);
 
             $query = $this->model::where('properties.property_type_id', $propertyTypeId)
                 ->where('properties.status', 'available')
@@ -65,14 +66,14 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                 ->select('properties.id', 'properties.title')
                 ->with(['images']);
 
-            \Log::info('allByPropertyType: Executing query', [
+            Log::info('allByPropertyType: Executing query', [
                 'sql' => $query->toSql(),
                 'bindings' => $query->getBindings()
             ]);
 
             $data = $query->paginate($perPage, ['*'], 'page', $page);
 
-            \Log::info('allByPropertyType SUCCESS', [
+            Log::info('allByPropertyType SUCCESS', [
                 'property_type_id' => $propertyTypeId,
                 'total' => $data->total(),
                 'count' => $data->count()
@@ -80,7 +81,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
 
             return $data;
         } catch (\Exception $e) {
-            \Log::error('allByPropertyType repository error', [
+            Log::error('allByPropertyType repository error', [
                 'property_type_id' => $propertyTypeId,
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -91,7 +92,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             try {
                 return $this->model::where('id', 0)->paginate($perPage ?? 10, ['*'], 'page', $page ?? 1);
             } catch (\Exception $fallbackError) {
-                \Log::error('allByPropertyType fallback error', [
+                Log::error('allByPropertyType fallback error', [
                     'error' => $fallbackError->getMessage()
                 ]);
                 throw $e; // Re-throw original error
@@ -148,7 +149,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
 
             return $properties;
         } catch (\Exception $e) {
-            \Log::error('allByLoaction repository error: ' . $e->getMessage(), [
+            Log::error('allByLoaction repository error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
             // Fallback: trả về properties đơn giản nhất
@@ -163,7 +164,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                     ->orderBy('properties.price', 'desc')
                     ->paginate($perPage, ['*'], 'page', $page);
             } catch (\Exception $fallbackError) {
-                \Log::error('allByLoaction fallback error: ' . $fallbackError->getMessage());
+                Log::error('allByLoaction fallback error: ' . $fallbackError->getMessage());
                 // Trả về empty pagination
                 return $this->model->where('id', 0)->paginate($perPage, ['*'], 'page', $page);
             }
@@ -172,7 +173,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
 
     public function allByOutstand($request)
     {
-        \Log::info('allByOutstand START', [
+        Log::info('allByOutstand START', [
             'page' => $request->get('page', 1),
             'per_page' => $request->get('per_page', 10)
         ]);
@@ -181,7 +182,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             $page = $request->get('page', 1);
             $perPage = $request->get('per_page', 10);
 
-            \Log::info('allByOutstand: Building query');
+            Log::info('allByOutstand: Building query');
 
             $query = $this->model
                 ->select('properties.id', 'properties.title', 'properties.description', 'properties.price')
@@ -191,7 +192,7 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                 ->limit(5)
                 ->with(['primaryImage']);
 
-            \Log::info('allByOutstand: Executing query', [
+            Log::info('allByOutstand: Executing query', [
                 'sql' => $query->toSql(),
                 'bindings' => $query->getBindings()
             ]);
@@ -199,20 +200,20 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             // Nếu cần pagination, dùng paginate, nếu không thì get
             if ($perPage > 0) {
                 $data = $query->paginate($perPage, ['*'], 'page', $page);
-                \Log::info('allByOutstand SUCCESS (paginated)', [
+                Log::info('allByOutstand SUCCESS (paginated)', [
                     'total' => $data->total(),
                     'count' => $data->count()
                 ]);
                 return $data;
             } else {
                 $data = $query->get();
-                \Log::info('allByOutstand SUCCESS (collection)', [
+                Log::info('allByOutstand SUCCESS (collection)', [
                     'count' => $data->count()
                 ]);
                 return $data;
             }
         } catch (\Exception $e) {
-            \Log::error('allByOutstand repository error', [
+            Log::error('allByOutstand repository error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -221,10 +222,10 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
             // Fallback: trả về empty collection hoặc pagination
             try {
                 $fallbackData = $this->model->where('id', 0)->paginate($perPage ?? 10, ['*'], 'page', $page ?? 1);
-                \Log::info('allByOutstand: Using fallback (empty pagination)');
+                Log::info('allByOutstand: Using fallback (empty pagination)');
                 return $fallbackData;
             } catch (\Exception $fallbackError) {
-                \Log::error('allByOutstand fallback error', [
+                Log::error('allByOutstand fallback error', [
                     'error' => $fallbackError->getMessage(),
                     'file' => $fallbackError->getFile(),
                     'line' => $fallbackError->getLine()

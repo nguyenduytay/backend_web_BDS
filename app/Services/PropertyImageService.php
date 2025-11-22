@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
-use App\Helpers\ApiResponse;
 use App\Repositories\PropertyImageRepository\PropertyImageRepositoryInterface;
 use Cloudinary\Api\Upload\UploadApi;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class PropertyImageService
+class PropertyImageService extends BaseService
 {
     protected $propertyImageRepository;
 
@@ -21,27 +19,21 @@ class PropertyImageService
 
     public function getAllImages($propertyId)
     {
-        try {
-            $images = $this->propertyImageRepository->allImages($propertyId);
-            return $images;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($propertyId) {
+            return $this->propertyImageRepository->allImages($propertyId);
+        }, 'PropertyImageService::getAllImages');
     }
 
     public function show($propertyId, $imageId)
     {
-        try {
-            $image = $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
-            return $image;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($propertyId, $imageId) {
+            return $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
+        }, 'PropertyImageService::show');
     }
 
     public function create($request, $propertyId)
     {
-        try {
+        return $this->execute(function () use ($request, $propertyId) {
             // Upload ảnh lên Cloudinary
             $uploadedFile = Cloudinary::upload(
                 $request->file('image_path')->getRealPath(),
@@ -59,14 +51,12 @@ class PropertyImageService
             ];
 
             return $this->propertyImageRepository->create($data);
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyImageService::create');
     }
 
     public function update(Request $request, $propertyId, $imageId)
     {
-        try {
+        return $this->execute(function () use ($request, $propertyId, $imageId) {
             // Lấy ảnh cũ từ DB
             $oldImage = $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
 
@@ -109,10 +99,7 @@ class PropertyImageService
             }
 
             return null;
-        } catch (Exception $e) {
-            Log::error("Update image error: " . $e->getMessage());
-            return null;
-        }
+        }, 'PropertyImageService::update');
     }
 
     /**
@@ -152,7 +139,7 @@ class PropertyImageService
 
     public function delete($propertyId, $imageId)
     {
-        try {
+        return $this->execute(function () use ($propertyId, $imageId) {
             $oldImage = $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
             if ($oldImage != null && !empty($oldImage->image_path)) {
                 $publicId = $this->getPublicIdFromUrl($oldImage->image_path);
@@ -167,18 +154,15 @@ class PropertyImageService
                 } else {
                     Log::info("Public ID rỗng, bỏ qua xóa Cloudinary.");
                 }
-                $status = $this->propertyImageRepository->delete($imageId);
-                return $status;
+                return $this->propertyImageRepository->delete($imageId);
             }
             return null;
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyImageService::delete');
     }
 
     public function deleteMultiple(Request $request, $propertyId)
     {
-        try {
+        return $this->execute(function () use ($request, $propertyId) {
             $imageIds = $request->input('image_ids', []);
             if (empty($imageIds) || !is_array($imageIds)) {
                 return null;
@@ -203,12 +187,14 @@ class PropertyImageService
                 // Xóa record trong DB (dù có hay không có publicId)
             }
 
-            // Nếu có public_ids thì gọi Cloudinary API để xóa 1 lần
+            // Nếu có public_ids thì gọi Cloudinary API để xóa từng cái một
             if (!empty($publicIds)) {
-                try {
-                    (new UploadApi())->destroy($publicIds, ["invalidate" => true]);
-                } catch (\Exception $ex) {
-                    Log::warning("Batch delete Cloudinary thất bại: " . $ex->getMessage());
+                foreach ($publicIds as $publicId) {
+                    try {
+                        (new UploadApi())->destroy((string) $publicId, ["invalidate" => true]);
+                    } catch (\Exception $ex) {
+                        Log::warning("Cloudinary delete failed for {$publicId}: " . $ex->getMessage());
+                    }
                 }
             }
 
@@ -216,19 +202,13 @@ class PropertyImageService
                 'deleted_in_db' => $deletedDbIds,
                 'deleted_in_cloudinary' => $publicIds
             ];
-        } catch (\Exception $e) {
-            return null;
-        }
+        }, 'PropertyImageService::deleteMultiple');
     }
+
     public function getAllHomeAvatars()
     {
-        try {
+        return $this->execute(function () {
             return $this->propertyImageRepository->getAllHomeAvatars();
-        } catch (Exception $e) {
-            Log::error('getAllHomeAvatars error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return null;
-        }
+        }, 'PropertyImageService::getAllHomeAvatars');
     }
 }

@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\PropertyFeatureRepository\PropertyFeatureRepositoryInterface;
-use Exception;
 
-class PropertyFeatureService
+class PropertyFeatureService extends BaseService
 {
     protected $propertyFeatureRepository;
 
@@ -16,38 +15,29 @@ class PropertyFeatureService
 
     public function getFeaturesByProperty($propertyId)
     {
-        try {
-            $data = $this->propertyFeatureRepository->getFeaturesByProperty($propertyId);
-            return $data;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($propertyId) {
+            return $this->propertyFeatureRepository->getFeaturesByProperty($propertyId);
+        }, 'PropertyFeatureService::getFeaturesByProperty');
     }
 
     public function addFeatureToProperty($propertyId, $data)
     {
-        try {
+        return $this->execute(function () use ($propertyId, $data) {
             return $this->propertyFeatureRepository->addFeatureToProperty($propertyId, $data['feature_id']);
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyFeatureService::addFeatureToProperty');
     }
 
     public function syncFeaturesToProperty($propertyId, $request)
     {
-        try {
+        return $this->execute(function () use ($propertyId, $request) {
             return $this->propertyFeatureRepository->syncFeatures($propertyId, $request['feature_ids']);
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyFeatureService::syncFeaturesToProperty');
     }
 
     public function removeFeatureFromProperty($propertyId, $featureId)
     {
-        try {
+        return $this->execute(function () use ($propertyId, $featureId) {
             return $this->propertyFeatureRepository->removeFeatureFromProperty($propertyId, $featureId);
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyFeatureService::removeFeatureFromProperty');
     }
 }

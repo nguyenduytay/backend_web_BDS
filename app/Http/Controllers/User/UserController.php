@@ -40,36 +40,32 @@ class UserController extends Controller
 //Hiển thị thông tin user cụ thể với phân quyền
 /**
  * Get specific user information
- * @param int $id
+ * @param Request $request
  * @return JsonResponse
  */
 public function show(Request $request): JsonResponse
 {
-    try {
-       $validator = $this->validation->validateGetUser($request);
+    $validator = $this->validation->validateGetUser($request);
     if ($validator->fails()) {
         return ApiResponse::error($validator->errors()->first(), 422);
     }
-    // Nếu pass validation thì lấy user từ service
-    $user = $this->userService->getUserById($request->id);
-    return ApiResponse::success($user, 'Lấy user thành công');
-        // Lấy user đang đăng nhập từ auth()
-        $authenticatedUser = auth()->user();
-        // Kiểm tra quyền truy cập
-        if ($authenticatedUser->role !== 'admin' && $authenticatedUser->id != $request->id) {
-            return ApiResponse::error('Bạn không có quyền xem thông tin user này', 403);
-        }
-        // Lấy thông tin user
-        $user = $this->userService->getUserById($request->id);
-        if (!$user) {
-            return ApiResponse::error('Không tìm thấy user', 404);
-        }
-        // Ẩn thông tin nhạy cảm trước khi trả về
-        unset($user->password, $user->remember_token);
-        return ApiResponse::success($user, 'Lấy thông tin user thành công', 200);
-    } catch (\Exception $e) {
-        return ApiResponse::error('Lỗi server: ' . $e->getMessage(), 500);
+    
+    // Lấy user đang đăng nhập từ auth()
+    $authenticatedUser = auth()->user();
+    // Kiểm tra quyền truy cập
+    if ($authenticatedUser->role !== 'admin' && $authenticatedUser->id != $request->id) {
+        return ApiResponse::error('Bạn không có quyền xem thông tin user này', 403);
     }
+    
+    // Lấy thông tin user
+    $user = $this->userService->getUserById($request->id);
+    if (!$user) {
+        return ApiResponse::error('Lỗi khi lấy thông tin user', 500);
+    }
+    
+    // Ẩn thông tin nhạy cảm trước khi trả về
+    unset($user->password, $user->remember_token);
+    return ApiResponse::success($user, 'Lấy thông tin user thành công', 200);
 }
 // Cập nhật thông tin user cụ thể với phân quyền
  public function update(Request $request): JsonResponse
@@ -93,27 +89,12 @@ public function destroy(Request $request)
         'id' => 'required|integer',
     ]);
 
-    try {
-        $result = $this->userService->deleteUser($validated['id']);
-
-        if (!$result) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User không tồn tại hoặc không thể xóa.'
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Xóa user thành công.'
-        ], 200, [], JSON_UNESCAPED_UNICODE);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Lỗi hệ thống: ' . $e->getMessage()
-        ], 500, [], JSON_UNESCAPED_UNICODE);
+    $result = $this->userService->deleteUser($validated['id']);
+    if (!$result) {
+        return ApiResponse::error('Lỗi khi xóa user', 500);
     }
+
+    return ApiResponse::success(null, 'Xóa user thành công', 200);
 }
 
 }

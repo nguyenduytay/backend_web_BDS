@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Carbon\Carbon;
@@ -43,7 +44,7 @@ class FavoritesSeeder extends Seeder
 
         $attempts = 0;
         $maxAttempts = $totalFavorites * 10; // Giới hạn số lần thử
-        
+
         for ($i = 0; $i < $totalFavorites && $attempts < $maxAttempts; $attempts++) {
             $userId     = $faker->randomElement($userIds);
             $propertyId = $faker->randomElement($propertyIds);
@@ -51,7 +52,7 @@ class FavoritesSeeder extends Seeder
             $pair = $userId . '-' . $propertyId;
 
             // Kiểm tra xem đã tồn tại trong database hoặc trong batch hiện tại chưa
-            $exists = isset($usedPairs[$pair]) || 
+            $exists = isset($usedPairs[$pair]) ||
                      DB::table('favorites')
                        ->where('user_id', $userId)
                        ->where('property_id', $propertyId)

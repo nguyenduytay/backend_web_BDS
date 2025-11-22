@@ -14,7 +14,7 @@ return new class extends Migration {
 
             // Một user chỉ có thể favorite 1 property duy nhất
             $table->unique(['user_id', 'property_id']);
-            
+
             $table->timestamps();
         });
     }

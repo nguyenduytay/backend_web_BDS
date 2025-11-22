@@ -14,4 +14,3 @@ interface PropertyRepositoryInterface extends RepositoryInterface
     public function forceDelete($id);
     public function getPropertiesByUser($userId);
 }
-

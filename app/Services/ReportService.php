@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Repositories\ReportRepository\ReportRepositoryInterface;
-use Exception;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ReportService
+class ReportService extends BaseService
 {
     protected $reportRepo;
 
@@ -17,20 +16,16 @@ class ReportService
 
     public function getPropertiesMonthly()
     {
-        try {
+        return $this->execute(function () {
             return $this->reportRepo->getPropertiesMonthly();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'ReportService::getPropertiesMonthly');
     }
 
     public function getUsersMonthly()
     {
-        try {
+        return $this->execute(function () {
             return $this->reportRepo->getUsersMonthly();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'ReportService::getUsersMonthly');
     }
 
     public function exportProperties(): ?StreamedResponse

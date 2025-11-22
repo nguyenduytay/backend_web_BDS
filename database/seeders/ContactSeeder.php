@@ -29,7 +29,7 @@ class ContactSeeder extends Seeder
         for ($i = 1; $i <= $totalContacts; $i++) {
             DB::table('contacts')->insert([
                 'name'       => $faker->name(),
-                'phone'      => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                'phone'      => '09' . str_pad((string) rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                 'email'      => $faker->optional(0.7)->safeEmail(),
                 'user_id'    => $faker->boolean(60) ? $faker->randomElement($userIds) : null,
                 'created_at' => $now,

@@ -2,13 +2,10 @@
 
 namespace App\Services;
 
-use App\Repositories\FeatureRepository\FeatureRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Feature;
 use App\Repositories\FeatureRepository\FeatureRepositoryInterface;
+use Illuminate\Http\Request;
 
-class FeatureService
+class FeatureService extends BaseService
 {
     protected $featureRepository;
 
@@ -19,50 +16,36 @@ class FeatureService
 
     public function getAllFeatures()
     {
-        try {
+        return $this->execute(function () {
             return $this->featureRepository->all();
-        } catch (\Exception $e) {
-            return null;
-        }
+        }, 'FeatureService::getAllFeatures');
     }
 
     public function SearchId($id)
     {
-        try {
-            $feature = $this->featureRepository->find($id);
-            return $feature;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($id) {
+            return $this->featureRepository->find($id);
+        }, 'FeatureService::SearchId');
     }
 
     public function create(Request $request)
     {
-        try {
-            $feature = $this->featureRepository->create($request->all());
-            return $feature;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($request) {
+            return $this->featureRepository->create($request->all());
+        }, 'FeatureService::create');
     }
 
     public function update(Request $request, $id)
     {
-        try {
-            $updated = $this->featureRepository->update($id, $request->all());
-            return $updated;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($request, $id) {
+            return $this->featureRepository->update($id, $request->all());
+        }, 'FeatureService::update');
     }
 
     public function delete($id)
     {
-        try {
-            $status = $this->featureRepository->delete($id);
-            return $status;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($id) {
+            return $this->featureRepository->delete($id);
+        }, 'FeatureService::delete');
     }
 }

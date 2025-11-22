@@ -50,13 +50,9 @@ class FeatureController extends Controller
         }
         $status = $this->featureService->create($request);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error('Tạo mới thất bại', 400);
-            }
             return ApiResponse::success($status);
         }
-
-        return ApiResponse::error('Tạo mới thất bại', 500);
+        return ApiResponse::error('Lỗi khi tạo mới feature', 500);
     }
 
     public function update(Request $request, $id)
@@ -65,14 +61,11 @@ class FeatureController extends Controller
         if ($vali->fails()) {
             return ApiResponse::error($vali->errors()->first(), 422);
         }
-        $status =  $this->featureService->update($request, $id);
+        $status = $this->featureService->update($request, $id);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error('Cập nhật thất bại', 400);
-            }
             return ApiResponse::success($status);
         }
-        return ApiResponse::error('Cập nhật thất bại', 500);
+        return ApiResponse::error('Lỗi khi cập nhật feature', 500);
     }
 
     public function delete($id)
@@ -83,11 +76,8 @@ class FeatureController extends Controller
         }
         $status = $this->featureService->delete($id);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error('Xóa thất bại', 400);
-            }
             return ApiResponse::success($status);
         }
-        return ApiResponse::error('Xoá thất bại', 500);
+        return ApiResponse::error('Lỗi khi xóa feature', 500);
     }
 }

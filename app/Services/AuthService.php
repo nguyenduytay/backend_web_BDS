@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class AuthService
+class AuthService extends BaseService
 {
     protected $usersRepository;
 
@@ -22,91 +22,101 @@ class AuthService
 
     public function register($request)
     {
-        return $this->usersRepository->create([
-            'name'     => $request->input('name'),
-            'email'    => $request->input('email'),
-            'phone'    => $request->input('phone'),
-            'password' => Hash::make($request->input('password')),
-            'avatar'   => null,
-            'role'     => $request->input('role', 'user'),
-        ]);
+        return $this->execute(function () use ($request) {
+            return $this->usersRepository->create([
+                'name'     => $request->input('name'),
+                'email'    => $request->input('email'),
+                'phone'    => $request->input('phone'),
+                'password' => Hash::make($request->input('password')),
+                'avatar'   => null,
+                'role'     => $request->input('role', 'user'),
+            ]);
+        }, 'AuthService::register');
     }
 
     public function login($request)
     {
-        $credentials = [
-            'email'    => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
+        return $this->execute(function () use ($request) {
+            $credentials = [
+                'email'    => $request->input('email'),
+                'password' => $request->input('password'),
+            ];
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
 
-            // Kiểm tra và xóa token cũ nếu vượt quá giới hạn
-            $maxTokens     = config('security.token.max_tokens_per_user', 5);
-            $currentTokens = \Laravel\Sanctum\PersonalAccessToken::where('tokenable_id', $user->id)
-                ->where('tokenable_type', get_class($user))
-                ->count();
-
-            if ($currentTokens >= $maxTokens) {
-                $oldestToken = \Laravel\Sanctum\PersonalAccessToken::where('tokenable_id', $user->id)
+                // Kiểm tra và xóa token cũ nếu vượt quá giới hạn
+                $maxTokens     = config('security.token.max_tokens_per_user', 5);
+                $currentTokens = PersonalAccessToken::where('tokenable_id', $user->id)
                     ->where('tokenable_type', get_class($user))
-                    ->orderBy('created_at', 'asc')
-                    ->first();
+                    ->count();
 
-                if ($oldestToken) {
-                    $oldestToken->delete();
+                if ($currentTokens >= $maxTokens) {
+                    $oldestToken = PersonalAccessToken::where('tokenable_id', $user->id)
+                        ->where('tokenable_type', get_class($user))
+                        ->orderBy('created_at', 'asc')
+                        ->first();
+
+                    if ($oldestToken) {
+                        $oldestToken->delete();
+                    }
                 }
-            }
 
-            $token = $user->createToken('auth_token')->plainTextToken;
-            return $token;
-        }
-        return null;
+                return $user->createToken('auth_token')->plainTextToken;
+            }
+            return null;
+        }, 'AuthService::login');
     }
 
     public function logout($accessToken)
     {
-        $token = PersonalAccessToken::findToken($accessToken);
-        if ($token) {
-            $token->delete();
-            return true;
-        } else {
+        return $this->execute(function () use ($accessToken) {
+            $token = PersonalAccessToken::findToken($accessToken);
+            if ($token) {
+                $token->delete();
+                return true;
+            }
             return false;
-        }
+        }, 'AuthService::logout');
     }
 
     public function refresh(Request $request)
     {
-        $user = $request->user();
-        if (! $user) {
-            return null;
-        }
-        $token = $user->currentAccessToken();
-        if (! $token || ! $token instanceof PersonalAccessToken) {
-            return null;
-        }
-        $token->delete();
-        return $user->createToken('auth_token')->plainTextToken;
+        return $this->execute(function () use ($request) {
+            $user = $request->user();
+            if (!$user) {
+                return null;
+            }
+            $token = $user->currentAccessToken();
+            if (!$token || !$token instanceof PersonalAccessToken) {
+                return null;
+            }
+            $token->delete();
+            return $user->createToken('auth_token')->plainTextToken;
+        }, 'AuthService::refresh');
     }
+
     public function me(Request $request)
     {
-        $user = $request->user();
-        if (! $user) {
-            return null;
-        }
-        return $user;
+        return $this->execute(function () use ($request) {
+            $user = $request->user();
+            if (!$user) {
+                return null;
+            }
+            return $user;
+        }, 'AuthService::me');
     }
-    // Gửi email chứa link reset mật khẩu
+
     public function forgotPassword(Request $request)
     {
-        $response = Password::broker()->sendResetLink($request->only('email'));
-        return $response;
+        return $this->execute(function () use ($request) {
+            return Password::broker()->sendResetLink($request->only('email'));
+        }, 'AuthService::forgotPassword');
     }
 
     public function resetPassword(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $response = Password::broker()->reset(
                 $request->only('email', 'password', 'password_confirmation', 'token'),
                 function ($user, $password) {
@@ -121,8 +131,6 @@ class AuthService
                 return ApiResponse::success(null, 'Mật khẩu của bạn đã được đặt lại thành công.');
             }
             return ApiResponse::error('Không thể đặt lại mật khẩu, token có thể không hợp lệ.', null, 400);
-        } catch (\Exception $e) {
-            return ApiResponse::error('Đã có lỗi xảy ra: ' . $e->getMessage(), null, 500);
-        }
+        }, 'AuthService::resetPassword');
     }
 }

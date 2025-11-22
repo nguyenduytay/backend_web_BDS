@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Hash;
 
 class PropertyApiTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     protected $user;
     protected $admin;
@@ -264,4 +265,3 @@ class PropertyApiTest extends TestCase
         $response->assertStatus(401);
     }
 }
-

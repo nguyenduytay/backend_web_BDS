@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\FavoriteRepository\FavoriteRepositoryInterface;
-use Exception;
 
-class FavoriteService
+class FavoriteService extends BaseService
 {
     protected $favoriteRepository;
 
@@ -16,40 +15,29 @@ class FavoriteService
 
     public function getUserFavorites($userId)
     {
-        try {
+        return $this->execute(function () use ($userId) {
             return $this->favoriteRepository->getUserFavorites($userId);
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'FavoriteService::getUserFavorites');
     }
 
     public function addFavorite($userId, $propertyId)
     {
-        try {
-            $favorite = $this->favoriteRepository->addFavorite($userId, $propertyId);
-            return $favorite;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($userId, $propertyId) {
+            return $this->favoriteRepository->addFavorite($userId, $propertyId);
+        }, 'FavoriteService::addFavorite');
     }
 
     public function removeFavorite($userId, $propertyId)
     {
-        try {
-            $delete = $this->favoriteRepository->removeFavorite($userId, $propertyId);
-            return $delete;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($userId, $propertyId) {
+            return $this->favoriteRepository->removeFavorite($userId, $propertyId);
+        }, 'FavoriteService::removeFavorite');
     }
 
     public function checkFavorite($userId, $propertyId)
     {
-        try {
-            $isFavorite = $this->favoriteRepository->isFavorite($userId, $propertyId);
-            return $isFavorite;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($userId, $propertyId) {
+            return $this->favoriteRepository->isFavorite($userId, $propertyId);
+        }, 'FavoriteService::checkFavorite');
     }
 }

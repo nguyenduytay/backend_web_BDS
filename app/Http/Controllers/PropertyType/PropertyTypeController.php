@@ -49,14 +49,11 @@ class PropertyTypeController extends Controller
         if ($vali->fails()) {
             return ApiResponse::error($vali->errors()->first(), 422);
         }
-        $status =  $this->propertyTypeService->create($request);
+        $status = $this->propertyTypeService->create($request);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error('Lỗi Không thể tạo mới dữ liệu, có thể do loại bất động sản đã tồn tại', 400);
-            }
             return ApiResponse::success($status, "Tạo loại bất động sản thành công");
         }
-        return ApiResponse::error('Lỗi Không thể tạo mới dữ liệu', 404);
+        return ApiResponse::error('Lỗi khi tạo mới loại bất động sản', 500);
     }
 
     public function update(Request $request, $id)
@@ -67,12 +64,9 @@ class PropertyTypeController extends Controller
         }
         $propertyType = $this->propertyTypeService->update($request, $id);
         if ($propertyType != null) {
-            if ($propertyType === false) {
-                return ApiResponse::error('Lỗi Không thể cập nhật dữ liệu, có thể do loại bất động sản đang được sử dụng', 400);
-            }
             return ApiResponse::success($propertyType, "Cập nhật loại bất động sản thành công");
         }
-        return ApiResponse::error('Lỗi Không thể cập nhật dữ liệu', 404);
+        return ApiResponse::error('Lỗi khi cập nhật loại bất động sản', 500);
     }
 
     public function delete($id)
@@ -83,11 +77,8 @@ class PropertyTypeController extends Controller
         }
         $propertyType = $this->propertyTypeService->delete($id);
         if ($propertyType != null) {
-            if ($propertyType === false) {
-                return ApiResponse::error('Lỗi Không thể xóa dữ liệu, có thể do loại bất động sản đang được sử dụng', 400);
-            }
             return ApiResponse::success($propertyType, "Xóa loại bất động sản thành công");
         }
-        return ApiResponse::error('Lỗi Không thể xóa dữ liệu', 404);
+        return ApiResponse::error('Lỗi khi xóa loại bất động sản', 500);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Carbon\Carbon;
@@ -134,7 +135,7 @@ class PropertySeeder extends Seeder
             // Tạo title và description bằng tiếng Việt
             $titleTemplate = $faker->randomElement($titleTemplates[$type] ?? $titleTemplates['apartment']);
             $title = $titleTemplate . ' tại ' . $cityName;
-            
+
             $description = $faker->optional(0.9)->randomElement($descriptionTemplates[$type] ?? $descriptionTemplates['apartment']);
 
             // Giá gợi ý theo loại
@@ -164,7 +165,7 @@ class PropertySeeder extends Seeder
                 'bathrooms'        => $faker->numberBetween(1, 5),
                 'floors'           => $faker->numberBetween(1, 5),
                 'address'          => $faker->randomElement($streetNames) . ' ' . $faker->numberBetween(1, 500) . ', ' . $location->district . ', ' . $location->city,
-                'postal_code'      => str_pad($faker->numberBetween(10000, 99999), 5, '0', STR_PAD_LEFT),
+                'postal_code'      => str_pad((string) $faker->numberBetween(10000, 99999), 5, '0', STR_PAD_LEFT),
                 'latitude'         => $faker->randomFloat(8, $latMin, $latMax),
                 'longitude'        => $faker->randomFloat(8, $lngMin, $lngMax),
                 'year_built'       => $faker->optional(0.8)->numberBetween(1990, (int) date('Y')),

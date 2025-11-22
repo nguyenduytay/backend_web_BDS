@@ -69,7 +69,7 @@ class AuthApiTest extends TestCase
             'role' => 'user',
             'phone' => '0912345678'
         ]);
-        
+
         $response = $this->actingAs($user, 'sanctum')
                          ->getJson('/api/auth/me');
 
@@ -90,11 +90,10 @@ class AuthApiTest extends TestCase
             'role' => 'user',
             'phone' => '0912345678'
         ]);
-        
+
         $response = $this->actingAs($user, 'sanctum')
                          ->postJson('/api/auth/logout');
 
         $response->assertStatus(200);
     }
 }
-

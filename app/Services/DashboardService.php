@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Repositories\DashboardRepository\DashboardRepository;
 use App\Repositories\DashboardRepository\DashboardRepositoryInterface;
-use Exception;
 
-class DashboardService
+class DashboardService extends BaseService
 {
     protected $dashboardRepo;
 
@@ -17,46 +15,36 @@ class DashboardService
 
     public function getStats()
     {
-        try {
+        return $this->execute(function () {
             return $this->dashboardRepo->getStats();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'DashboardService::getStats');
     }
 
     public function getPropertyStats()
     {
-        try {
+        return $this->execute(function () {
             return $this->dashboardRepo->getPropertyStats();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'DashboardService::getPropertyStats');
     }
 
     public function getUserStats()
     {
-        try {
+        return $this->execute(function () {
             return $this->dashboardRepo->getUserStats();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'DashboardService::getUserStats');
     }
 
     public function getRecentProperties()
     {
-        try {
+        return $this->execute(function () {
             return $this->dashboardRepo->getRecentProperties();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'DashboardService::getRecentProperties');
     }
 
     public function getRecentUsers()
     {
-        try {
+        return $this->execute(function () {
             return $this->dashboardRepo->getRecentUsers();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'DashboardService::getRecentUsers');
     }
 }

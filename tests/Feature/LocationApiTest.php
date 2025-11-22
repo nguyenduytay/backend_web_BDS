@@ -55,4 +55,3 @@ class LocationApiTest extends TestCase
         $response->assertStatus(200);
     }
 }
-

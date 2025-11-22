@@ -40,7 +40,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
-        
+
         // Add CHECK constraint for PostgreSQL compatibility
         if (DB::getDriverName() === 'pgsql') {
             DB::statement("ALTER TABLE properties ADD CONSTRAINT properties_status_check CHECK (status IN ('available', 'sold', 'rented', 'pending'))");

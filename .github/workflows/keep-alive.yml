@@ -1,22 +1,39 @@
+# yaml-language-server: disable
 name: Keep Render Alive
 
 on:
   schedule:
-    # Chạy mỗi 10 phút
-    - cron: '*/10 * * * *'
+    # Chạy mỗi 5 phút để tránh Render ngủ
+    - cron: "*/5 * * * *"
   workflow_dispatch: # Cho phép chạy thủ công
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Ping Render Health Endpoint
         run: |
-          # URL Render của bạn
-          RENDER_URL="${RENDER_URL:-https://backend-web-bds.onrender.com}"
+          RENDER_URL="${{ secrets.RENDER_URL || 'https://backend-web-bds.onrender.com' }}"
+          HEALTH_URL="$RENDER_URL/health"
+
           echo "🚀 Pinging Render to keep it alive..."
-          echo "URL: $RENDER_URL/health"
-          curl -f "$RENDER_URL/health" && echo "✅ Success!" || echo "⚠️ Failed but continuing..."
+          echo "📍 URL: $HEALTH_URL"
+          echo "⏰ Time: $(date)"
+
+          # Ping với timeout 30s
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$HEALTH_URL" || echo "000")
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Success! Render is alive (HTTP $HTTP_CODE)"
+            # Lấy response để xem chi tiết
+            curl -s --max-time 30 "$HEALTH_URL" | head -c 200
+            echo ""
+            exit 0
+          else
+            echo "⚠️ Warning: HTTP $HTTP_CODE (Render might be sleeping or error)"
+            echo "💡 This is normal if Render is sleeping - it will wake up on next request"
+            exit 0  # Không fail workflow, chỉ cảnh báo
+          fi
         env:
           RENDER_URL: ${{ secrets.RENDER_URL || 'https://backend-web-bds.onrender.com' }}
-

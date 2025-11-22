@@ -55,12 +55,9 @@ class FavoriteController extends Controller
         }
         $status = $this->favoriteService->addFavorite($userId, $propertyId);
         if ($status !== null) {
-            if ($status === false) {
-                return ApiResponse::error('Không thể thêm yêu thích');
-            }
             return ApiResponse::success($status);
         }
-        return ApiResponse::error('Không thể thêm yêu thích');
+        return ApiResponse::error('Lỗi khi thêm yêu thích', 500);
     }
 
     // DELETE /api/properties/{propertyId}/favorite
@@ -84,12 +81,9 @@ class FavoriteController extends Controller
         }
         $status = $this->favoriteService->removeFavorite($userId, $propertyId);
         if ($status !== null) {
-            if ($status === false) {
-                return ApiResponse::error('Không thể xóa yêu thích');
-            }
             return ApiResponse::success($status);
         }
-        return ApiResponse::error('Không thể xóa yêu thích');
+        return ApiResponse::error('Lỗi khi xóa yêu thích', 500);
     }
 
     // GET /api/properties/{propertyId}/is-favorite
@@ -113,11 +107,8 @@ class FavoriteController extends Controller
         }
         $status = $this->favoriteService->checkFavorite($userId, $propertyId);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error('Không tìm thấy yêu thích');
-            }
-            return ApiResponse::success($status, 'Tim thấy yêu thích');
+            return ApiResponse::success($status, 'Tìm thấy yêu thích');
         }
-        return ApiResponse::error('Không tìm thấy yêu thích');
+        return ApiResponse::error('Lỗi khi kiểm tra yêu thích', 500);
     }
 }

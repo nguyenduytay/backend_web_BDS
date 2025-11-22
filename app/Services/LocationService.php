@@ -2,18 +2,11 @@
 
 namespace App\Services;
 
-use App\Helpers\ApiResponse;
-use App\Repositories\LocationsRepository\LocationRepository;
+use App\Repositories\LocationsRepository\LocationRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use App\Models\Location;
-use App\Repositories\BaseRepository;
-use App\Repositories\LocationsRepository\LocationRepositoryInterface;
-use App\Repositories\RepositoryInterface;
 
-class LocationService
+class LocationService extends BaseService
 {
     protected $locationRepository;
 
@@ -24,85 +17,63 @@ class LocationService
 
     public function getAllLocations()
     {
-        try {
+        return $this->execute(function () {
             return $this->locationRepository->all();
-        } catch (\Exception $e) {
-            return null;
-        }
+        }, 'LocationService::getAllLocations');
     }
 
     public function search(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $city = $request->input('city');
-            $locations = $this->locationRepository->findByCity($city);
-            return $locations;
-        } catch (\Exception $e) {
-            return null;
-        }
+            return $this->locationRepository->findByCity($city);
+        }, 'LocationService::search');
     }
 
     public function show($id)
     {
-        try {
-            $location = $this->locationRepository->find($id);
-            return $location;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($id) {
+            return $this->locationRepository->find($id);
+        }, 'LocationService::show');
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $data = $request->all();
             $data['slug'] = Str::slug($data['city'] . '-' . $data['district']);
-            $location = $this->locationRepository->create($data);
-            return $location;
-        } catch (\Exception $e) {
-            return null;
-        }
+            return $this->locationRepository->create($data);
+        }, 'LocationService::create');
     }
 
     public function update(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $data = $request->all();
             $data['slug'] = Str::slug($data['city'] . '-' . $data['district']);
-            $updated = $this->locationRepository->update($data['id'], $data);
-            return $updated;
-        } catch (\Exception $e) {
-            return null;
-        }
+            return $this->locationRepository->update($data['id'], $data);
+        }, 'LocationService::update');
     }
 
     public function delete(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             return $this->locationRepository->delete($request->id);
-        } catch (\Exception $e) {
-            return null;
-        }
+        }, 'LocationService::delete');
     }
 
     public function getUniqueCities(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $keyword = $request->input('keyword');
-            $cities = $this->locationRepository->uniqueCities($keyword);
-            return $cities;
-        } catch (\Exception $e) {
-            return null;
-        }
+            return $this->locationRepository->uniqueCities($keyword);
+        }, 'LocationService::getUniqueCities');
     }
 
     public function districts(string $city)
     {
-        try {
-            $districts = $this->locationRepository->districtsByCity($city);
-            return $districts;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($city) {
+            return $this->locationRepository->districtsByCity($city);
+        }, 'LocationService::districts');
     }
 }

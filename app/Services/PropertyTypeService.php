@@ -2,17 +2,12 @@
 
 namespace App\Services;
 
-use App\Http\Validations\PropertyTypeValidation;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\PropertyType;
 use App\Repositories\PropertyTypeRepository\PropertyTypeRepositoryInterface;
+use Illuminate\Http\Request;
 
-class PropertyTypeService
+class PropertyTypeService extends BaseService
 {
     protected $propertyTypeRepository;
-
 
     public function __construct(PropertyTypeRepositoryInterface $propertyTypeRepository)
     {
@@ -21,52 +16,38 @@ class PropertyTypeService
 
     public function getAll()
     {
-        try {
+        return $this->execute(function () {
             return $this->propertyTypeRepository->all();
-        } catch (Exception $e) {
-            return null;
-        }
+        }, 'PropertyTypeService::getAll');
     }
 
     public function getByType(Request $request)
     {
-        try {
-            $typeObj = $this->propertyTypeRepository->find($request);
-            return $typeObj;
-        } catch (Exception) {
-            return null;
-        }
+        return $this->execute(function () use ($request) {
+            return $this->propertyTypeRepository->find($request);
+        }, 'PropertyTypeService::getByType');
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->execute(function () use ($request) {
             $data = $request->all();
-            $propertyType = $this->propertyTypeRepository->create($data);
-            return $propertyType;
-        } catch (Exception $e) {
-            return null;
-        }
+            return $this->propertyTypeRepository->create($data);
+        }, 'PropertyTypeService::create');
     }
 
     public function update(Request $request, $id)
     {
-        try {
+        return $this->execute(function () use ($request, $id) {
             $data = $request->all();
-            $updated = $this->propertyTypeRepository->update($id, $data);
-            return $updated;
-        } catch (Exception $e) {
-            return null;
-        }
+            return $this->propertyTypeRepository->update($id, $data);
+        }, 'PropertyTypeService::update');
     }
 
     public function delete($id)
     {
-        try {
-             $status = $this->propertyTypeRepository->delete($id);
-            return $status;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->execute(function () use ($id) {
+            return $this->propertyTypeRepository->delete($id);
+        }, 'PropertyTypeService::delete');
     }
 }

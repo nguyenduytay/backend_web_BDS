@@ -55,18 +55,9 @@ class PropertyFeatureController extends Controller
         }
         $data = $this->propertyFeatureService->addFeatureToProperty($propertyId, $request->all());
         if ($data != null) {
-            if ($data === false) {
-                return ApiResponse::error(
-                    'Thêm thất bại',
-                );
-            }
-            return ApiResponse::success(
-                $data
-            );
+            return ApiResponse::success($data);
         }
-        return ApiResponse::error(
-            'Thêm thất bại'
-        );
+        return ApiResponse::error('Lỗi khi thêm feature', 500);
     }
 
     public function sync(Request $request, $propertyId)
@@ -79,18 +70,9 @@ class PropertyFeatureController extends Controller
         }
         $data = $this->propertyFeatureService->syncFeaturesToProperty($propertyId, $request);
         if ($data != null) {
-            if ($data === false) {
-                return ApiResponse::error(
-                    'Xóa thất bại',
-                );
-            }
-            return ApiResponse::success(
-                $data
-            );
+            return ApiResponse::success($data);
         }
-        return ApiResponse::error(
-            'Xóa thất bại'
-        );
+        return ApiResponse::error('Lỗi khi sync features', 500);
     }
 
     public function delete($propertyId, $featureId)

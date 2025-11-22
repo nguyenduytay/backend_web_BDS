@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         $now = Carbon::now();
 
         $this->command->info('   → Đang tạo tài khoản Admin...');
-        
+
         // Tài khoản Admin cố định
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@gmail.com'],
@@ -42,17 +42,17 @@ class UserSeeder extends Seeder
             'Hoàng Văn Em', 'Vũ Thị Phương', 'Đặng Văn Giang', 'Bùi Thị Hoa',
             'Đỗ Văn Hùng', 'Ngô Thị Lan'
         ];
-        
+
         for ($i = 0; $i < 10; $i++) {
             $email = "agent" . ($i + 1) . "@example.com";
             DB::table('users')->updateOrInsert(
                 ['email' => $email],
                 [
-                    'name'           => $agentNames[$i] ?? "Agent " . ($i + 1),
+                    'name'           => isset($agentNames[$i]) ? $agentNames[$i] : "Agent " . ($i + 1),
                     'email'          => $email,
                     'password'       => Hash::make('password'),
                     'role'           => 'agent',
-                    'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                    'phone'          => '09' . str_pad((string) rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                     'remember_token' => Str::random(10),
                     'created_at'     => $now,
                     'updated_at'     => $now,
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
                     'email'          => $email,
                     'password'       => Hash::make('password'),
                     'role'           => 'user',
-                    'phone'          => '09' . str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                    'phone'          => '09' . str_pad((string) rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                     'remember_token' => Str::random(10),
                     'created_at'     => $now,
                     'updated_at'     => $now,

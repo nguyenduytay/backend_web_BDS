@@ -1,11 +1,10 @@
 <?php
 namespace App\Services;
 
-use App\Http\Validations\UserValidation;
 use App\Repositories\UsersRepository\UsersRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 
-class UserService
+class UserService extends BaseService
 {
     protected $userRepository;
 
@@ -16,37 +15,41 @@ class UserService
 
     public function getAllUsers()
     {
-        return $this->userRepository->getAll();
+        return $this->execute(function () {
+            return $this->userRepository->getAll();
+        }, 'UserService::getAllUsers');
     }
-     /**
-     * Create new user
-     * @param array $userData
-     * @return mixed
-     */
+
     public function createUser(array $userData)
     {
-        return $this->userRepository->create([
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'password' => Hash::make($userData['password']),
-            'role' => $userData['role'] ?? 'user',
-        ]); 
+        return $this->execute(function () use ($userData) {
+            return $this->userRepository->create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'role' => $userData['role'] ?? 'user',
+            ]);
+        }, 'UserService::createUser');
     }
-    /**
-     * Get user by ID
-     * @param int $id
-     * @return \App\Models\User|null
-     */
+
     public function getUserById($id)
     {
-        return $this->userRepository->find($id);
+        return $this->execute(function () use ($id) {
+            return $this->userRepository->find($id);
+        }, 'UserService::getUserById');
     }
-   public function updateUser($id, array $data)
-{
-    return $this->userRepository->updateUser($id, $data);
-}
+
+    public function updateUser($id, array $data)
+    {
+        return $this->execute(function () use ($id, $data) {
+            return $this->userRepository->updateUser($id, $data);
+        }, 'UserService::updateUser');
+    }
+
     public function deleteUser($id)
     {
-         return $this->userRepository->delete($id);
+        return $this->execute(function () use ($id) {
+            return $this->userRepository->delete($id);
+        }, 'UserService::deleteUser');
     }
 }

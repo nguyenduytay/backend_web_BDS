@@ -24,7 +24,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        
+
         // Add CHECK constraint for PostgreSQL compatibility
         if (DB::getDriverName() === 'pgsql') {
             DB::statement("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'agent', 'user'))");

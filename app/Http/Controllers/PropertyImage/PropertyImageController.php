@@ -41,13 +41,10 @@ class PropertyImageController extends Controller
             return ApiResponse::error($vali, 400);
         }
         $status = $this->propertyImageService->create($request, $propertyId);
-        if ($status) {
-            if ($status === false) {
-                return ApiResponse::error("Tạo ảnh thất bại", 404);
-            }
-            return ApiResponse::success($status, "Tạo ảnh thành công",);
+        if ($status != null) {
+            return ApiResponse::success($status, "Tạo ảnh thành công");
         }
-        return ApiResponse::error("Tạo ảnh thất bại", 400);
+        return ApiResponse::error("Lỗi khi tạo ảnh", 500);
     }
 
     public function show($propertyId, $imageId)
@@ -101,12 +98,9 @@ class PropertyImageController extends Controller
         }
         $status = $this->propertyImageService->delete($propertyId, $imageId);
         if ($status != null) {
-            if ($status === false) {
-                return ApiResponse::error("Xóa ảnh thất bại", 400);
-            }
             return ApiResponse::success($status, "Xóa ảnh thành công");
         }
-        return ApiResponse::error("Xóa ảnh thất bại", 404);
+        return ApiResponse::error("Lỗi khi xóa ảnh", 500);
     }
 
     public function deleteMultiple(Request $request, $propertyId)

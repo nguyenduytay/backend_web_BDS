@@ -9,7 +9,7 @@ class ApiResponse
     /**
      * Trả về JSON response chung
      *
-     * @param bool   $status
+     * @param string|bool $status
      * @param string $message
      * @param mixed  $data
      * @param int    $statusCode

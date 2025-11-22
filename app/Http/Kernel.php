@@ -40,10 +40,13 @@ class Kernel extends HttpKernel
         ],
 
         "api" => [
-            "bindings",
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \App\Http\Middleware\CustomRateLimit::class . ':100,1', // 100 requests per minute
+            // "bindings",
+            // \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            // \App\Http\Middleware\CustomRateLimit::class . ':100,1', // 100 requests per minute
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            'throttle:api',
+            'api.versioning',
         ],
     ];
 

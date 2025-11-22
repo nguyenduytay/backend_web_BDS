@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'Laravel API is running',
+        'timestamp' => now()->toDateTimeString(),
+    ]);
+});
+
+// Health check endpoint để Render không ngủ
+Route::get('/health', function () {
+    try {
+        $dbStatus = 'connected';
+        DB::connection()->getPdo();
+    } catch (\Exception $e) {
+        $dbStatus = 'disconnected';
+    }
+
+    return response()->json([
+        'status' => 'healthy',
+        'timestamp' => now()->toDateTimeString(),
+        'database' => $dbStatus,
+    ]);
 });

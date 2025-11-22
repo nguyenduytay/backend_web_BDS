@@ -29,16 +29,18 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
-        // Content Security Policy
-        $csp = "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " .
-            "style-src 'self' 'unsafe-inline'; " .
-            "img-src 'self' data: https:; " .
-            "font-src 'self' data:; " .
-            "connect-src 'self'; " .
-            "frame-ancestors 'none';";
+        // Content Security Policy (chỉ cho web routes, không áp dụng cho API)
+        if (!$request->is('api/*')) {
+            $csp = "default-src 'self'; " .
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " .
+                "style-src 'self' 'unsafe-inline'; " .
+                "img-src 'self' data: https:; " .
+                "font-src 'self' data:; " .
+                "connect-src 'self' " . env('FRONTEND_URL', 'http://localhost:3000') . " " . env('ADMIN_URL', 'http://localhost:3001') . "; " .
+                "frame-ancestors 'none';";
 
-        $response->headers->set('Content-Security-Policy', $csp);
+            $response->headers->set('Content-Security-Policy', $csp);
+        }
 
         return $response;
     }

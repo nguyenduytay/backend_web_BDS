@@ -8,6 +8,7 @@ services:
     plan: starter
     region: singapore
     branch: main
+    healthCheckPath: /health
     buildCommand: |
       composer install --no-dev --optimize-autoloader --no-interaction
       php artisan config:cache

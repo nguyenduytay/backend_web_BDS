@@ -1,24 +1,24 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Laravel application..."
+echo "🚀 Starting Laravel application..." >&2
 
 # Chạy migrations
-echo "📊 Running migrations..."
+echo "📊 Running migrations..." >&2
 php artisan migrate --force
 
 # Chạy seeders nếu biến môi trường RUN_SEEDERS được set
 if [ "$RUN_SEEDERS" = "true" ] || [ "$RUN_SEEDERS" = "1" ]; then
-    echo "🌱 Running seeders..."
+    echo "🌱 Running seeders..." >&2
     php artisan db:seed --force
-    echo "✅ Seeders completed!"
+    echo "✅ Seeders completed!" >&2
 else
-    echo "ℹ️  Skipping seeders (set RUN_SEEDERS=true to enable)"
+    echo "ℹ️  Skipping seeders (set RUN_SEEDERS=true to enable)" >&2
 fi
 
 # Start Laravel server
 # Render tự động set biến môi trường PORT
 PORT=${PORT:-80}
-echo "✅ Starting server on port $PORT..."
+echo "✅ Starting server on port $PORT..." >&2
 php artisan serve --host=0.0.0.0 --port=$PORT
 

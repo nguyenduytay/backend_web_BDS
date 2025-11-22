@@ -38,10 +38,25 @@ class PropertyService
     }
     public function allByPropertyType($propertyTypeId, $request)
     {
+        \Log::info('PropertyService::allByPropertyType START', [
+            'property_type_id' => $propertyTypeId
+        ]);
+        
         try {
-            return $this->propertyRepository->allByPropertyType($propertyTypeId, $request);
+            $result = $this->propertyRepository->allByPropertyType($propertyTypeId, $request);
+            \Log::info('PropertyService::allByPropertyType SUCCESS', [
+                'property_type_id' => $propertyTypeId,
+                'result_not_null' => $result !== null
+            ]);
+            return $result;
         } catch (Exception $e) {
-            \Log::error('allByPropertyType error: ' . $e->getMessage());
+            \Log::error('PropertyService::allByPropertyType error', [
+                'property_type_id' => $propertyTypeId,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }
@@ -58,10 +73,21 @@ class PropertyService
     }
     public function allByOutstand($request)
     {
+        \Log::info('PropertyService::allByOutstand START');
+        
         try {
-            return $this->propertyRepository->allByOutstand($request);
+            $result = $this->propertyRepository->allByOutstand($request);
+            \Log::info('PropertyService::allByOutstand SUCCESS', [
+                'result_not_null' => $result !== null
+            ]);
+            return $result;
         } catch (Exception $e) {
-            \Log::error('allByOutstand error: ' . $e->getMessage());
+            \Log::error('PropertyService::allByOutstand error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }

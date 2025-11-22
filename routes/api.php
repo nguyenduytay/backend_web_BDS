@@ -132,21 +132,27 @@ Route::middleware(['api'])->group(function () {
 
     // ----------------- Property API -----------------
     Route::prefix('properties')->group(function () {
-        Route::get('/all', [PropertyController::class, 'all']);              // Lấy danh sách properties
-        Route::get('/search/{id}', [PropertyController::class, 'searchId']); // Chi tiết property
-        //lấy thông tin hình ảnh danh sách bất động sản dành cho bạn
-        Route::get('/all/property_type/{property_type_id}', [PropertyController::class, 'allByPropertyType']);
-        // lây thông tin hình ảnh danh sách bất động sản theo địa điểm
-        Route::get('/all/location', [PropertyController::class, 'allByLoaction']);
-        // lấy thông tin hình ảnh sanh sách bất động sản nổi bật
-        Route::get('/all/outstand', [PropertyController::class, 'allByOutstand']);
+        // Đặt các route cụ thể (dài hơn) trước để tránh conflict với /all
+        // Lấy danh sách properties theo loại
+        Route::get('/by-type/{property_type_id}', [PropertyController::class, 'allByPropertyType']);
+        // Lấy danh sách properties theo địa điểm
+        Route::get('/by-location', [PropertyController::class, 'allByLoaction']);
+        // Lấy danh sách properties nổi bật
+        Route::get('/featured', [PropertyController::class, 'allByOutstand']);
+
+        // Lấy danh sách tất cả properties (đặt sau các route cụ thể)
+        Route::get('/all', [PropertyController::class, 'all']);
+        // Chi tiết property theo ID
+        Route::get('/detail/{id}', [PropertyController::class, 'searchId'])->whereNumber('id');
+
+        // Routes cần authentication
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
             Route::post('/create', [PropertyController::class, 'create']);                 // Tạo mới
             Route::put('/update/{id}', [PropertyController::class, 'update']);             // Cập nhật
             Route::delete('/delete/{id}', [PropertyController::class, 'delete']);          // Soft delete
             Route::post('/restore/{id}', [PropertyController::class, 'restore']);          // Khôi phục
             Route::delete('/force/{id}', [PropertyController::class, 'forceDelete']);      // Xóa vĩnh viễn
-            Route::get('users/{userId}', [PropertyController::class, 'propertiesByUser']); // Lấy properties của user cập nhật
+            Route::get('/user/{userId}', [PropertyController::class, 'propertiesByUser']); // Lấy properties của user
         });
     });
 

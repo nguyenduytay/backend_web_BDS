@@ -152,7 +152,7 @@ Route::middleware(['api'])->group(function () {
             Route::delete('/delete/{id}', [PropertyController::class, 'delete']);          // Soft delete
             Route::post('/restore/{id}', [PropertyController::class, 'restore']);          // Khôi phục
             Route::delete('/force/{id}', [PropertyController::class, 'forceDelete']);      // Xóa vĩnh viễn
-            Route::get('/user/{userId}', [PropertyController::class, 'propertiesByUser']); // Lấy properties của user
+            Route::get('/user/{userId}', [PropertyController::class, 'propertiesByUser'])->whereNumber('userId'); // Lấy properties của user
         });
     });
 

@@ -19,37 +19,48 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $data = $this->searchService->search($request);
-        if ($data !== null) {
-            return ApiResponse::success($data, "Lấy thông tin thành công");
-        }
-        return ApiResponse::error("Lấy thông tin thất bại");
+        return $this->handleServiceResponse(
+            $data,
+            "Lấy thông tin thành công",
+            "Lấy thông tin thất bại",
+            200,
+            500
+        );
     }
 
     public function filter(Request $request)
     {
         $data = $this->searchService->filter($request);
-        if ($data !== null) {
-            return ApiResponse::success($data, "Lấy thông tin thành công");
-        }
-        return ApiResponse::error("Lấy thông tin thất bại");
+        return $this->handleServiceResponse(
+            $data,
+            "Lấy thông tin thành công",
+            "Lấy thông tin thất bại",
+            200,
+            500
+        );
     }
-
 
     public function autocomplete(Request $request)
     {
         $data = $this->searchService->autocomplete($request);
-        if ($data !== null) {
-            return ApiResponse::success($data, "Lấy thông tin thành công");
-        }
-        return ApiResponse::error("Lấy thông tin thất bại");
+        return $this->handleServiceResponse(
+            $data,
+            "Lấy thông tin thành công",
+            "Lấy thông tin thất bại",
+            200,
+            500
+        );
     }
 
     public function nearby(Request $request)
     {
         $data = $this->searchService->nearby($request);
-        if ($data !== null) {
-            return ApiResponse::success($data, "Lấy thông tin thành công");
-        }
-        return ApiResponse::error("Lấy thông tin thất bại");
+        return $this->handleServiceResponse(
+            $data,
+            "Lấy thông tin thành công",
+            "Lấy thông tin thất bại",
+            200,
+            500
+        );
     }
 }

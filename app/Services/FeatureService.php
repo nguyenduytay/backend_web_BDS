@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\FeatureRepository\FeatureRepositoryInterface;
 use Illuminate\Http\Request;
+use Throwable;
 
 class FeatureService extends BaseService
 {
@@ -16,36 +17,51 @@ class FeatureService extends BaseService
 
     public function getAllFeatures()
     {
-        return $this->execute(function () {
+        try {
             return $this->featureRepository->all();
-        }, 'FeatureService::getAllFeatures');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FeatureService::getAllFeatures');
+            return null;
+        }
     }
 
     public function SearchId($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->featureRepository->find($id);
-        }, 'FeatureService::SearchId');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FeatureService::SearchId');
+            return null;
+        }
     }
 
     public function create(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->featureRepository->create($request->all());
-        }, 'FeatureService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FeatureService::create');
+            return null;
+        }
     }
 
     public function update(Request $request, $id)
     {
-        return $this->execute(function () use ($request, $id) {
+        try {
             return $this->featureRepository->update($id, $request->all());
-        }, 'FeatureService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FeatureService::update');
+            return null;
+        }
     }
 
     public function delete($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->featureRepository->delete($id);
-        }, 'FeatureService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FeatureService::delete');
+            return null;
+        }
     }
 }

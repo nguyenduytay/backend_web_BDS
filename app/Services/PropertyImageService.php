@@ -7,6 +7,7 @@ use Cloudinary\Api\Upload\UploadApi;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class PropertyImageService extends BaseService
 {
@@ -19,21 +20,27 @@ class PropertyImageService extends BaseService
 
     public function getAllImages($propertyId)
     {
-        return $this->execute(function () use ($propertyId) {
+        try {
             return $this->propertyImageRepository->allImages($propertyId);
-        }, 'PropertyImageService::getAllImages');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::getAllImages');
+            return null;
+        }
     }
 
     public function show($propertyId, $imageId)
     {
-        return $this->execute(function () use ($propertyId, $imageId) {
+        try {
             return $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
-        }, 'PropertyImageService::show');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::show');
+            return null;
+        }
     }
 
     public function create($request, $propertyId)
     {
-        return $this->execute(function () use ($request, $propertyId) {
+        try {
             // Upload ảnh lên Cloudinary
             $uploadedFile = Cloudinary::upload(
                 $request->file('image_path')->getRealPath(),
@@ -51,12 +58,15 @@ class PropertyImageService extends BaseService
             ];
 
             return $this->propertyImageRepository->create($data);
-        }, 'PropertyImageService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::create');
+            return null;
+        }
     }
 
     public function update(Request $request, $propertyId, $imageId)
     {
-        return $this->execute(function () use ($request, $propertyId, $imageId) {
+        try {
             // Lấy ảnh cũ từ DB
             $oldImage = $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
 
@@ -99,7 +109,10 @@ class PropertyImageService extends BaseService
             }
 
             return null;
-        }, 'PropertyImageService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::update');
+            return null;
+        }
     }
 
     /**
@@ -136,10 +149,9 @@ class PropertyImageService extends BaseService
             : pathinfo($publicId, PATHINFO_FILENAME);
     }
 
-
     public function delete($propertyId, $imageId)
     {
-        return $this->execute(function () use ($propertyId, $imageId) {
+        try {
             $oldImage = $this->propertyImageRepository->detailPropertyImage($propertyId, $imageId);
             if ($oldImage != null && !empty($oldImage->image_path)) {
                 $publicId = $this->getPublicIdFromUrl($oldImage->image_path);
@@ -157,12 +169,15 @@ class PropertyImageService extends BaseService
                 return $this->propertyImageRepository->delete($imageId);
             }
             return null;
-        }, 'PropertyImageService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::delete');
+            return null;
+        }
     }
 
     public function deleteMultiple(Request $request, $propertyId)
     {
-        return $this->execute(function () use ($request, $propertyId) {
+        try {
             $imageIds = $request->input('image_ids', []);
             if (empty($imageIds) || !is_array($imageIds)) {
                 return null;
@@ -202,13 +217,19 @@ class PropertyImageService extends BaseService
                 'deleted_in_db' => $deletedDbIds,
                 'deleted_in_cloudinary' => $publicIds
             ];
-        }, 'PropertyImageService::deleteMultiple');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::deleteMultiple');
+            return null;
+        }
     }
 
     public function getAllHomeAvatars()
     {
-        return $this->execute(function () {
+        try {
             return $this->propertyImageRepository->getAllHomeAvatars();
-        }, 'PropertyImageService::getAllHomeAvatars');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyImageService::getAllHomeAvatars');
+            return null;
+        }
     }
 }

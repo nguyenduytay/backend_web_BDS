@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\PropertyFeatureRepository\PropertyFeatureRepositoryInterface;
+use Throwable;
 
 class PropertyFeatureService extends BaseService
 {
@@ -15,29 +16,41 @@ class PropertyFeatureService extends BaseService
 
     public function getFeaturesByProperty($propertyId)
     {
-        return $this->execute(function () use ($propertyId) {
+        try {
             return $this->propertyFeatureRepository->getFeaturesByProperty($propertyId);
-        }, 'PropertyFeatureService::getFeaturesByProperty');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyFeatureService::getFeaturesByProperty');
+            return null;
+        }
     }
 
     public function addFeatureToProperty($propertyId, $data)
     {
-        return $this->execute(function () use ($propertyId, $data) {
+        try {
             return $this->propertyFeatureRepository->addFeatureToProperty($propertyId, $data['feature_id']);
-        }, 'PropertyFeatureService::addFeatureToProperty');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyFeatureService::addFeatureToProperty');
+            return null;
+        }
     }
 
     public function syncFeaturesToProperty($propertyId, $request)
     {
-        return $this->execute(function () use ($propertyId, $request) {
+        try {
             return $this->propertyFeatureRepository->syncFeatures($propertyId, $request['feature_ids']);
-        }, 'PropertyFeatureService::syncFeaturesToProperty');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyFeatureService::syncFeaturesToProperty');
+            return null;
+        }
     }
 
     public function removeFeatureFromProperty($propertyId, $featureId)
     {
-        return $this->execute(function () use ($propertyId, $featureId) {
+        try {
             return $this->propertyFeatureRepository->removeFeatureFromProperty($propertyId, $featureId);
-        }, 'PropertyFeatureService::removeFeatureFromProperty');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyFeatureService::removeFeatureFromProperty');
+            return null;
+        }
     }
 }

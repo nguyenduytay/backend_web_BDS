@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ContactRepository\ContactRepositoryInterface;
 use Illuminate\Http\Request;
+use Throwable;
 
 class ContactService extends BaseService
 {
@@ -16,36 +17,51 @@ class ContactService extends BaseService
 
     public function getAllContacts()
     {
-        return $this->execute(function () {
+        try {
             return $this->contactRepository->all();
-        }, 'ContactService::getAllContacts');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::getAllContacts');
+            return null;
+        }
     }
 
     public function search($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->contactRepository->searchContact($request);
-        }, 'ContactService::search');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::search');
+            return null;
+        }
     }
 
     public function create(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->contactRepository->create($request->all());
-        }, 'ContactService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::create');
+            return null;
+        }
     }
 
     public function update(Request $request, $id)
     {
-        return $this->execute(function () use ($request, $id) {
+        try {
             return $this->contactRepository->update($id, $request->all());
-        }, 'ContactService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::update');
+            return null;
+        }
     }
 
     public function delete($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->contactRepository->delete($id);
-        }, 'ContactService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::delete');
+            return null;
+        }
     }
 }

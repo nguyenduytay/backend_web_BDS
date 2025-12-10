@@ -22,29 +22,34 @@ class ReportController extends Controller
     public function getPropertiesMonthly()
     {
         $data = $this->reportService->getPropertiesMonthly();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error('Lỗi khi lấy dữ liệu');
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Lỗi khi lấy dữ liệu",
+            200,
+            500
+        );
     }
 
     // Báo cáo users theo tháng
     public function getUsersMonthly()
     {
         $data = $this->reportService->getUsersMonthly();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error('Lỗi khi lấy dữ liệu');
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Lỗi khi lấy dữ liệu",
+            200,
+            500
+        );
     }
 
     // Xuất CSV properties
     public function exportProperties(): StreamedResponse|JsonResponse|null
     {
         $response = $this->reportService->exportProperties();
-
         if ($response === null) {
-            return ApiResponse::error('Lỗi khi xuất dữ liệu');
+            return ApiResponse::error('Lỗi khi xuất dữ liệu', null, 500);
         }
         return $response;
     }
@@ -52,9 +57,9 @@ class ReportController extends Controller
     // Xuất CSV users
     public function exportUsers(): StreamedResponse|JsonResponse|null
     {
-        $response =  $this->reportService->exportUsers();
+        $response = $this->reportService->exportUsers();
         if ($response === null) {
-            return ApiResponse::error('Lỗi khi xuất dữ liệu');
+            return ApiResponse::error('Lỗi khi xuất dữ liệu', null, 500);
         }
         return $response;
     }

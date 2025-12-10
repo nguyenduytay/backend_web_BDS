@@ -24,87 +24,109 @@ class LocationController extends Controller
 
     public function all()
     {
-            $all = $this->locationService->getAllLocations();
-        if ($all->isEmpty()) {
-            return ApiResponse::error("Không có dữ liệu ", 404);
-        }
-            return ApiResponse::success($all, "Thành công", 200);
+        $all = $this->locationService->getAllLocations();
+        return $this->handleServiceResponseWithEmptyCheck(
+            $all,
+            "Thành công",
+            "Không có dữ liệu",
+            200,
+            404
+        );
     }
 
     public function SearchCity(Request $request)
     {
-            $search =  $this->locationService->search($request);
-        if ($search->isEmpty()) {
-            return ApiResponse::error("Không tìm thấy kết quả nào.", 404);
-        }
-            return ApiResponse::success($search, "Thành công", 200);
+        $search = $this->locationService->search($request);
+        return $this->handleServiceResponseWithEmptyCheck(
+            $search,
+            "Thành công",
+            "Không tìm thấy kết quả nào.",
+            200,
+            404
+        );
     }
 
     public function SeacrhId($id)
     {
-
-            $data =  $this->locationService->show($id);
-        if ($data) {
-            return ApiResponse::success($data, "Thành công", 200);
-        }
-            return ApiResponse::error("Không tìm thấy dữ liệu.", 404);
+        $data = $this->locationService->show($id);
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu.",
+            200,
+            404
+        );
     }
 
     public function create(Request $request)
     {
-
-            $vali = $this->locationValidation->validateLocationCreate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        $vali = $this->locationValidation->validateLocationCreate($request);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
-            $location = $this->locationService->create($request);
-        if ($location) {
-            return ApiResponse::success($location, "Tạo mới thành công", 201);
-        }
-            return ApiResponse::error("Dữ liệu đã tồn tại.", 400);
+        $location = $this->locationService->create($request);
+        return $this->handleServiceResponse(
+            $location,
+            "Tạo mới thành công",
+            "Dữ liệu đã tồn tại.",
+            201,
+            400
+        );
     }
 
     public function update(Request $request)
     {
-            $vali = $this->locationValidation->validateLocationUpdate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        $vali = $this->locationValidation->validateLocationUpdate($request);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
-            $status = $this->locationService->update($request);
-        if ($status) {
-            return ApiResponse::success($status, "Cập nhật thành công", 200);
-        }
-            return ApiResponse::error("Dữ liệu không hợp lệ.", 400);
+        $status = $this->locationService->update($request);
+        return $this->handleServiceResponse(
+            $status,
+            "Cập nhật thành công",
+            "Dữ liệu không hợp lệ.",
+            200,
+            400
+        );
     }
 
     public function delete(Request $request)
     {
-            $vali = $this->locationValidation->validateLocationDelete($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        $vali = $this->locationValidation->validateLocationDelete($request);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
-            $status = $this->locationService->delete($request);
-        if ($status) {
-            return ApiResponse::success($status, "Xóa thành công", 200);
-        }
-            return ApiResponse::error("Không tìm thấy dữ liệu.", 404);
+        $status = $this->locationService->delete($request);
+        return $this->handleServiceResponse(
+            $status,
+            "Xóa thành công",
+            "Không tìm thấy dữ liệu.",
+            200,
+            404
+        );
     }
 
     public function cities(Request $request)
     {
-            $cities =  $this->locationService->getUniqueCities($request);
-        if ($cities->isEmpty()) {
-            return ApiResponse::error("Không tìm thấy thành phố nào.", 404);
-        }
-            return ApiResponse::success($cities, 200);
+        $cities = $this->locationService->getUniqueCities($request);
+        return $this->handleServiceResponseWithEmptyCheck(
+            $cities,
+            "Thành công",
+            "Không tìm thấy thành phố nào.",
+            200,
+            404
+        );
     }
 
     public function districts($city)
     {
-            $districts = $this->locationService->districts($city);
-        if ($districts->isEmpty()) {
-            return ApiResponse::error("Không tìm thấy quận/huyện nào.", 404);
-        }
-            return ApiResponse::success($districts, 200);
+        $districts = $this->locationService->districts($city);
+        return $this->handleServiceResponseWithEmptyCheck(
+            $districts,
+            "Thành công",
+            "Không tìm thấy quận/huyện nào.",
+            200,
+            404
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\PropertyTypeRepository\PropertyTypeRepositoryInterface;
 use Illuminate\Http\Request;
+use Throwable;
 
 class PropertyTypeService extends BaseService
 {
@@ -16,38 +17,53 @@ class PropertyTypeService extends BaseService
 
     public function getAll()
     {
-        return $this->execute(function () {
+        try {
             return $this->propertyTypeRepository->all();
-        }, 'PropertyTypeService::getAll');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyTypeService::getAll');
+            return null;
+        }
     }
 
     public function getByType(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->propertyTypeRepository->find($request);
-        }, 'PropertyTypeService::getByType');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyTypeService::getByType');
+            return null;
+        }
     }
 
     public function create(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $data = $request->all();
             return $this->propertyTypeRepository->create($data);
-        }, 'PropertyTypeService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyTypeService::create');
+            return null;
+        }
     }
 
     public function update(Request $request, $id)
     {
-        return $this->execute(function () use ($request, $id) {
+        try {
             $data = $request->all();
             return $this->propertyTypeRepository->update($id, $data);
-        }, 'PropertyTypeService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyTypeService::update');
+            return null;
+        }
     }
 
     public function delete($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->propertyTypeRepository->delete($id);
-        }, 'PropertyTypeService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyTypeService::delete');
+            return null;
+        }
     }
 }

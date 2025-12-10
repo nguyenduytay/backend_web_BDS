@@ -23,61 +23,76 @@ class FeatureController extends Controller
     public function all()
     {
         $all = $this->featureService->getAllFeatures();
-        if ($all != null) {
-            return ApiResponse::success($all);
-        }
-        return ApiResponse::error('Không tìm thấy dữ liệu', 404);
+        return $this->handleServiceResponseWithEmptyCheck(
+            $all,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function SearchId($id)
     {
         $validator = $this->featureValidation->checkIdValidate($id);
-        if ($validator->fails()) {
-            return ApiResponse::error($validator->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($validator)) {
+            return $valiError;
         }
-        $data =  $this->featureService->SearchId($id);
-        if ($data != null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error('Không tìm thấy dữ liệu', 404);
+        $data = $this->featureService->SearchId($id);
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function create(Request $request)
     {
         $vali = $this->featureValidation->createValidate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $status = $this->featureService->create($request);
-        if ($status != null) {
-            return ApiResponse::success($status);
-        }
-        return ApiResponse::error('Lỗi khi tạo mới feature', 500);
+        return $this->handleServiceResponse(
+            $status,
+            "Tạo mới feature thành công",
+            "Lỗi khi tạo mới feature",
+            201,
+            500
+        );
     }
 
     public function update(Request $request, $id)
     {
         $vali = $this->featureValidation->updateValidate($request, $id);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $status = $this->featureService->update($request, $id);
-        if ($status != null) {
-            return ApiResponse::success($status);
-        }
-        return ApiResponse::error('Lỗi khi cập nhật feature', 500);
+        return $this->handleServiceResponse(
+            $status,
+            "Cập nhật feature thành công",
+            "Lỗi khi cập nhật feature",
+            200,
+            500
+        );
     }
 
     public function delete($id)
     {
         $validator = $this->featureValidation->checkIdValidation($id, 'features');
-        if ($validator->fails()) {
-            return ApiResponse::error($validator->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($validator)) {
+            return $valiError;
         }
         $status = $this->featureService->delete($id);
-        if ($status != null) {
-            return ApiResponse::success($status);
-        }
-        return ApiResponse::error('Lỗi khi xóa feature', 500);
+        return $this->handleServiceResponse(
+            $status,
+            "Xóa feature thành công",
+            "Lỗi khi xóa feature",
+            200,
+            500
+        );
     }
 }

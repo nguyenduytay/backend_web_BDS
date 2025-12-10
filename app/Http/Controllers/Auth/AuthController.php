@@ -25,30 +25,36 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $vali = $this->validation->validateCreate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $user = $this->authService->register($request);
-        if ($user != null) {
-            return ApiResponse::success(null, 'Đăng ký thành công', 201);
-        }
-        return ApiResponse::error('Lỗi khi đăng ký', null, 500);
+        return $this->handleServiceResponse(
+            $user,
+            'Đăng ký thành công',
+            'Lỗi khi đăng ký',
+            201,
+            500
+        );
     }
 
     // Đăng nhập (API)
     public function login(Request $request)
     {
         $vali = $this->validation->validateAuthLoginRequest($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $token = $this->authService->login($request);
-        if ($token != null) {
-            return ApiResponse::success($token, 'Đăng nhập thành công');
-        }
-        return ApiResponse::error('Đăng nhập thất bại', null, 401);
+        return $this->handleServiceResponse(
+            $token,
+            'Đăng nhập thành công',
+            'Đăng nhập thất bại',
+            200,
+            401
+        );
     }
 
     public function logout(Request $request)
@@ -63,10 +69,13 @@ class AuthController extends Controller
         }
 
         $check = $this->authService->logout($accessToken);
-        if ($check) {
-            return ApiResponse::success(null, 'Đăng xuất thành công.', 200);
-        }
-        return ApiResponse::error('Lỗi khi đăng xuất.', null, 500);
+        return $this->handleServiceResponse(
+            $check ? true : null,
+            'Đăng xuất thành công.',
+            'Lỗi khi đăng xuất.',
+            200,
+            500
+        );
     }
 
     public function refresh(Request $request)
@@ -85,10 +94,13 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $this->authService->me($request);
-        if (!$user) {
-            return ApiResponse::error('Không tìm thấy user.', null, 401);
-        }
-        return ApiResponse::success($user, 'Lấy thông tin user thành công', 200);
+        return $this->handleServiceResponse(
+            $user,
+            'Lấy thông tin user thành công',
+            'Không tìm thấy user.',
+            200,
+            401
+        );
     }
 
     public function forgotPassword(Request $request)

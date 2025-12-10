@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\LocationsRepository\LocationRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Throwable;
 
 class LocationService extends BaseService
 {
@@ -17,63 +18,87 @@ class LocationService extends BaseService
 
     public function getAllLocations()
     {
-        return $this->execute(function () {
+        try {
             return $this->locationRepository->all();
-        }, 'LocationService::getAllLocations');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::getAllLocations');
+            return null;
+        }
     }
 
     public function search(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $city = $request->input('city');
             return $this->locationRepository->findByCity($city);
-        }, 'LocationService::search');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::search');
+            return null;
+        }
     }
 
     public function show($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->locationRepository->find($id);
-        }, 'LocationService::show');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::show');
+            return null;
+        }
     }
 
     public function create(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $data = $request->all();
             $data['slug'] = Str::slug($data['city'] . '-' . $data['district']);
             return $this->locationRepository->create($data);
-        }, 'LocationService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::create');
+            return null;
+        }
     }
 
     public function update(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $data = $request->all();
             $data['slug'] = Str::slug($data['city'] . '-' . $data['district']);
             return $this->locationRepository->update($data['id'], $data);
-        }, 'LocationService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::update');
+            return null;
+        }
     }
 
     public function delete(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->locationRepository->delete($request->id);
-        }, 'LocationService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::delete');
+            return null;
+        }
     }
 
     public function getUniqueCities(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $keyword = $request->input('keyword');
             return $this->locationRepository->uniqueCities($keyword);
-        }, 'LocationService::getUniqueCities');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::getUniqueCities');
+            return null;
+        }
     }
 
     public function districts(string $city)
     {
-        return $this->execute(function () use ($city) {
+        try {
             return $this->locationRepository->districtsByCity($city);
-        }, 'LocationService::districts');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'LocationService::districts');
+            return null;
+        }
     }
 }

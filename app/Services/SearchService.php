@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\SearchRepository\SearchRepositoryInterface;
+use Throwable;
 
 class SearchService extends BaseService
 {
@@ -15,29 +16,41 @@ class SearchService extends BaseService
 
     public function search($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->searchRepository->search($request);
-        }, 'SearchService::search');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'SearchService::search');
+            return null;
+        }
     }
 
     public function filter($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->searchRepository->filter($request);
-        }, 'SearchService::filter');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'SearchService::filter');
+            return null;
+        }
     }
 
     public function autocomplete($keyword)
     {
-        return $this->execute(function () use ($keyword) {
+        try {
             return $this->searchRepository->autocomplete($keyword);
-        }, 'SearchService::autocomplete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'SearchService::autocomplete');
+            return null;
+        }
     }
 
     public function nearby($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->searchRepository->nearby($request);
-        }, 'SearchService::nearby');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'SearchService::nearby');
+            return null;
+        }
     }
 }

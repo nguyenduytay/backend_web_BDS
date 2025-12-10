@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\DashboardRepository\DashboardRepositoryInterface;
+use Throwable;
 
 class DashboardService extends BaseService
 {
@@ -15,36 +16,51 @@ class DashboardService extends BaseService
 
     public function getStats()
     {
-        return $this->execute(function () {
+        try {
             return $this->dashboardRepo->getStats();
-        }, 'DashboardService::getStats');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'DashboardService::getStats');
+            return null;
+        }
     }
 
     public function getPropertyStats()
     {
-        return $this->execute(function () {
+        try {
             return $this->dashboardRepo->getPropertyStats();
-        }, 'DashboardService::getPropertyStats');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'DashboardService::getPropertyStats');
+            return null;
+        }
     }
 
     public function getUserStats()
     {
-        return $this->execute(function () {
+        try {
             return $this->dashboardRepo->getUserStats();
-        }, 'DashboardService::getUserStats');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'DashboardService::getUserStats');
+            return null;
+        }
     }
 
     public function getRecentProperties()
     {
-        return $this->execute(function () {
+        try {
             return $this->dashboardRepo->getRecentProperties();
-        }, 'DashboardService::getRecentProperties');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'DashboardService::getRecentProperties');
+            return null;
+        }
     }
 
     public function getRecentUsers()
     {
-        return $this->execute(function () {
+        try {
             return $this->dashboardRepo->getRecentUsers();
-        }, 'DashboardService::getRecentUsers');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'DashboardService::getRecentUsers');
+            return null;
+        }
     }
 }

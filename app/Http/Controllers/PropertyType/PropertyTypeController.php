@@ -23,62 +23,76 @@ class PropertyTypeController extends Controller
     public function all()
     {
         $all = $this->propertyTypeService->getAll();
-        if ($all != null) {
-            return ApiResponse::success($all);
-        }
-
-        return ApiResponse::error('Lỗi không tìm thấy dữ liệu', 404);
+        return $this->handleServiceResponseWithEmptyCheck(
+            $all,
+            "Thành công",
+            "Lỗi không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function SearchType(Request $request)
     {
-         $vali = $this->propertyTypeValidation->validatePropertyType($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        $vali = $this->propertyTypeValidation->validatePropertyType($request);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $data = $this->propertyTypeService->getByType($request);
-        if ($data != null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error('Lỗi không tìm thấy dữ liệu', 404);
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Lỗi không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function create(Request $request)
     {
         $vali = $this->propertyTypeValidation->validatePropertyTypeCreate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $status = $this->propertyTypeService->create($request);
-        if ($status != null) {
-            return ApiResponse::success($status, "Tạo loại bất động sản thành công");
-        }
-        return ApiResponse::error('Lỗi khi tạo mới loại bất động sản', 500);
+        return $this->handleServiceResponse(
+            $status,
+            "Tạo loại bất động sản thành công",
+            "Lỗi khi tạo mới loại bất động sản",
+            201,
+            500
+        );
     }
 
     public function update(Request $request, $id)
     {
         $vali = $this->propertyTypeValidation->validatePropertyTypeUpdate($request, $id);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $propertyType = $this->propertyTypeService->update($request, $id);
-        if ($propertyType != null) {
-            return ApiResponse::success($propertyType, "Cập nhật loại bất động sản thành công");
-        }
-        return ApiResponse::error('Lỗi khi cập nhật loại bất động sản', 500);
+        return $this->handleServiceResponse(
+            $propertyType,
+            "Cập nhật loại bất động sản thành công",
+            "Lỗi khi cập nhật loại bất động sản",
+            200,
+            500
+        );
     }
 
     public function delete($id)
     {
         $vali = $this->propertyTypeValidation->checkIdValidation($id, 'property_types');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors()->first(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
         $propertyType = $this->propertyTypeService->delete($id);
-        if ($propertyType != null) {
-            return ApiResponse::success($propertyType, "Xóa loại bất động sản thành công");
-        }
-        return ApiResponse::error('Lỗi khi xóa loại bất động sản', 500);
+        return $this->handleServiceResponse(
+            $propertyType,
+            "Xóa loại bất động sản thành công",
+            "Lỗi khi xóa loại bất động sản",
+            200,
+            500
+        );
     }
 }

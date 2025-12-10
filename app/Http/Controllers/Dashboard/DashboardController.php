@@ -22,45 +22,60 @@ class DashboardController extends Controller
     public function getStats()
     {
         $data = $this->dashboardService->getStats();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error("Không tìm thấy dữ liệu");
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function getPropertyStats()
     {
         $data = $this->dashboardService->getPropertyStats();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error("Không tìm thấy dữ liệu");
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function getUserStats()
     {
         $data = $this->dashboardService->getUserStats();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error("Không tìm thấy dữ liệu");
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function getRecentProperties()
     {
         $data = $this->dashboardService->getRecentProperties();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error("Không tìm thấy dữ liệu");
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 
     public function getRecentUsers()
     {
         $data = $this->dashboardService->getRecentUsers();
-        if ($data !== null) {
-            return ApiResponse::success($data);
-        }
-        return ApiResponse::error("Không tìm thấy dữ liệu");
+        return $this->handleServiceResponse(
+            $data,
+            "Thành công",
+            "Không tìm thấy dữ liệu",
+            200,
+            404
+        );
     }
 }

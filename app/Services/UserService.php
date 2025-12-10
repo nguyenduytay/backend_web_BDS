@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Services;
 
 use App\Repositories\UsersRepository\UsersRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class UserService extends BaseService
 {
@@ -15,41 +17,56 @@ class UserService extends BaseService
 
     public function getAllUsers()
     {
-        return $this->execute(function () {
+        try {
             return $this->userRepository->getAll();
-        }, 'UserService::getAllUsers');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'UserService::getAllUsers');
+            return null;
+        }
     }
 
     public function createUser(array $userData)
     {
-        return $this->execute(function () use ($userData) {
+        try {
             return $this->userRepository->create([
                 'name' => $userData['name'],
                 'email' => $userData['email'],
                 'password' => Hash::make($userData['password']),
                 'role' => $userData['role'] ?? 'user',
             ]);
-        }, 'UserService::createUser');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'UserService::createUser');
+            return null;
+        }
     }
 
     public function getUserById($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->userRepository->find($id);
-        }, 'UserService::getUserById');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'UserService::getUserById');
+            return null;
+        }
     }
 
     public function updateUser($id, array $data)
     {
-        return $this->execute(function () use ($id, $data) {
+        try {
             return $this->userRepository->updateUser($id, $data);
-        }, 'UserService::updateUser');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'UserService::updateUser');
+            return null;
+        }
     }
 
     public function deleteUser($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->userRepository->delete($id);
-        }, 'UserService::deleteUser');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'UserService::deleteUser');
+            return null;
+        }
     }
 }

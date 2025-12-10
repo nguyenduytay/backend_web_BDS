@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+use Throwable;
 
 class AuthService extends BaseService
 {
@@ -22,7 +23,7 @@ class AuthService extends BaseService
 
     public function register($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->usersRepository->create([
                 'name'     => $request->input('name'),
                 'email'    => $request->input('email'),
@@ -31,18 +32,22 @@ class AuthService extends BaseService
                 'avatar'   => null,
                 'role'     => $request->input('role', 'user'),
             ]);
-        }, 'AuthService::register');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::register');
+            return null;
+        }
     }
 
     public function login($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $credentials = [
                 'email'    => $request->input('email'),
                 'password' => $request->input('password'),
             ];
 
             if (Auth::attempt($credentials)) {
+                /** @var \App\Models\User $user */
                 $user = Auth::user();
 
                 // Kiểm tra và xóa token cũ nếu vượt quá giới hạn
@@ -65,24 +70,31 @@ class AuthService extends BaseService
                 return $user->createToken('auth_token')->plainTextToken;
             }
             return null;
-        }, 'AuthService::login');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::login');
+            return null;
+        }
     }
 
     public function logout($accessToken)
     {
-        return $this->execute(function () use ($accessToken) {
+        try {
             $token = PersonalAccessToken::findToken($accessToken);
             if ($token) {
                 $token->delete();
                 return true;
             }
             return false;
-        }, 'AuthService::logout');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::logout');
+            return null;
+        }
     }
 
     public function refresh(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
+            /** @var \App\Models\User|null $user */
             $user = $request->user();
             if (!$user) {
                 return null;
@@ -93,30 +105,39 @@ class AuthService extends BaseService
             }
             $token->delete();
             return $user->createToken('auth_token')->plainTextToken;
-        }, 'AuthService::refresh');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::refresh');
+            return null;
+        }
     }
 
     public function me(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $user = $request->user();
             if (!$user) {
                 return null;
             }
             return $user;
-        }, 'AuthService::me');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::me');
+            return null;
+        }
     }
 
     public function forgotPassword(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return Password::broker()->sendResetLink($request->only('email'));
-        }, 'AuthService::forgotPassword');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::forgotPassword');
+            return null;
+        }
     }
 
     public function resetPassword(Request $request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             $response = Password::broker()->reset(
                 $request->only('email', 'password', 'password_confirmation', 'token'),
                 function ($user, $password) {
@@ -131,6 +152,9 @@ class AuthService extends BaseService
                 return ApiResponse::success(null, 'Mật khẩu của bạn đã được đặt lại thành công.');
             }
             return ApiResponse::error('Không thể đặt lại mật khẩu, token có thể không hợp lệ.', null, 400);
-        }, 'AuthService::resetPassword');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'AuthService::resetPassword');
+            return null;
+        }
     }
 }

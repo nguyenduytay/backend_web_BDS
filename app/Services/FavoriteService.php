@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\FavoriteRepository\FavoriteRepositoryInterface;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class FavoriteService extends BaseService
 {
@@ -15,29 +17,41 @@ class FavoriteService extends BaseService
 
     public function getUserFavorites($userId)
     {
-        return $this->execute(function () use ($userId) {
+        try {
             return $this->favoriteRepository->getUserFavorites($userId);
-        }, 'FavoriteService::getUserFavorites');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FavoriteService::getUserFavorites');
+            return null;
+        }
     }
 
     public function addFavorite($userId, $propertyId)
     {
-        return $this->execute(function () use ($userId, $propertyId) {
+        try {
             return $this->favoriteRepository->addFavorite($userId, $propertyId);
-        }, 'FavoriteService::addFavorite');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FavoriteService::addFavorite');
+            return null;
+        }
     }
 
     public function removeFavorite($userId, $propertyId)
     {
-        return $this->execute(function () use ($userId, $propertyId) {
+        try {
             return $this->favoriteRepository->removeFavorite($userId, $propertyId);
-        }, 'FavoriteService::removeFavorite');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FavoriteService::removeFavorite');
+            return null;
+        }
     }
 
     public function checkFavorite($userId, $propertyId)
     {
-        return $this->execute(function () use ($userId, $propertyId) {
+        try {
             return $this->favoriteRepository->isFavorite($userId, $propertyId);
-        }, 'FavoriteService::checkFavorite');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'FavoriteService::checkFavorite');
+            return null;
+        }
     }
 }

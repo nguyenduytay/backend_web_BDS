@@ -22,47 +22,59 @@ class PropertyController extends Controller
     public function all(Request $request)
     {
         $data = $this->propertyService->getAllProperties($request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách properties thành công');
-        }
-        return ApiResponse::error('Lỗi khi lấy danh sách properties', 500);
+        return $this->handleServiceResponse(
+            $data,
+            'Lấy danh sách properties thành công',
+            'Lỗi khi lấy danh sách properties',
+            200,
+            500
+        );
     }
 
     public function searchId($id)
     {
         $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $data = $this->propertyService->show($id);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy thông tin property thành công');
-        }
-        return ApiResponse::error('Lỗi khi lấy thông tin property', 500);
+        return $this->handleServiceResponse(
+            $data,
+            'Lấy thông tin property thành công',
+            'Lỗi khi lấy thông tin property',
+            200,
+            500
+        );
     }
 
     public function allByPropertyType($propertyTypeId, Request $request)
     {
         $vali = $this->propertyValidation->checkIdValidation($propertyTypeId, 'property_types', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $data = $this->propertyService->allByPropertyType($propertyTypeId, $request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách properties thành công');
-        }
-        return ApiResponse::error('Lỗi khi lấy danh sách properties', 500);
+        return $this->handleServiceResponse(
+            $data,
+            'Lấy danh sách properties thành công',
+            'Lỗi khi lấy danh sách properties',
+            200,
+            500
+        );
     }
 
     public function allByLoaction(Request $request)
     {
         $data = $this->propertyService->allByLoaction($request);
-        if ($data != null) {
-            return ApiResponse::success($data, 'Lấy danh sách thành công');
-        }
-        return ApiResponse::error('Lỗi khi lấy danh sách properties theo location', 500);
+        return $this->handleServiceResponse(
+            $data,
+            'Lấy danh sách thành công',
+            'Lỗi khi lấy danh sách properties theo location',
+            200,
+            500
+        );
     }
 
     public function allByOutstand(Request $request)
@@ -77,83 +89,98 @@ class PropertyController extends Controller
     public function create(Request $request)
     {
         $vali = $this->propertyValidation->validateCreateAndUpdate($request);
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $status = $this->propertyService->create($request);
-        if ($status != null) {
-            return ApiResponse::success($status, 'Tạo mới property thành công');
-        }
-        return ApiResponse::error('Lỗi khi tạo mới property', 500);
+        return $this->handleServiceResponse(
+            $status,
+            'Tạo mới property thành công',
+            'Lỗi khi tạo mới property',
+            201,
+            500
+        );
     }
 
     public function update(Request $request, $id)
     {
         $valiId = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($valiId->fails()) {
-            return ApiResponse::error($valiId->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($valiId)) {
+            return $valiError;
         }
 
         $valiUpdate = $this->propertyValidation->validateCreateAndUpdate($request);
-        if ($valiUpdate->fails()) {
-            return ApiResponse::error($valiUpdate->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($valiUpdate)) {
+            return $valiError;
         }
 
         $status = $this->propertyService->update($id, $request);
-        if ($status != null) {
-            return ApiResponse::success($status, 'Cập nhật property thành công');
-        }
-        return ApiResponse::error('Lỗi khi cập nhật property', 500);
+        return $this->handleServiceResponse(
+            $status,
+            'Cập nhật property thành công',
+            'Lỗi khi cập nhật property',
+            200,
+            500
+        );
     }
 
     public function delete($id)
     {
         $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $status = $this->propertyService->delete($id);
-        if ($status != null) {
-            return ApiResponse::success($status, 'Xóa property thành công');
-        }
-        return ApiResponse::error('Lỗi khi xóa property', 500);
+        return $this->handleServiceResponse(
+            $status,
+            'Xóa property thành công',
+            'Lỗi khi xóa property',
+            200,
+            500
+        );
     }
 
     public function restore($id)
     {
         $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $status = $this->propertyService->restore($id);
-        if ($status != null) {
-            return ApiResponse::success($status, 'Khôi phục property thành công');
-        }
-        return ApiResponse::error('Lỗi khi khôi phục property', 500);
+        return $this->handleServiceResponse(
+            $status,
+            'Khôi phục property thành công',
+            'Lỗi khi khôi phục property',
+            200,
+            500
+        );
     }
 
     public function forceDelete($id)
     {
         $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $property = $this->propertyService->forceDelete($id);
-        if ($property != null) {
-            return ApiResponse::success($property, 'Xóa property thành công');
-        }
-        return ApiResponse::error('Lỗi khi xóa property', 500);
+        return $this->handleServiceResponse(
+            $property,
+            'Xóa property thành công',
+            'Lỗi khi xóa property',
+            200,
+            500
+        );
     }
 
     public function propertiesByUser($userId)
     {
         $vali = $this->propertyValidation->checkIdValidation($userId, 'users', 'id');
-        if ($vali->fails()) {
-            return ApiResponse::error($vali->errors(), 422);
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
         }
 
         $properties = $this->propertyService->getPropertiesByUser($userId);

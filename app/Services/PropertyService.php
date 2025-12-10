@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\Repositories\PropertyRepository\PropertyRepositoryInterface;
-use Exception;
+use Throwable;
 
 class PropertyService extends BaseService
 {
@@ -17,78 +17,111 @@ class PropertyService extends BaseService
 
     public function getAllProperties($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->propertyRepository->allProperty($request);
-        }, 'PropertyService::getAllProperties');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::getAllProperties');
+            return null;
+        }
     }
 
     public function show($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->propertyRepository->find($id);
-        }, 'PropertyService::show');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::show');
+            return null;
+        }
     }
 
     public function allByPropertyType($propertyTypeId, $request)
     {
-        return $this->execute(function () use ($propertyTypeId, $request) {
+        try {
             return $this->propertyRepository->allByPropertyType($propertyTypeId, $request);
-        }, 'PropertyService::allByPropertyType');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::allByPropertyType');
+            return null;
+        }
     }
 
     public function allByLoaction($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->propertyRepository->allByLoaction($request);
-        }, 'PropertyService::allByLoaction');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::allByLoaction');
+            return null;
+        }
     }
 
     public function allByOutstand($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->propertyRepository->allByOutstand($request);
-        }, 'PropertyService::allByOutstand');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::allByOutstand');
+            return null;
+        }
     }
 
     public function create($request)
     {
-        return $this->execute(function () use ($request) {
+        try {
             return $this->propertyRepository->create($request->all());
-        }, 'PropertyService::create');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::create');
+            return null;
+        }
     }
 
     public function update($id, Request $request)
     {
-        return $this->execute(function () use ($id, $request) {
+        try {
             return $this->propertyRepository->update($id, $request->all());
-        }, 'PropertyService::update');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::update');
+            return null;
+        }
     }
 
     public function delete($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->propertyRepository->delete($id);
-        }, 'PropertyService::delete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::delete');
+            return null;
+        }
     }
 
     public function restore($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->propertyRepository->restore($id);
-        }, 'PropertyService::restore');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::restore');
+            return null;
+        }
     }
 
     public function forceDelete($id)
     {
-        return $this->execute(function () use ($id) {
+        try {
             return $this->propertyRepository->forceDelete($id);
-        }, 'PropertyService::forceDelete');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::forceDelete');
+            return null;
+        }
     }
 
     public function getPropertiesByUser($userId)
     {
-        return $this->execute(function () use ($userId) {
+        try {
             return $this->propertyRepository->getPropertiesByUser($userId);
-        }, 'PropertyService::getPropertiesByUser');
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::getPropertiesByUser');
+            return null;
+        }
     }
 }

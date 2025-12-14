@@ -19,9 +19,5 @@
     "Dashboard",
     "Report"
   ],
-  "exclude": [
-    "vendor",
-    "node_modules"
-  ]
+  "exclude": ["vendor", "node_modules"]
 }
-

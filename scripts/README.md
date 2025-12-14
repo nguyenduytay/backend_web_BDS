@@ -27,18 +27,21 @@ Lấy ảnh từ một hoặc nhiều folder cùng lúc.
 **Cách sử dụng:**
 
 #### Lấy từ folder mặc định (luxury home, background):
+
 ```bash
 cd scripts
 node get-images-from-folders.js
 ```
 
 #### Lấy từ folder cụ thể:
+
 ```bash
 cd scripts
 node get-images-from-folders.js "luxury home" "background" "other folder"
 ```
 
 **Kết quả:**
+
 - `all-folders-images.json` - Thông tin đầy đủ về tất cả ảnh từ tất cả folder
 - `all-folders-urls.txt` - Tất cả URL (có ghi chú folder)
 - `luxury-home-urls.txt` - URL từ folder "luxury home" (nếu có)
@@ -48,11 +51,13 @@ node get-images-from-folders.js "luxury home" "background" "other folder"
 ## Ví dụ
 
 ### Lấy từ 3 folder:
+
 ```bash
 node get-images-from-folders.js "luxury home" "background" "apartments"
 ```
 
 Kết quả sẽ có:
+
 - `all-folders-images.json` - Tổng hợp tất cả
 - `all-folders-urls.txt` - Tất cả URL
 - `luxury-home-urls.txt` - Chỉ URL từ "luxury home"
@@ -62,6 +67,7 @@ Kết quả sẽ có:
 ## Cấu trúc file JSON
 
 ### `all-folders-images.json`:
+
 ```json
 {
   "total": 30,
@@ -96,7 +102,7 @@ Kết quả sẽ có:
 ## Xử lý lỗi
 
 Nếu một folder không tìm thấy hoặc có lỗi, script sẽ:
+
 - Bỏ qua folder đó và tiếp tục với các folder khác
 - Hiển thị cảnh báo nhưng không dừng toàn bộ quá trình
 - Vẫn lưu kết quả từ các folder thành công
-

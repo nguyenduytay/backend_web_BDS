@@ -14,22 +14,18 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Chạy migrations
-echo "📊 Running migrations..." >&2
-php artisan migrate --force
-
-# Chạy seeders nếu biến môi trường RUN_SEEDERS được set
-if [ "$RUN_SEEDERS" = "true" ] || [ "$RUN_SEEDERS" = "1" ]; then
-    echo "🌱 Running seeders..." >&2
-    php artisan db:seed --force
-    echo "✅ Seeders completed!" >&2
-else
-    echo "ℹ️  Skipping seeders (set RUN_SEEDERS=true to enable)" >&2
-fi
+# ⚠️ XÓA TOÀN BỘ DỮ LIỆU VÀ CHẠY LẠI MIGRATIONS + SEEDERS
+# migrate:fresh sẽ:
+# - Xóa tất cả các bảng
+# - Chạy lại tất cả migrations
+# - Chạy seeders (--seed)
+echo "🗑️  Resetting database (xóa tất cả dữ liệu cũ)..." >&2
+echo "📊 Running fresh migrations and seeders..." >&2
+php artisan migrate:fresh --seed --force
+echo "✅ Database đã được reset và seed dữ liệu mới!" >&2
 
 # Start Laravel server
 # Render tự động set biến môi trường PORT
 PORT=${PORT:-80}
 echo "✅ Starting server on port $PORT..." >&2
 php artisan serve --host=0.0.0.0 --port=$PORT
-

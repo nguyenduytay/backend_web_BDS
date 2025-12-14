@@ -69,8 +69,8 @@ services:
         value: file
       - key: SESSION_LIFETIME
         value: 120
-      - key: RUN_SEEDERS
-        value: "true"
+      # Lưu ý: RUN_SEEDERS không còn cần thiết vì start.sh đã dùng migrate:fresh --seed
+      # Mỗi lần deploy sẽ tự động xóa toàn bộ dữ liệu và chạy lại migrations + seeders
 
   # Database Service - PostgreSQL
   - type: pserv

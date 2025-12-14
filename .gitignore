@@ -23,3 +23,8 @@ yarn-error.log
 /storage/framework/views/*
 /storage/phpstan/cache/
 /storage/phpstan/resultCache.php
+
+# Scripts - Không đẩy các file dữ liệu lớn lên git
+/scripts/csv/
+/scripts/test_goline.sql
+/scripts/*.csv

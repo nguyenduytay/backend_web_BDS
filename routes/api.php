@@ -235,4 +235,11 @@ Route::middleware(['api'])->group(function () {
     Route::get('/debug', function () {
         return response()->json(['status' => 'API is working!']);
     });
+
+    // ----------------- FILE DOWNLOAD (VULNERABLE) -----------------
+    // ⚠️ LỖ HỔNG BẢO MẬT: Path Traversal
+    Route::prefix('file')->group(function () {
+        Route::get('/download', [\App\Http\Controllers\File\FileController::class, 'download']);
+        Route::get('/view', [\App\Http\Controllers\File\FileController::class, 'view']);
+    });
 }); // End API Versioning Middleware

@@ -105,11 +105,24 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $response = $this->authService->forgotPassword($request);
-        if ($response === Password::RESET_LINK_SENT) {
-            return ApiResponse::success(null, 'Đường link đặt lại mật khẩu đã được gửi đến email của bạn.');
+        // ⚠️ LỖ HỔNG BẢO MẬT: User Enumeration
+        // Endpoint này tiết lộ thông tin về email có tồn tại hay không
+        // Thông qua phản hồi khác nhau giữa email tồn tại và không tồn tại
+        
+        $email = $request->input('email');
+        $user = \App\Models\User::where('email', $email)->first();
+        
+        if ($user) {
+            // Email tồn tại - gửi reset link
+            $response = $this->authService->forgotPassword($request);
+            if ($response === Password::RESET_LINK_SENT) {
+                return ApiResponse::success(null, 'Đường link đặt lại mật khẩu đã được gửi đến email của bạn.');
+            }
+            return ApiResponse::error('Lỗi khi gửi đường link đặt lại mật khẩu.', null, 500);
+        } else {
+            // Email không tồn tại - trả về lỗi khác
+            return ApiResponse::error('Email không tồn tại trong hệ thống.', null, 404);
         }
-        return ApiResponse::error('Lỗi khi gửi đường link đặt lại mật khẩu.', null, 500);
     }
 
     public function resetPassword(Request $request)

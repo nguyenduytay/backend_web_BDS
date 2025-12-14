@@ -1,9 +1,0 @@
-<?php declare(strict_types = 1);
-
-// odsl-D:/project_web/project-php-vs-react/backend_dev/vendor/composer/../symfony/polyfill-php83/Resources/stubs
-return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v1',
-   'data' => 
-  array (
-  ),
-));

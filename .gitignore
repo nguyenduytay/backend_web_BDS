@@ -13,3 +13,13 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# Logs
+/storage/logs/*.log
+/storage/logs/*.txt
+
+# Cache
+/storage/framework/cache/data/*
+/storage/framework/views/*
+/storage/phpstan/cache/
+/storage/phpstan/resultCache.php

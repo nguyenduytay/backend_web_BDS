@@ -70,7 +70,7 @@ services:
       - key: SESSION_LIFETIME
         value: 120
       - key: RUN_SEEDERS
-        value: "false"
+        value: "true"
 
   # Database Service - PostgreSQL
   - type: pserv

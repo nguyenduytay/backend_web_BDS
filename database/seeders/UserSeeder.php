@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
         $faker = Faker::create('vi_VN');
         $now = Carbon::now();
 
-        $this->command->info('   → Đang tạo tài khoản Admin...');
+        $this->command->info('   → Đang tạo tài khoản Quản trị viên...');
 
-        // Tài khoản Admin cố định
+        // Tài khoản Quản trị viên cố định
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@gmail.com'],
             [
@@ -32,15 +32,22 @@ class UserSeeder extends Seeder
                 'updated_at'        => $now,
             ]
         );
-        $this->command->line('   ✓ Đã tạo tài khoản Admin (admin@gmail.com / password)');
+        $this->command->line('   ✓ Đã tạo tài khoản Quản trị viên (admin@gmail.com / password)');
 
-        $this->command->info('   → Đang tạo tài khoản Agent (10 tài khoản)...');
-        // Agents
+        $this->command->info('   → Đang tạo tài khoản Môi giới (10 tài khoản)...');
+        // Môi giới
         $agents = [];
         $agentNames = [
-            'Nguyễn Văn An', 'Trần Thị Bình', 'Lê Văn Cường', 'Phạm Thị Dung',
-            'Hoàng Văn Em', 'Vũ Thị Phương', 'Đặng Văn Giang', 'Bùi Thị Hoa',
-            'Đỗ Văn Hùng', 'Ngô Thị Lan'
+            'Nguyễn Văn An',
+            'Trần Thị Bình',
+            'Lê Văn Cường',
+            'Phạm Thị Dung',
+            'Hoàng Văn Em',
+            'Vũ Thị Phương',
+            'Đặng Văn Giang',
+            'Bùi Thị Hoa',
+            'Đỗ Văn Hùng',
+            'Ngô Thị Lan'
         ];
 
         for ($i = 0; $i < 10; $i++) {
@@ -48,7 +55,7 @@ class UserSeeder extends Seeder
             DB::table('users')->updateOrInsert(
                 ['email' => $email],
                 [
-                    'name'           => array_key_exists($i, $agentNames) ? $agentNames[$i] : "Agent " . ($i + 1),
+                    'name'           => array_key_exists($i, $agentNames) ? $agentNames[$i] : "Môi giới " . ($i + 1),
                     'email'          => $email,
                     'password'       => Hash::make('password'),
                     'role'           => 'agent',
@@ -59,10 +66,10 @@ class UserSeeder extends Seeder
                 ]
             );
         }
-        $this->command->line('   ✓ Đã tạo 10 tài khoản Agent');
+        $this->command->line('   ✓ Đã tạo 10 tài khoản Môi giới');
 
-        $this->command->info('   → Đang tạo tài khoản User (50 tài khoản)...');
-        // Users
+        $this->command->info('   → Đang tạo tài khoản Người dùng (50 tài khoản)...');
+        // Người dùng
         for ($i = 1; $i <= 50; $i++) {
             $email = "user{$i}@example.com";
             DB::table('users')->updateOrInsert(
@@ -79,7 +86,7 @@ class UserSeeder extends Seeder
                 ]
             );
         }
-        $this->command->line('   ✓ Đã tạo 50 tài khoản User');
+        $this->command->line('   ✓ Đã tạo 50 tài khoản Người dùng');
 
         $totalUsers = DB::table('users')->count();
         $this->command->info("   📊 Tổng cộng: {$totalUsers} tài khoản đã được tạo");

@@ -11,16 +11,16 @@ class FavoritesSeeder extends Seeder
 {
     public function run(): void
     {
-        $faker = Faker::create();
+        $faker = Faker::create('vi_VN');
 
         $this->command->info('   → Đang tạo danh sách yêu thích...');
 
-        // Lấy danh sách user và property hiện có
+        // Lấy danh sách người dùng và bất động sản hiện có
         $userIds     = DB::table('users')->pluck('id')->toArray();
         $propertyIds = DB::table('properties')->pluck('id')->toArray();
 
         if (empty($userIds) || empty($propertyIds)) {
-            $this->command->warn('   ⚠ Không có user hoặc property để tạo danh sách yêu thích');
+            $this->command->warn('   ⚠ Không có người dùng hoặc bất động sản để tạo danh sách yêu thích');
             return;
         }
 

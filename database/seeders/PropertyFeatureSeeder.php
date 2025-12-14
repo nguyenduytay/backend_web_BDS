@@ -10,7 +10,7 @@ class PropertyFeatureSeeder extends Seeder
 {
     public function run(): void
     {
-        $faker = Faker::create();
+        $faker = Faker::create('vi_VN');
 
         $this->command->info('   → Đang liên kết tính năng với bất động sản...');
         $propertyIds = DB::table('properties')->pluck('id')->all();

@@ -1,0 +1,172 @@
+{
+  "total": 15,
+  "folder": "luxury home",
+  "generated_at": "2025-12-14T02:58:38.799Z",
+  "images": [
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680536/salman-saqib-WaC-JFfF21M-unsplash_yvcull.jpg",
+      "public_id": "salman-saqib-WaC-JFfF21M-unsplash_yvcull",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3840,
+        "height": 2160
+      },
+      "size_bytes": 2135205,
+      "created_at": "2025-12-14T02:48:56+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680536/clay-banks-4zlQ3CCoIyo-unsplash_tshd93.jpg",
+      "public_id": "clay-banks-4zlQ3CCoIyo-unsplash_tshd93",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3309,
+        "height": 2206
+      },
+      "size_bytes": 1226396,
+      "created_at": "2025-12-14T02:48:56+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680535/florian-schmidinger-b_79nOqf95I-unsplash_cllnqk.jpg",
+      "public_id": "florian-schmidinger-b_79nOqf95I-unsplash_cllnqk",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3729,
+        "height": 2486
+      },
+      "size_bytes": 2626883,
+      "created_at": "2025-12-14T02:48:55+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680534/lycs-architecture-kUdbEEMcRwE-unsplash_o6n6m6.jpg",
+      "public_id": "lycs-architecture-kUdbEEMcRwE-unsplash_o6n6m6",
+      "format": "jpg",
+      "dimensions": {
+        "width": 5000,
+        "height": 3293
+      },
+      "size_bytes": 5116303,
+      "created_at": "2025-12-14T02:48:54+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680532/roberto-nickson-emqnSQwQQDo-unsplash_c4uaq0.jpg",
+      "public_id": "roberto-nickson-emqnSQwQQDo-unsplash_c4uaq0",
+      "format": "jpg",
+      "dimensions": {
+        "width": 5472,
+        "height": 3648
+      },
+      "size_bytes": 1645332,
+      "created_at": "2025-12-14T02:48:52+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680531/clay-banks-zGRQYKuNa2E-unsplash_bzzfoi.jpg",
+      "public_id": "clay-banks-zGRQYKuNa2E-unsplash_bzzfoi",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3500,
+        "height": 2333
+      },
+      "size_bytes": 1581176,
+      "created_at": "2025-12-14T02:48:51+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680531/roberto-nickson-rEJxpBskj3Q-unsplash_hb4jvb.jpg",
+      "public_id": "roberto-nickson-rEJxpBskj3Q-unsplash_hb4jvb",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3648,
+        "height": 5472
+      },
+      "size_bytes": 1555519,
+      "created_at": "2025-12-14T02:48:51+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/avi-werde-hHz4yrvxwlA-unsplash_jd4cgx.jpg",
+      "public_id": "avi-werde-hHz4yrvxwlA-unsplash_jd4cgx",
+      "format": "jpg",
+      "dimensions": {
+        "width": 5969,
+        "height": 3979
+      },
+      "size_bytes": 4236007,
+      "created_at": "2025-12-14T02:48:49+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/clay-banks-vPsvT8tkLSQ-unsplash_j4bftm.jpg",
+      "public_id": "clay-banks-vPsvT8tkLSQ-unsplash_j4bftm",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3500,
+        "height": 2333
+      },
+      "size_bytes": 1289521,
+      "created_at": "2025-12-14T02:48:49+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/lotus-design-n-print-xroM8RaMnSI-unsplash_vy4wj2.jpg",
+      "public_id": "lotus-design-n-print-xroM8RaMnSI-unsplash_vy4wj2",
+      "format": "jpg",
+      "dimensions": {
+        "width": 6960,
+        "height": 4640
+      },
+      "size_bytes": 2081339,
+      "created_at": "2025-12-14T02:48:49+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/roberto-nickson-so3wgJLwDxo-unsplash_vbsrnq.jpg",
+      "public_id": "roberto-nickson-so3wgJLwDxo-unsplash_vbsrnq",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3648,
+        "height": 5472
+      },
+      "size_bytes": 1845918,
+      "created_at": "2025-12-14T02:48:48+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/aranprime-KbytCpI1i5I-unsplash_qwddvp.jpg",
+      "public_id": "aranprime-KbytCpI1i5I-unsplash_qwddvp",
+      "format": "jpg",
+      "dimensions": {
+        "width": 5304,
+        "height": 7952
+      },
+      "size_bytes": 1893327,
+      "created_at": "2025-12-14T02:48:48+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/aaron-huber-G7sE2S4Lab4-unsplash_kxrblb.jpg",
+      "public_id": "aaron-huber-G7sE2S4Lab4-unsplash_kxrblb",
+      "format": "jpg",
+      "dimensions": {
+        "width": 4928,
+        "height": 3264
+      },
+      "size_bytes": 1651904,
+      "created_at": "2025-12-14T02:48:48+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680527/vj-von-art-BP1Ze0qcp-c-unsplash_u14aqc.jpg",
+      "public_id": "vj-von-art-BP1Ze0qcp-c-unsplash_u14aqc",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3938,
+        "height": 2122
+      },
+      "size_bytes": 1884757,
+      "created_at": "2025-12-14T02:48:47+00:00"
+    },
+    {
+      "url": "https://res.cloudinary.com/dkrnmtema/image/upload/v1765680527/clay-banks-C-FqIffctHI-unsplash_lmpnwo.jpg",
+      "public_id": "clay-banks-C-FqIffctHI-unsplash_lmpnwo",
+      "format": "jpg",
+      "dimensions": {
+        "width": 3500,
+        "height": 2333
+      },
+      "size_bytes": 881520,
+      "created_at": "2025-12-14T02:48:47+00:00"
+    }
+  ]
+}

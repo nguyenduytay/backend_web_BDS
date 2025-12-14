@@ -9,6 +9,53 @@ use Illuminate\Support\Facades\DB;
 
 class PropertySeeder extends Seeder
 {
+    /**
+     * Danh sách URL ảnh từ Cloudinary (luxury home và background)
+     */
+    private function getCloudinaryImages(): array
+    {
+        return [
+            // Folder: luxury home (15 ảnh)
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680536/salman-saqib-WaC-JFfF21M-unsplash_yvcull.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680536/clay-banks-4zlQ3CCoIyo-unsplash_tshd93.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680535/florian-schmidinger-b_79nOqf95I-unsplash_cllnqk.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680534/lycs-architecture-kUdbEEMcRwE-unsplash_o6n6m6.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680532/roberto-nickson-emqnSQwQQDo-unsplash_c4uaq0.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680531/clay-banks-zGRQYKuNa2E-unsplash_bzzfoi.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680531/roberto-nickson-rEJxpBskj3Q-unsplash_hb4jvb.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/avi-werde-hHz4yrvxwlA-unsplash_jd4cgx.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/clay-banks-vPsvT8tkLSQ-unsplash_j4bftm.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680529/lotus-design-n-print-xroM8RaMnSI-unsplash_vy4wj2.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/roberto-nickson-so3wgJLwDxo-unsplash_vbsrnq.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/aranprime-KbytCpI1i5I-unsplash_qwddvp.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680528/aaron-huber-G7sE2S4Lab4-unsplash_kxrblb.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680527/vj-von-art-BP1Ze0qcp-c-unsplash_u14aqc.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680527/clay-banks-C-FqIffctHI-unsplash_lmpnwo.jpg',
+            // Folder: background (11 ảnh)
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680217/sarmat-batagov-2HbkIQeZRBc-unsplash_rchtsw.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680217/nate-holland-X88xujrI04Q-unsplash_lo7mvo.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680216/josh-hild-jaJfFe0HAnM-unsplash_lci95t.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680215/alex-robertson-RPFvgzbPWxA-unsplash_yko56n.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680214/diana-bondarenko-ZFaz6FJgVIw-unsplash_nk1dha.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680214/marco-grosso-4OyGSc2c0vw-unsplash_ffziqh.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680214/marco-grosso-m41uew-oMlU-unsplash_p7gdv9.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680213/junel-mujar-yJmR_0Fookg-unsplash_ieuwa5.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680213/huy-phan-5V0BTf2XMBY-unsplash_skiybp.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680212/jason-dent-w3eFhqXjkZE-unsplash_s64awu.jpg',
+            'https://res.cloudinary.com/dkrnmtema/image/upload/v1765680212/salman-saqib-WaC-JFfF21M-unsplash_q1zvny.jpg',
+        ];
+    }
+
+    /**
+     * Lấy tên file từ URL
+     */
+    private function getImageNameFromUrl(string $url): string
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+        $filename = basename($path);
+        return $filename ?: 'image.jpg';
+    }
+
     public function run(): void
     {
         $faker = Faker::create('vi_VN');
@@ -64,8 +111,8 @@ class PropertySeeder extends Seeder
                 'Biệt thự mới xây', 'Biệt thự đẹp', 'Biệt thự tiện nghi', 'Biệt thự độc đáo'
             ],
             'shophouse' => [
-                'Shophouse mặt tiền', 'Shophouse kinh doanh', 'Shophouse hiện đại', 'Shophouse giá tốt',
-                'Shophouse mới xây', 'Shophouse đẹp', 'Shophouse tiện nghi', 'Shophouse vị trí đẹp'
+                'Nhà phố thương mại mặt tiền', 'Nhà phố thương mại kinh doanh', 'Nhà phố thương mại hiện đại', 'Nhà phố thương mại giá tốt',
+                'Nhà phố thương mại mới xây', 'Nhà phố thương mại đẹp', 'Nhà phố thương mại tiện nghi', 'Nhà phố thương mại vị trí đẹp'
             ],
             'land' => [
                 'Đất nền mặt tiền', 'Đất nền giá tốt', 'Đất nền vị trí đẹp', 'Đất nền đầu tư',
@@ -101,10 +148,10 @@ class PropertySeeder extends Seeder
                 'Biệt thự đẹp, thiết kế tinh tế. Không gian sống cao cấp, đầy đủ tiện nghi. Vị trí yên tĩnh, phù hợp nghỉ dưỡng.'
             ],
             'shophouse' => [
-                'Shophouse mặt tiền, kinh doanh tốt. Thiết kế hiện đại, không gian rộng. Vị trí đắc địa, tiềm năng sinh lời cao.',
-                'Shophouse mới xây, kiến trúc đẹp. Phù hợp mở cửa hàng, văn phòng. Giao thông thuận tiện, đông dân cư.',
-                'Shophouse giá tốt, đầu tư hiệu quả. Mặt tiền rộng, thiết kế tối ưu. Vị trí trung tâm, tiềm năng phát triển.',
-                'Shophouse cao cấp, thiết kế sang trọng. Phù hợp kinh doanh cao cấp. Vị trí đẹp, giá trị đầu tư cao.'
+                'Nhà phố thương mại mặt tiền, kinh doanh tốt. Thiết kế hiện đại, không gian rộng. Vị trí đắc địa, tiềm năng sinh lời cao.',
+                'Nhà phố thương mại mới xây, kiến trúc đẹp. Phù hợp mở cửa hàng, văn phòng. Giao thông thuận tiện, đông dân cư.',
+                'Nhà phố thương mại giá tốt, đầu tư hiệu quả. Mặt tiền rộng, thiết kế tối ưu. Vị trí trung tâm, tiềm năng phát triển.',
+                'Nhà phố thương mại cao cấp, thiết kế sang trọng. Phù hợp kinh doanh cao cấp. Vị trí đẹp, giá trị đầu tư cao.'
             ],
             'land' => [
                 'Đất nền mặt tiền, pháp lý rõ ràng. Vị trí đẹp, tiềm năng phát triển cao. Phù hợp đầu tư hoặc xây dựng.',
@@ -182,17 +229,20 @@ class PropertySeeder extends Seeder
                 'updated_at'       => $now,
             ]);
 
-            // Ảnh BĐS (3-7 ảnh)
+            // Ảnh BĐS (3-7 ảnh) - Sử dụng ảnh thật từ Cloudinary
+            $cloudinaryImages = $this->getCloudinaryImages();
             $imgCount     = $faker->numberBetween(3, 7);
             $primaryIndex = $faker->numberBetween(1, $imgCount);
-            $images       = [];
-            for ($j = 1; $j <= $imgCount; $j++) {
+            $selectedImages = $faker->randomElements($cloudinaryImages, min($imgCount, count($cloudinaryImages)));
+            
+            $images = [];
+            foreach ($selectedImages as $index => $imageUrl) {
                 $images[] = [
                     'property_id' => $propertyId,
-                    'image_path'  => "storage/properties/{$propertyId}/image_{$j}.jpg",
-                    'image_name' => "image_{$j}.jpg",
-                    'is_primary' => $j === $primaryIndex,
-                    'sort_order' => $j,
+                    'image_path'  => $imageUrl, // URL từ Cloudinary
+                    'image_name' => $this->getImageNameFromUrl($imageUrl),
+                    'is_primary' => ($index + 1) === $primaryIndex,
+                    'sort_order' => $index + 1,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

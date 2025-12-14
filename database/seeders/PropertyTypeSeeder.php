@@ -34,7 +34,7 @@ class PropertyTypeSeeder extends Seeder
             ],
             [
                 'type'       => 'shophouse',
-                'name'       => 'Shophouse',
+                'name'       => 'Nhà phố thương mại',
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
@@ -60,7 +60,7 @@ class PropertyTypeSeeder extends Seeder
         }
         $this->command->line(
             '   ✓ Đã tạo ' . count($types) .
-            ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Shophouse, Đất nền, Văn phòng'
+            ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Nhà phố thương mại, Đất nền, Văn phòng'
         );
     }
 }

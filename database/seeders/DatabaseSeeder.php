@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('🎉 Hoàn tất seed dữ liệu! Database đã được tạo thành công.');
         $this->command->newLine();
-        $this->command->info('📝 Thông tin đăng nhập Admin:');
+        $this->command->info('📝 Thông tin đăng nhập Quản trị viên:');
         $this->command->line('   Email: admin@gmail.com');
         $this->command->line('   Mật khẩu: password');
     }

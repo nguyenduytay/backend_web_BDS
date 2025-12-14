@@ -32,13 +32,13 @@ class UserController extends Controller
         );
     }
     // Tạo user mới
-    public function store(Request $request): JsonResponse
-    {
-        $validator = $this->validation->validateCreate($request);
+  public function store(Request $request): JsonResponse
+{
+    $validator = $this->validation->validateCreate($request);
         if ($valiError = $this->handleValidationErrors($validator)) {
             return $valiError;
-        }
-        $user = $this->userService->createUser($request->all());
+    }
+    $user = $this->userService->createUser($request->all());
         return $this->handleServiceResponse(
             $user,
             'Tạo user thành công',
@@ -46,35 +46,35 @@ class UserController extends Controller
             201,
             500
         );
-    }
+}
 //Hiển thị thông tin user cụ thể với phân quyền
-    /**
-     * Get specific user information
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function show(Request $request): JsonResponse
-    {
-        $validator = $this->validation->validateGetUser($request);
+/**
+ * Get specific user information
+ * @param Request $request
+ * @return JsonResponse
+ */
+public function show(Request $request): JsonResponse
+{
+    $validator = $this->validation->validateGetUser($request);
         if ($valiError = $this->handleValidationErrors($validator)) {
             return $valiError;
-        }
-
-        $authenticatedUser = auth()->user();
-        if ($authenticatedUser->role !== 'admin' && $authenticatedUser->id != $request->id) {
-            return ApiResponse::error('Bạn không có quyền xem thông tin user này', 403);
-        }
-
-        $user = $this->userService->getUserById($request->id);
-        if (!$user) {
-            return ApiResponse::error('Lỗi khi lấy thông tin user', 500);
-        }
-
-        unset($user->password, $user->remember_token);
-        return ApiResponse::success($user, 'Lấy thông tin user thành công', 200);
     }
-    // Cập nhật thông tin user cụ thể với phân quyền
-    public function update(Request $request): JsonResponse
+    
+    $authenticatedUser = auth()->user();
+    if ($authenticatedUser->role !== 'admin' && $authenticatedUser->id != $request->id) {
+        return ApiResponse::error('Bạn không có quyền xem thông tin user này', 403);
+    }
+    
+    $user = $this->userService->getUserById($request->id);
+    if (!$user) {
+        return ApiResponse::error('Lỗi khi lấy thông tin user', 500);
+    }
+    
+    unset($user->password, $user->remember_token);
+    return ApiResponse::success($user, 'Lấy thông tin user thành công', 200);
+}
+// Cập nhật thông tin user cụ thể với phân quyền
+ public function update(Request $request): JsonResponse
     {
         $validator = $this->validation->validateUpdate($request);
         if ($valiError = $this->handleValidationErrors($validator)) {
@@ -90,14 +90,14 @@ class UserController extends Controller
         );
     }
 
-    // Xóa người dùng chỉ Admin
-    public function destroy(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required|integer',
-        ]);
+// Xóa người dùng chỉ Admin
+public function destroy(Request $request)
+{
+    $validated = $request->validate([
+        'id' => 'required|integer',
+    ]);
 
-        $result = $this->userService->deleteUser($validated['id']);
+    $result = $this->userService->deleteUser($validated['id']);
         return $this->handleServiceResponse(
             $result,
             'Xóa user thành công',
@@ -105,5 +105,5 @@ class UserController extends Controller
             200,
             500
         );
-    }
+}
 }

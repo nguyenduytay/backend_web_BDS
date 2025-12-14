@@ -24,7 +24,7 @@ class LocationController extends Controller
 
     public function all()
     {
-        $all = $this->locationService->getAllLocations();
+            $all = $this->locationService->getAllLocations();
         return $this->handleServiceResponseWithEmptyCheck(
             $all,
             "Thành công",
@@ -60,11 +60,11 @@ class LocationController extends Controller
 
     public function create(Request $request)
     {
-        $vali = $this->locationValidation->validateLocationCreate($request);
+            $vali = $this->locationValidation->validateLocationCreate($request);
         if ($valiError = $this->handleValidationErrors($vali)) {
             return $valiError;
         }
-        $location = $this->locationService->create($request);
+            $location = $this->locationService->create($request);
         return $this->handleServiceResponse(
             $location,
             "Tạo mới thành công",
@@ -76,11 +76,11 @@ class LocationController extends Controller
 
     public function update(Request $request)
     {
-        $vali = $this->locationValidation->validateLocationUpdate($request);
+            $vali = $this->locationValidation->validateLocationUpdate($request);
         if ($valiError = $this->handleValidationErrors($vali)) {
             return $valiError;
         }
-        $status = $this->locationService->update($request);
+            $status = $this->locationService->update($request);
         return $this->handleServiceResponse(
             $status,
             "Cập nhật thành công",
@@ -92,11 +92,11 @@ class LocationController extends Controller
 
     public function delete(Request $request)
     {
-        $vali = $this->locationValidation->validateLocationDelete($request);
+            $vali = $this->locationValidation->validateLocationDelete($request);
         if ($valiError = $this->handleValidationErrors($vali)) {
             return $valiError;
         }
-        $status = $this->locationService->delete($request);
+            $status = $this->locationService->delete($request);
         return $this->handleServiceResponse(
             $status,
             "Xóa thành công",
@@ -120,7 +120,7 @@ class LocationController extends Controller
 
     public function districts($city)
     {
-        $districts = $this->locationService->districts($city);
+            $districts = $this->locationService->districts($city);
         return $this->handleServiceResponseWithEmptyCheck(
             $districts,
             "Thành công",

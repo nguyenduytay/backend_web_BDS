@@ -1,0 +1,27 @@
+{
+  "name": "Real Estate API",
+  "version": "1.0.0",
+  "description": "API Documentation cho hệ thống quản lý bất động sản",
+  "title": "Real Estate API",
+  "url": "http://localhost",
+  "order": [
+    "Auth",
+    "User",
+    "Location",
+    "PropertyType",
+    "Feature",
+    "Contact",
+    "Property",
+    "PropertyImage",
+    "PropertyFeature",
+    "Favorite",
+    "Search",
+    "Dashboard",
+    "Report"
+  ],
+  "exclude": [
+    "vendor",
+    "node_modules"
+  ]
+}
+

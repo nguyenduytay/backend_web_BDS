@@ -124,4 +124,36 @@ class PropertyService extends BaseService
             return null;
         }
     }
+
+    /**
+     * Admin: Duyệt tin đăng (approve property)
+     */
+    public function approve($id)
+    {
+        try {
+            $property = $this->propertyRepository->find($id);
+            $property->status = 'available'; // Đặt status thành available khi duyệt
+            $property->save();
+            return $property;
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::approve');
+            return null;
+        }
+    }
+
+    /**
+     * Admin: Ẩn tin đăng (hide property)
+     */
+    public function hide($id)
+    {
+        try {
+            $property = $this->propertyRepository->find($id);
+            $property->status = 'pending'; // Đặt status thành pending để ẩn
+            $property->save();
+            return $property;
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::hide');
+            return null;
+        }
+    }
 }

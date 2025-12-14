@@ -2,46 +2,44 @@
 
 namespace App\Rules;
 
-use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Rule;
 
-class StrongPassword implements ValidationRule
+class StrongPassword implements Rule
 {
     /**
-     * Run the validation rule.
+     * Determine if the validation rule passes.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return bool
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function passes($attribute, $value)
     {
         $password = $value;
 
         // Kiểm tra độ dài tối thiểu
         if (strlen($password) < 8) {
-            $fail('Mật khẩu phải có ít nhất 8 ký tự.');
-            return;
+            return false;
         }
 
         // Kiểm tra có chữ hoa
         if (!preg_match('/[A-Z]/', $password)) {
-            $fail('Mật khẩu phải chứa ít nhất một chữ cái viết hoa.');
-            return;
+            return false;
         }
 
         // Kiểm tra có chữ thường
         if (!preg_match('/[a-z]/', $password)) {
-            $fail('Mật khẩu phải chứa ít nhất một chữ cái viết thường.');
-            return;
+            return false;
         }
 
         // Kiểm tra có số
         if (!preg_match('/[0-9]/', $password)) {
-            $fail('Mật khẩu phải chứa ít nhất một chữ số.');
-            return;
+            return false;
         }
 
         // Kiểm tra có ký tự đặc biệt
         if (!preg_match('/[^A-Za-z0-9]/', $password)) {
-            $fail('Mật khẩu phải chứa ít nhất một ký tự đặc biệt.');
-            return;
+            return false;
         }
 
         // Kiểm tra không chứa thông tin cá nhân phổ biến
@@ -52,15 +50,25 @@ class StrongPassword implements ValidationRule
 
         foreach ($commonPatterns as $pattern) {
             if (stripos($password, $pattern) !== false) {
-                $fail('Mật khẩu không được chứa các từ phổ biến như: ' . implode(', ', $commonPatterns));
-                return;
+                return false;
             }
         }
 
         // Kiểm tra không có chuỗi lặp lại
         if (preg_match('/(.)\1{2,}/', $password)) {
-            $fail('Mật khẩu không được chứa các ký tự lặp lại liên tiếp.');
-            return;
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.';
     }
 }

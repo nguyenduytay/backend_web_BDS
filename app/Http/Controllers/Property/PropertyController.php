@@ -189,4 +189,44 @@ class PropertyController extends Controller
         }
         return ApiResponse::error('Lỗi khi lấy danh sách properties của user', 500);
     }
+
+    /**
+     * Admin: Duyệt tin đăng
+     */
+    public function approve($id)
+    {
+        $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
+        }
+
+        $property = $this->propertyService->approve($id);
+        return $this->handleServiceResponse(
+            $property,
+            'Duyệt tin đăng thành công',
+            'Lỗi khi duyệt tin đăng',
+            200,
+            500
+        );
+    }
+
+    /**
+     * Admin: Ẩn tin đăng
+     */
+    public function hide($id)
+    {
+        $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
+        }
+
+        $property = $this->propertyService->hide($id);
+        return $this->handleServiceResponse(
+            $property,
+            'Ẩn tin đăng thành công',
+            'Lỗi khi ẩn tin đăng',
+            200,
+            500
+        );
+    }
 }

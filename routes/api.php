@@ -121,12 +121,18 @@ Route::middleware(['api'])->group(function () {
 
     // ----------------- Contacts -----------------
     Route::prefix('contacts')->group(function () {
+        // Routes cho Admin: Quản lý contacts
         Route::middleware(['auth:sanctum', 'admin'])->group(function () {
             Route::get('/all', [ContactController::class, 'all']);
             Route::get('/search', [ContactController::class, 'search']);
             Route::post('/create', [ContactController::class, 'create']);
             Route::put('/update/{id}', [ContactController::class, 'update']);
             Route::delete('/delete/{id}', [ContactController::class, 'delete']);
+        });
+
+        // Routes cho User: Liên hệ người bán
+        Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
+            Route::get('/seller/{propertyId}', [ContactController::class, 'contactSeller'])->whereNumber('propertyId'); // User lấy thông tin liên hệ người bán
         });
     });
 
@@ -153,6 +159,12 @@ Route::middleware(['api'])->group(function () {
             Route::post('/restore/{id}', [PropertyController::class, 'restore']);          // Khôi phục
             Route::delete('/force/{id}', [PropertyController::class, 'forceDelete']);      // Xóa vĩnh viễn
             Route::get('/user/{userId}', [PropertyController::class, 'propertiesByUser'])->whereNumber('userId'); // Lấy properties của user
+        });
+
+        // Routes chỉ dành cho Admin: Duyệt/Ẩn tin đăng
+        Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+            Route::post('/approve/{id}', [PropertyController::class, 'approve'])->whereNumber('id');  // Duyệt tin đăng
+            Route::post('/hide/{id}', [PropertyController::class, 'hide'])->whereNumber('id');        // Ẩn tin đăng
         });
     });
 
@@ -191,7 +203,7 @@ Route::middleware(['api'])->group(function () {
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {
             Route::post('favorite/create/{userId}', [FavoriteController::class, 'create']);
             Route::delete('favorite/delete/{userId}', [FavoriteController::class, 'delete']);
-            Route::get('favorite/is_favorite/{userId}', [FavoriteController::class, 'ch eck']);
+            Route::get('favorite/is_favorite/{userId}', [FavoriteController::class, 'check']);
         });
     });
 

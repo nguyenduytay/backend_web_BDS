@@ -96,4 +96,24 @@ class ContactController extends Controller
             500
         );
     }
+
+    /**
+     * User: Liên hệ người bán - Lấy thông tin contact của property owner
+     */
+    public function contactSeller($propertyId)
+    {
+        $vali = $this->contactValidation->checkIdValidation($propertyId, 'properties', 'id');
+        if ($valiError = $this->handleValidationErrors($vali)) {
+            return $valiError;
+        }
+
+        $contact = $this->contactService->getSellerContact($propertyId);
+        return $this->handleServiceResponse(
+            $contact,
+            'Lấy thông tin liên hệ người bán thành công',
+            'Không tìm thấy thông tin liên hệ',
+            200,
+            404
+        );
+    }
 }

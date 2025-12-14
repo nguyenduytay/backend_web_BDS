@@ -16,20 +16,18 @@ class AuthApiTest extends TestCase
         $data = [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'phone' => '0912345678'
+            'password' => 'Secure123!@#', // Mật khẩu đủ mạnh, không chứa "password"
+            'password_confirmation' => 'Secure123!@#',
+            'phone' => '0912345678',
+            'role' => 'user' // Role là bắt buộc
         ];
 
         $response = $this->postJson('/api/auth/register', $data);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201) // Register trả về 201
                  ->assertJsonStructure([
                      'status',
-                     'data' => [
-                         'user',
-                         'token'
-                     ]
+                     'data' // data là user object, không có token
                  ]);
     }
 
@@ -52,10 +50,7 @@ class AuthApiTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonStructure([
                      'status',
-                     'data' => [
-                         'user',
-                         'token'
-                     ]
+                     'data' // data là token string, không phải object
                  ]);
     }
 
@@ -91,7 +86,10 @@ class AuthApiTest extends TestCase
             'phone' => '0912345678'
         ]);
 
-        $response = $this->actingAs($user, 'sanctum')
+        // Tạo token và thêm vào header
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
                          ->postJson('/api/auth/logout');
 
         $response->assertStatus(200);

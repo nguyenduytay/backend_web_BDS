@@ -64,4 +64,21 @@ class ContactService extends BaseService
             return null;
         }
     }
+
+    /**
+     * User: Lấy thông tin liên hệ của người bán (property owner)
+     */
+    public function getSellerContact($propertyId)
+    {
+        try {
+            $property = \App\Models\Property::with('contact')->find($propertyId);
+            if (!$property) {
+                return null;
+            }
+            return $property->contact;
+        } catch (Throwable $e) {
+            $this->handleException($e, 'ContactService::getSellerContact');
+            return null;
+        }
+    }
 }

@@ -25,12 +25,12 @@ class FeatureService extends BaseService
         }
     }
 
-    public function SearchId($id)
+    public function searchId($id)
     {
         try {
             return $this->featureRepository->find($id);
         } catch (Throwable $e) {
-            $this->handleException($e, 'FeatureService::SearchId');
+            $this->handleException($e, 'FeatureService::searchId');
             return null;
         }
     }

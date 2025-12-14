@@ -87,4 +87,3 @@ class SearchApiTest extends TestCase
         $response->assertStatus(200);
     }
 }
-

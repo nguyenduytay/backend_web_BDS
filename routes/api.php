@@ -67,10 +67,10 @@ Route::middleware(['api'])->group(function () {
         Route::get('/cities/{city}/districts', [LocationController::class, 'districts']);
 
         // Tìm kiếm location theo city
-        Route::get('/search_city', [LocationController::class, 'SearchCity']);
+        Route::get('/search_city', [LocationController::class, 'searchCity']);
 
         // Lấy location theo ID (chỉ match số)
-        Route::get('/search/{id}', [LocationController::class, 'SeacrhId'])->whereNumber('id');
+        Route::get('/search/{id}', [LocationController::class, 'searchId'])->whereNumber('id');
 
         // Các route chỉ admin
         Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -87,7 +87,7 @@ Route::middleware(['api'])->group(function () {
         Route::get('/all', [PropertyTypeController::class, 'all']);
 
         // Lấy property type theo type
-        Route::get('/search_type', [PropertyTypeController::class, 'SearchType']);
+        Route::get('/search_type', [PropertyTypeController::class, 'searchType']);
 
         // Các route chỉ admin
         Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -109,7 +109,7 @@ Route::middleware(['api'])->group(function () {
         Route::get('/all', [FeatureController::class, 'all']);
 
         // Lấy feature theo ID
-        Route::get('/search/{id}', [FeatureController::class, 'SearchId']);
+        Route::get('/search/{id}', [FeatureController::class, 'searchId']);
 
         // Các route chỉ admin
         Route::middleware(['auth:sanctum', 'admin'])->group(function () {

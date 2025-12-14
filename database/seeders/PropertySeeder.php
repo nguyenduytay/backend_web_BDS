@@ -79,8 +79,12 @@ class PropertySeeder extends Seeder
 
         $descriptionTemplates = [
             'apartment' => [
-                'Căn hộ đẹp, thiết kế hiện đại, đầy đủ tiện nghi. Vị trí thuận lợi, gần trung tâm, giao thông thuận tiện. Phù hợp cho gia đình trẻ hoặc người độc thân.',
-                'Căn hộ cao cấp với view đẹp, không gian thoáng mát. Nội thất đầy đủ, sẵn sàng vào ở ngay. An ninh tốt, tiện ích xung quanh đầy đủ.',
+                'Căn hộ đẹp, thiết kế hiện đại, đầy đủ tiện nghi. ' .
+                'Vị trí thuận lợi, gần trung tâm, giao thông thuận tiện. ' .
+                'Phù hợp cho gia đình trẻ hoặc người độc thân.',
+                'Căn hộ cao cấp với view đẹp, không gian thoáng mát. ' .
+                'Nội thất đầy đủ, sẵn sàng vào ở ngay. ' .
+                'An ninh tốt, tiện ích xung quanh đầy đủ.',
                 'Căn hộ mới xây, thiết kế tối ưu không gian. Gần trường học, bệnh viện, siêu thị. Phù hợp đầu tư hoặc ở.',
                 'Căn hộ sang trọng, đầy đủ tiện ích: hồ bơi, gym, sân vườn. Vị trí đắc địa, giá trị đầu tư cao.'
             ],
@@ -164,7 +168,9 @@ class PropertySeeder extends Seeder
                 'bedrooms'         => $faker->numberBetween(0, 6),
                 'bathrooms'        => $faker->numberBetween(1, 5),
                 'floors'           => $faker->numberBetween(1, 5),
-                'address'          => $faker->randomElement($streetNames) . ' ' . $faker->numberBetween(1, 500) . ', ' . $location->district . ', ' . $location->city,
+                'address'          => $faker->randomElement($streetNames) . ' ' .
+                    $faker->numberBetween(1, 500) . ', ' .
+                    $location->district . ', ' . $location->city,
                 'postal_code'      => str_pad((string) $faker->numberBetween(10000, 99999), 5, '0', STR_PAD_LEFT),
                 'latitude'         => $faker->randomFloat(8, $latMin, $latMax),
                 'longitude'        => $faker->randomFloat(8, $lngMin, $lngMax),

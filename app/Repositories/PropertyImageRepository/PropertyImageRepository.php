@@ -21,7 +21,7 @@ class PropertyImageRepository extends BaseRepository implements PropertyImageRep
     }
     public function getAllHomeAvatars()
     {
-        $images = PropertyImage::select(
+        $images = PropertyImage::query()->select(
             'property_images.id',
             'property_images.image_path',
             'properties.id as property_id',

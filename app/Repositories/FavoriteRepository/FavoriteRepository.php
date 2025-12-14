@@ -41,7 +41,7 @@ class FavoriteRepository extends BaseRepository implements FavoriteRepositoryInt
 
     public function isFavorite($userId, $propertyId)
     {
-        return Favorite::where('user_id', $userId)
+        return Favorite::query()->where('user_id', $userId)
             ->where('property_id', $propertyId)
             ->exists();
     }

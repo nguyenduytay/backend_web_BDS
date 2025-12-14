@@ -42,11 +42,11 @@ abstract class BaseService
             return $callback();
         } catch (Throwable $e) {
             $this->handleException($e, $context);
-            
+
             if ($throwException) {
                 throw $e;
             }
-            
+
             return null;
         }
     }

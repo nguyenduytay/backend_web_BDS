@@ -78,9 +78,10 @@ class Controller extends BaseController
     {
         if ($validator->fails()) {
             $errors = $validator->errors();
+            /** @var \Illuminate\Support\MessageBag $errors */
             return ApiResponse::error(
-                is_string($errors) ? $errors : $errors->first(),
-                is_string($errors) ? null : $errors,
+                $errors->first(),
+                $errors,
                 422
             );
         }

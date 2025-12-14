@@ -47,7 +47,8 @@ class PropertyFeatureRepository extends BaseRepository implements PropertyFeatur
     public function removeFeatureFromProperty($propertyId, $featureId)
     {
         // Tìm property theo ID, nếu không có sẽ throw 404
-        $property = Property::findOrFail($propertyId);
+        /** @var \App\Models\Property $property */
+        $property = Property::query()->findOrFail($propertyId);
 
         // Xóa featureId ra khỏi bảng trung gian property_feature
         $property->features()->detach($featureId);

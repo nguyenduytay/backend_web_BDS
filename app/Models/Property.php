@@ -109,6 +109,8 @@ class Property extends Model
     }
     public function primaryImage()
     {
-        return $this->hasOne(PropertyImage::class)->where('is_primary', 1)->orderBy('updated_at', 'DESC');
+        return $this->hasOne(PropertyImage::class, 'property_id')
+            ->where('is_primary', 1)
+            ->orderBy('updated_at', 'DESC');
     }
 }

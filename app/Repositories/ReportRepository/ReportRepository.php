@@ -16,7 +16,7 @@ class ReportRepository extends BaseRepository implements ReportRepositoryInterfa
     // Đếm properties theo tháng (12 tháng gần nhất)
     public function getPropertiesMonthly()
     {
-        return Property::select(
+        return Property::query()->select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('YEAR(created_at) as year'),
             DB::raw('COUNT(*) as total')
@@ -31,7 +31,7 @@ class ReportRepository extends BaseRepository implements ReportRepositoryInterfa
     // Đếm users theo tháng (12 tháng gần nhất)
     public function getUsersMonthly()
     {
-        return User::select(
+        return User::query()->select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('YEAR(created_at) as year'),
             DB::raw('COUNT(*) as total')

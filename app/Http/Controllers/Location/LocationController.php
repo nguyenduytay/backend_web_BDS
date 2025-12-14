@@ -34,7 +34,7 @@ class LocationController extends Controller
         );
     }
 
-    public function SearchCity(Request $request)
+    public function searchCity(Request $request)
     {
         $search = $this->locationService->search($request);
         return $this->handleServiceResponseWithEmptyCheck(
@@ -46,7 +46,7 @@ class LocationController extends Controller
         );
     }
 
-    public function SeacrhId($id)
+    public function searchId($id)
     {
         $data = $this->locationService->show($id);
         return $this->handleServiceResponse(

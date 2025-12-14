@@ -10,10 +10,13 @@ parameters:
         - storage
         - bootstrap/cache
     ignoreErrors:
-        # Laravel specific
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::.*#'
-        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Builder::.*#'
         # Dynamic properties
         - '#Access to an undefined property.*#'
+        # Cloudinary facade
+        - '#Call to an undefined static method CloudinaryLabs\\CloudinaryLaravel\\Facades\\Cloudinary::.*#'
+        # Eloquent Relations - HasOne supports where() method
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasOne::where#'
+        # Boolean expressions from PHPDoc
+        - '#Negated boolean expression is always false#'
     tmpDir: storage/phpstan
 

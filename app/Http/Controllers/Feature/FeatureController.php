@@ -32,7 +32,7 @@ class FeatureController extends Controller
         );
     }
 
-    public function SearchId($id)
+    public function searchId($id)
     {
         $validator = $this->featureValidation->checkIdValidate($id);
         if ($valiError = $this->handleValidationErrors($validator)) {

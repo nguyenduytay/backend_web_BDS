@@ -24,7 +24,7 @@ class UsersRepository extends BaseRepository implements UsersRepositoryInterface
      */
     public function find($id)
     {
-        return $this->model->select('id', 'name', 'email', 'role', 'created_at', 'updated_at')
+        return $this->model->select('id', 'name', 'email', 'phone', 'avatar', 'role', 'created_at', 'updated_at')
                           ->find($id);
     }
     public function updateUser($id, array $data)

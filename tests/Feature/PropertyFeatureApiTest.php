@@ -111,4 +111,3 @@ class PropertyFeatureApiTest extends TestCase
         $response->assertStatus(200);
     }
 }
-

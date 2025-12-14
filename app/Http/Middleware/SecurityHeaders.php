@@ -36,7 +36,9 @@ class SecurityHeaders
                 "style-src 'self' 'unsafe-inline'; " .
                 "img-src 'self' data: https:; " .
                 "font-src 'self' data:; " .
-                "connect-src 'self' " . env('FRONTEND_URL', 'http://localhost:3000') . " " . env('ADMIN_URL', 'http://localhost:3001') . "; " .
+                "connect-src 'self' " .
+                env('FRONTEND_URL', 'http://localhost:3000') . " " .
+                env('ADMIN_URL', 'http://localhost:3001') . "; " .
                 "frame-ancestors 'none';";
 
             $response->headers->set('Content-Security-Policy', $csp);

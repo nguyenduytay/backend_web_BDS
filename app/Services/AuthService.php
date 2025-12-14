@@ -52,12 +52,16 @@ class AuthService extends BaseService
 
                 // Kiểm tra và xóa token cũ nếu vượt quá giới hạn
                 $maxTokens     = config('security.token.max_tokens_per_user', 5);
-                $currentTokens = PersonalAccessToken::where('tokenable_id', $user->id)
+                /** @var \Illuminate\Database\Eloquent\Builder $query */
+                $query = PersonalAccessToken::query();
+                $currentTokens = $query->where('tokenable_id', $user->id)
                     ->where('tokenable_type', get_class($user))
                     ->count();
 
                 if ($currentTokens >= $maxTokens) {
-                    $oldestToken = PersonalAccessToken::where('tokenable_id', $user->id)
+                    /** @var \Illuminate\Database\Eloquent\Builder $query */
+                    $query = PersonalAccessToken::query();
+                    $oldestToken = $query->where('tokenable_id', $user->id)
                         ->where('tokenable_type', get_class($user))
                         ->orderBy('created_at', 'asc')
                         ->first();
@@ -67,7 +71,8 @@ class AuthService extends BaseService
                     }
                 }
 
-                return $user->createToken('auth_token')->plainTextToken;
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return ['token' => $token];
             }
             return null;
         } catch (Throwable $e) {
@@ -100,7 +105,10 @@ class AuthService extends BaseService
                 return null;
             }
             $token = $user->currentAccessToken();
-            if (!$token || !$token instanceof PersonalAccessToken) {
+            if (!$token) {
+                return null;
+            }
+            if (!$token instanceof PersonalAccessToken) {
                 return null;
             }
             $token->delete();

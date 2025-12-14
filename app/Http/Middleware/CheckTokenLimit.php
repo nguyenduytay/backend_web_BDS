@@ -23,13 +23,17 @@ class CheckTokenLimit
         }
 
         $maxTokens     = config('security.token.max_tokens_per_user', 5);
-        $currentTokens = PersonalAccessToken::where('tokenable_id', $user->id)
+        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        $query = PersonalAccessToken::query();
+        $currentTokens = $query->where('tokenable_id', $user->id)
             ->where('tokenable_type', get_class($user))
             ->count();
 
         if ($currentTokens >= $maxTokens) {
             // Xóa token cũ nhất
-            $oldestToken = PersonalAccessToken::where('tokenable_id', $user->id)
+            /** @var \Illuminate\Database\Eloquent\Builder $query */
+            $query = PersonalAccessToken::query();
+            $oldestToken = $query->where('tokenable_id', $user->id)
                 ->where('tokenable_type', get_class($user))
                 ->orderBy('created_at', 'asc')
                 ->first();

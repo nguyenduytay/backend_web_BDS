@@ -36,5 +36,10 @@
         </properties>
         <exclude-pattern>*/routes/*</exclude-pattern>
     </rule>
+    
+    <!-- Ignore namespace requirement for migration files (Laravel convention) -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>*/database/migrations/*</exclude-pattern>
+    </rule>
 </ruleset>
 

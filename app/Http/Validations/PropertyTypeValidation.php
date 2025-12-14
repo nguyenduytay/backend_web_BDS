@@ -33,7 +33,8 @@ class PropertyTypeValidation extends Validation
     }
     public function validatePropertyTypeUpdate(Request $request, $id)
     {
-        $propertyType = \App\Models\PropertyType::find($id);
+        /** @var \App\Models\PropertyType|null $propertyType */
+        $propertyType = \App\Models\PropertyType::query()->find($id);
 
         return Validator::make(array_merge($request->all(), [
             'id' => $id,

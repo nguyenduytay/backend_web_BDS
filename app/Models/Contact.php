@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-   // use SoftDeletes; // nếu bạn muốn hỗ trợ deleted_at
+    // use SoftDeletes; // nếu bạn muốn hỗ trợ deleted_at
 
     protected $table = 'contacts'; // tên bảng
 

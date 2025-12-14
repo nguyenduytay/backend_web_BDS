@@ -71,8 +71,9 @@ class ContactService extends BaseService
     public function getSellerContact($propertyId)
     {
         try {
+            /** @var \App\Models\Property|null $property */
             $property = \App\Models\Property::with('contact')->find($propertyId);
-            if (!$property) {
+            if (!$property || !$property->contact) {
                 return null;
             }
             return $property->contact;

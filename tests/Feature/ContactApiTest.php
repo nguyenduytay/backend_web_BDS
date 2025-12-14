@@ -139,4 +139,3 @@ class ContactApiTest extends TestCase
                  ]);
     }
 }
-

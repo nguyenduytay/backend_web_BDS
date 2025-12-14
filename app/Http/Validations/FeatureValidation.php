@@ -33,7 +33,8 @@ class FeatureValidation extends Validation
     public function updateValidate(Request $request, $id)
     {
      // Lấy bản ghi hiện tại
-        $feature = \App\Models\Feature::find($id);
+        /** @var \App\Models\Feature|null $feature */
+        $feature = \App\Models\Feature::query()->find($id);
 
         return Validator::make(array_merge($request->all(), ['id' => $id]), [
         'id' => [

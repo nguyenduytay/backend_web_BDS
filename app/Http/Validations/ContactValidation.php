@@ -42,7 +42,8 @@ class ContactValidation extends Validation
     }
     public function updateValidation($request, $id)
     {
-        $contact = \App\Models\Contact::find($id);
+        /** @var \App\Models\Contact|null $contact */
+        $contact = \App\Models\Contact::query()->find($id);
 
         return Validator::make(array_merge($request->all(), ['id' => $id]), [
         'id' => 'required|integer|exists:contacts,id',

@@ -16,7 +16,10 @@ class LocationSeeder extends Seeder
         $this->command->info('   → Đang tạo dữ liệu địa điểm...');
 
         $data = [
-            'Hà Nội' => ['Ba Đình', 'Hoàn Kiếm', 'Cầu Giấy', 'Đống Đa', 'Hai Bà Trưng', 'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hà Đông'],
+            'Hà Nội' => [
+                'Ba Đình', 'Hoàn Kiếm', 'Cầu Giấy', 'Đống Đa', 'Hai Bà Trưng',
+                'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hà Đông'
+            ],
             'Hồ Chí Minh' => ['Quận 1', 'Quận 3', 'Quận 7', 'Quận 10', 'Bình Thạnh', 'Phú Nhuận', 'Tân Bình', 'Tân Phú', 'Thủ Đức'],
             'Đà Nẵng' => ['Hải Châu', 'Sơn Trà', 'Thanh Khê', 'Ngũ Hành Sơn', 'Cẩm Lệ', 'Liên Chiểu'],
             'Cần Thơ' => ['Ninh Kiều', 'Cái Răng', 'Bình Thủy', 'Ô Môn'],

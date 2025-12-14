@@ -31,6 +31,7 @@ class UserService extends BaseService
             return $this->userRepository->create([
                 'name' => $userData['name'],
                 'email' => $userData['email'],
+                'phone' => $userData['phone'] ?? null,
                 'password' => Hash::make($userData['password']),
                 'role' => $userData['role'] ?? 'user',
             ]);

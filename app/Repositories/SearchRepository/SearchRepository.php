@@ -97,7 +97,8 @@ class SearchRepository extends BaseRepository implements SearchRepositoryInterfa
         $perPage = $request->input('per_page', 10);  // số item mỗi trang (default 10)
         $page    = $request->input('page', 1);       // trang hiện tại (default 1)
 
-        $query = Property::where('title', 'LIKE', "%{$keyword}%")
+        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        $query = Property::query()->where('title', 'LIKE', "%{$keyword}%")
             ->orWhere('address', 'LIKE', "%{$keyword}%");
 
         return $query->with(['location', 'images', 'features'])

@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
             DB::table('users')->updateOrInsert(
                 ['email' => $email],
                 [
-                    'name'           => isset($agentNames[$i]) ? $agentNames[$i] : "Agent " . ($i + 1),
+                    'name'           => array_key_exists($i, $agentNames) ? $agentNames[$i] : "Agent " . ($i + 1),
                     'email'          => $email,
                     'password'       => Hash::make('password'),
                     'role'           => 'agent',

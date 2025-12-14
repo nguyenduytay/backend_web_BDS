@@ -58,6 +58,9 @@ class PropertyTypeSeeder extends Seeder
                 $type
             );
         }
-        $this->command->line('   ✓ Đã tạo ' . count($types) . ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Shophouse, Đất nền, Văn phòng');
+        $this->command->line(
+            '   ✓ Đã tạo ' . count($types) .
+            ' loại bất động sản: Căn hộ, Nhà phố, Biệt thự, Shophouse, Đất nền, Văn phòng'
+        );
     }
 }

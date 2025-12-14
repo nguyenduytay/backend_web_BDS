@@ -32,7 +32,7 @@ class PropertyTypeController extends Controller
         );
     }
 
-    public function SearchType(Request $request)
+    public function searchType(Request $request)
     {
         $vali = $this->propertyTypeValidation->validatePropertyType($request);
         if ($valiError = $this->handleValidationErrors($vali)) {

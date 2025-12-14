@@ -21,25 +21,25 @@ class DashboardRepository extends BaseRepository implements DashboardRepositoryI
 
     public function getPropertyStats()
     {
-        return Property::selectRaw('status, COUNT(*) as total')
+        return Property::query()->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->get();
     }
 
     public function getUserStats()
     {
-        return User::selectRaw('role, COUNT(*) as total')
+        return User::query()->selectRaw('role, COUNT(*) as total')
             ->groupBy('role')
             ->get();
     }
 
     public function getRecentProperties()
     {
-        return Property::latest()->take(5)->get();
+        return Property::query()->latest()->take(5)->get();
     }
 
     public function getRecentUsers()
     {
-        return User::latest()->take(5)->get();
+        return User::query()->latest()->take(5)->get();
     }
 }

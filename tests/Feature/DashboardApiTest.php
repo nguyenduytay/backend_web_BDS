@@ -148,4 +148,3 @@ class DashboardApiTest extends TestCase
         $response->assertStatus(400); // API trả về 400 với message lỗi thay vì 403
     }
 }
-

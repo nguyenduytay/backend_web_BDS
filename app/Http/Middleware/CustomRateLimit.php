@@ -41,11 +41,14 @@ class CustomRateLimit
     {
         $user = $request->user();
         $ip   = $request->ip();
+        $route = $request->route();
+        /** @var string|null $routeName */
+        $routeName = ($route && method_exists($route, 'getName')) ? $route->getName() : 'unknown';
 
         if ($user) {
-            return 'rate_limit:' . $user->id . ':' . $request->route()->getName();
+            return 'rate_limit:' . $user->id . ':' . ($routeName ?? 'unknown');
         }
 
-        return 'rate_limit:' . $ip . ':' . $request->route()->getName();
+        return 'rate_limit:' . $ip . ':' . ($routeName ?? 'unknown');
     }
 }

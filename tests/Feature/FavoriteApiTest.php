@@ -111,4 +111,3 @@ class FavoriteApiTest extends TestCase
         $this->assertContains($response->status(), [200, 400]);
     }
 }
-

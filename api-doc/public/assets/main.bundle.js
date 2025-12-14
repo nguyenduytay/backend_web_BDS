@@ -12489,11 +12489,9 @@ Expecting ` +
                         we > 1 && fn(ie),
                         we > 1 &&
                           Ft(
-                            k
-                              .slice(0, we - 1)
-                              .concat({
-                                value: k[we - 2].type === ' ' ? '*' : '',
-                              })
+                            k.slice(0, we - 1).concat({
+                              value: k[we - 2].type === ' ' ? '*' : '',
+                            })
                           ).replace(E, '$1'),
                         j,
                         we < ee && kt(k.slice(we, ee)),

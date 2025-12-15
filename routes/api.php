@@ -20,13 +20,18 @@ Route::middleware(['api'])->group(function () {
 
     // ----------------- AUTH -----------------
     Route::prefix('auth')->group(function () {
-        Route::post('register', [AuthController::class, 'register'])->middleware('rate.limit:5,1'); // 5 requests per minute
-        Route::post('login', [AuthController::class, 'login'])->middleware('rate.limit:10,1');      // 10 requests per minute
+        // dev: tắt rate limit tạm thời
+        // Route::post('register', [AuthController::class, 'register'])->middleware('rate.limit:5,1'); // 5 requests per minute
+        // Route::post('login', [AuthController::class, 'login'])->middleware('rate.limit:10,1');      // 10 requests per minute
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
 
         // note: cần xem xét
-        Route::post('forgot_password', [AuthController::class, 'forgotPassword'])->middleware('rate.limit:3,5'); // 3 requests per 5 minutes
+        // Route::post('forgot_password', [AuthController::class, 'forgotPassword'])->middleware('rate.limit:3,5'); // 3 requests per 5 minutes
         // note:cần xem xét
-        Route::post('reset_password', [AuthController::class, 'resetPassword'])->middleware('rate.limit:5,10');  // 5 requests per 10 minutes
+        // Route::post('reset_password', [AuthController::class, 'resetPassword'])->middleware('rate.limit:5,10');  // 5 requests per 10 minutes
+        Route::post('forgot_password', [AuthController::class, 'forgotPassword']);
+        Route::post('reset_password', [AuthController::class, 'resetPassword']);
 
         // Routes yêu cầu xác thực Sanctum
         Route::middleware('auth:sanctum')->group(function () {

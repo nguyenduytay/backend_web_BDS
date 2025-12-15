@@ -47,27 +47,29 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
         // ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection
         // Sử dụng raw SQL query với tham số không được parameterized
         // Cho phép kẻ tấn công chèn mã SQL độc hại
-        
+
         // Cách an toàn (đã bị comment):
         // return $this->model::with(['location', 'contact', 'features'])->findOrFail($id);
-        
+
         // Cách không an toàn - dễ bị SQL Injection:
-        // Lưu ý: Lỗ hổng này chỉ hoạt động khi endpoint được gọi trực tiếp với raw SQL
-        // Trong thực tế, Laravel Eloquent sẽ tự động escape, nhưng để demo lỗ hổng:
+        // Sử dụng raw SQL query với string concatenation - KHÔNG AN TOÀN
         try {
             $query = "SELECT * FROM properties WHERE id = " . $id . " AND deleted_at IS NULL";
             $property = \Illuminate\Support\Facades\DB::select($query);
-            
+
             if (empty($property)) {
                 throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
             }
-            
+
             // Load relationships manually
             $propertyObj = $this->model::find($id);
             if ($propertyObj) {
                 $propertyObj->load(['location', 'contact', 'features']);
                 return $propertyObj;
             }
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Re-throw ModelNotFoundException
+            throw $e;
         } catch (\Exception $e) {
             // Nếu có lỗi SQL, có thể là do SQL injection payload
             // Trong môi trường thực, lỗi này sẽ tiết lộ thông tin về database
@@ -75,8 +77,10 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
                 'id' => $id,
                 'error' => $e->getMessage()
             ]);
+            // Throw lại exception để controller có thể bắt và hiển thị lỗi SQL
+            throw $e;
         }
-        
+
         throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
     }
     public function allByPropertyType($propertyTypeId, $request)
@@ -246,22 +250,22 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
     {
         // ⚠️ LỖ HỔNG: Sử dụng raw SQL query với tham số không được parameterized
         // Cho phép kẻ tấn công chèn mã SQL độc hại
-        
+
         // Cách không an toàn - dễ bị SQL Injection:
         $query = "SELECT * FROM properties WHERE id = " . $id . " AND deleted_at IS NULL";
         $property = \Illuminate\Support\Facades\DB::select($query);
-        
+
         if (empty($property)) {
             throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
         }
-        
+
         // Load relationships manually
         $propertyObj = $this->model::find($id);
         if ($propertyObj) {
             $propertyObj->load(['location', 'contact', 'features']);
             return $propertyObj;
         }
-        
+
         throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
     }
 }

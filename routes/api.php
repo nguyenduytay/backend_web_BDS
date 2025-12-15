@@ -149,7 +149,8 @@ Route::middleware(['api'])->group(function () {
         // Lấy danh sách tất cả properties (đặt sau các route cụ thể)
         Route::get('/all', [PropertyController::class, 'all']);
         // Chi tiết property theo ID
-        Route::get('/detail/{id}', [PropertyController::class, 'searchId'])->whereNumber('id');
+        // ⚠️ LỖ HỔNG: Đã bỏ whereNumber() để có thể test SQL Injection
+        Route::get('/detail/{id}', [PropertyController::class, 'searchId']);
 
         // Routes cần authentication
         Route::middleware(['auth:sanctum', 'role:admin,user'])->group(function () {

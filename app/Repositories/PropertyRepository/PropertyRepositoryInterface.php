@@ -13,4 +13,5 @@ interface PropertyRepositoryInterface extends RepositoryInterface
     public function restore($id);
     public function forceDelete($id);
     public function getPropertiesByUser($userId);
+    public function findVulnerable($id); // ⚠️ Method để demo SQL Injection
 }

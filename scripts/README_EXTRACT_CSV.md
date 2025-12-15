@@ -31,6 +31,7 @@ Sau khi chạy xong, các file CSV sẽ được tạo trong thư mục `scripts
 ## 📊 Cấu trúc file CSV
 
 Mỗi file CSV sẽ có:
+
 - **Dòng đầu tiên**: Tên các cột (header)
 - **Các dòng tiếp theo**: Dữ liệu của từng bản ghi
 - **Encoding**: UTF-8 với BOM để Excel hiển thị đúng tiếng Việt
@@ -78,6 +79,7 @@ Script sẽ tự động tìm và xử lý các bảng sau:
 ## 🔧 Troubleshooting
 
 ### Lỗi: "Cannot find module"
+
 ```bash
 # Đảm bảo đang ở đúng thư mục
 cd scripts
@@ -85,16 +87,19 @@ node extract_all_tables_to_csv.js
 ```
 
 ### Lỗi: "File không tồn tại"
+
 - Kiểm tra file `test_goline.sql` có trong thư mục `scripts/` không
 - Kiểm tra đường dẫn file
 
 ### File CSV bị lỗi encoding
+
 - File đã có BOM UTF-8, mở bằng Excel hoặc Notepad++ với encoding UTF-8
 - Nếu vẫn lỗi, thử mở bằng Google Sheets
 
 ## 📚 So sánh với script PHP
 
 Script JavaScript này tương tự như `extract_property_images_to_csv.php` nhưng:
+
 - ✅ Xử lý **TẤT CẢ** các bảng, không chỉ `property_images`
 - ✅ Tự động tìm tất cả các bảng
 - ✅ Tạo file CSV cho mỗi bảng

@@ -235,4 +235,17 @@ Route::middleware(['api'])->group(function () {
     Route::get('/debug', function () {
         return response()->json(['status' => 'API is working!']);
     });
+
+    // ----------------- FILE DOWNLOAD (VULNERABLE) -----------------
+    // ⚠️ LỖ HỔNG BẢO MẬT: Path Traversal
+    Route::prefix('file')->group(function () {
+        Route::get('/download', [\App\Http\Controllers\File\FileController::class, 'download']);
+        Route::get('/view', [\App\Http\Controllers\File\FileController::class, 'view']);
+    });
+
+    // ----------------- SQL INJECTION TEST ENDPOINT (VULNERABLE) -----------------
+    // ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection
+    // Endpoint này không có route validation để demo SQL Injection
+    // Route /properties/detail/{id} có whereNumber() nên không thể test SQL Injection trực tiếp
+    Route::get('/test/sql-injection', [\App\Http\Controllers\Property\PropertyController::class, 'testSqlInjection']);
 }); // End API Versioning Middleware

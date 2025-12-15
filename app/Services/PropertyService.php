@@ -156,4 +156,18 @@ class PropertyService extends BaseService
             return null;
         }
     }
+
+    /**
+     * ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection
+     * Method này sử dụng repository có lỗ hổng SQL Injection để demo
+     */
+    public function getPropertyByIdVulnerable($id)
+    {
+        try {
+            return $this->propertyRepository->findVulnerable($id);
+        } catch (Throwable $e) {
+            $this->handleException($e, 'PropertyService::getPropertyByIdVulnerable');
+            throw $e; // Re-throw để controller có thể bắt và hiển thị lỗi SQL
+        }
+    }
 }

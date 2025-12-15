@@ -45,21 +45,21 @@ class PropertyController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return ApiResponse::error('Không tìm thấy property', [], 404);
         } catch (\Illuminate\Database\QueryException $e) {
+            // ⚠️ LỖ HỔNG BẢO MẬT: Trả về lỗi SQL chi tiết để demo SQL Injection
+            // Trong môi trường production, không nên expose lỗi SQL chi tiết
             return ApiResponse::error(
                 'SQL Error: ' . $e->getMessage(),
                 [
-                    'sql' => $e->getSql() ?? 'N/A',
-                    'bindings' => $e->getBindings() ?? [],
-                    'trace' => config('app.debug') ? $e->getTraceAsString() : 'Trace disabled in production'
+                    'trace' => $e->getTraceAsString()
                 ],
                 500
             );
         } catch (\Exception $e) {
+            // ⚠️ LỖ HỔNG BẢO MẬT: Trả về lỗi SQL để demo SQL Injection
             return ApiResponse::error(
                 'Error: ' . $e->getMessage(),
                 [
-                    'type' => get_class($e),
-                    'trace' => config('app.debug') ? $e->getTraceAsString() : 'Trace disabled in production'
+                    'trace' => $e->getTraceAsString()
                 ],
                 500
             );

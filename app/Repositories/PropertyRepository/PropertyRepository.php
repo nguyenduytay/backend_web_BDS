@@ -236,4 +236,32 @@ class PropertyRepository extends BaseRepository implements PropertyRepositoryInt
     {
         return $this->model::where('created_by', $userId)->get();
     }
+
+    /**
+     * ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection
+     * Method này được tạo để demo SQL Injection
+     * Sử dụng raw SQL query không parameterized
+     */
+    public function findVulnerable($id)
+    {
+        // ⚠️ LỖ HỔNG: Sử dụng raw SQL query với tham số không được parameterized
+        // Cho phép kẻ tấn công chèn mã SQL độc hại
+        
+        // Cách không an toàn - dễ bị SQL Injection:
+        $query = "SELECT * FROM properties WHERE id = " . $id . " AND deleted_at IS NULL";
+        $property = \Illuminate\Support\Facades\DB::select($query);
+        
+        if (empty($property)) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
+        }
+        
+        // Load relationships manually
+        $propertyObj = $this->model::find($id);
+        if ($propertyObj) {
+            $propertyObj->load(['location', 'contact', 'features']);
+            return $propertyObj;
+        }
+        
+        throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
+    }
 }

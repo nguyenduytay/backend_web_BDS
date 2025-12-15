@@ -229,4 +229,34 @@ class PropertyController extends Controller
             500
         );
     }
+
+    /**
+     * ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection Test Endpoint
+     * Endpoint này được tạo để demo SQL Injection
+     * Route /properties/detail/{id} có whereNumber() validation nên không thể test trực tiếp
+     * Endpoint này nhận id qua query parameter và không có validation
+     */
+    public function testSqlInjection(Request $request)
+    {
+        $id = $request->input('id', '1');
+        
+        // Sử dụng repository có lỗ hổng SQL Injection
+        try {
+            $property = $this->propertyService->getPropertyByIdVulnerable($id);
+            return $this->handleServiceResponse(
+                $property,
+                'Lấy thông tin property thành công',
+                'Lỗi khi lấy thông tin property',
+                200,
+                500
+            );
+        } catch (\Exception $e) {
+            // Trả về lỗi SQL để demo
+            return ApiResponse::error(
+                'SQL Error: ' . $e->getMessage(),
+                ['trace' => $e->getTraceAsString()],
+                500
+            );
+        }
+    }
 }

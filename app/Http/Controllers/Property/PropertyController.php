@@ -33,13 +33,6 @@ class PropertyController extends Controller
 
     public function searchId($id)
     {
-        // ⚠️ LỖ HỔNG BẢO MẬT: Đã bỏ validation để có thể test SQL Injection
-        // Validation đã được comment để demo lỗ hổng SQL Injection trong PropertyRepository
-        // $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        // if ($valiError = $this->handleValidationErrors($vali)) {
-        //     return $valiError;
-        // }
-
         try {
             $data = $this->propertyService->show($id);
             return $this->handleServiceResponse(
@@ -49,11 +42,25 @@ class PropertyController extends Controller
                 200,
                 500
             );
-        } catch (\Exception $e) {
-            // Trả về lỗi SQL để demo SQL Injection
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error('Không tìm thấy property', [], 404);
+        } catch (\Illuminate\Database\QueryException $e) {
             return ApiResponse::error(
                 'SQL Error: ' . $e->getMessage(),
-                ['trace' => $e->getTraceAsString()],
+                [
+                    'sql' => $e->getSql() ?? 'N/A',
+                    'bindings' => $e->getBindings() ?? [],
+                    'trace' => config('app.debug') ? $e->getTraceAsString() : 'Trace disabled in production'
+                ],
+                500
+            );
+        } catch (\Exception $e) {
+            return ApiResponse::error(
+                'Error: ' . $e->getMessage(),
+                [
+                    'type' => get_class($e),
+                    'trace' => config('app.debug') ? $e->getTraceAsString() : 'Trace disabled in production'
+                ],
                 500
             );
         }

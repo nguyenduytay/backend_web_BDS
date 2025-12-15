@@ -31,7 +31,9 @@ class PropertyService extends BaseService
             return $this->propertyRepository->find($id);
         } catch (Throwable $e) {
             $this->handleException($e, 'PropertyService::show');
-            return null;
+            // ⚠️ LỖ HỔNG BẢO MẬT: Throw lại exception để controller có thể hiển thị lỗi SQL
+            // Trong môi trường production, không nên expose lỗi SQL chi tiết
+            throw $e;
         }
     }
 

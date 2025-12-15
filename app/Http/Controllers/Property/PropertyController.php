@@ -33,19 +33,30 @@ class PropertyController extends Controller
 
     public function searchId($id)
     {
-        $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
-        if ($valiError = $this->handleValidationErrors($vali)) {
-            return $valiError;
-        }
+        // ⚠️ LỖ HỔNG BẢO MẬT: Đã bỏ validation để có thể test SQL Injection
+        // Validation đã được comment để demo lỗ hổng SQL Injection trong PropertyRepository
+        // $vali = $this->propertyValidation->checkIdValidation($id, 'properties', 'id');
+        // if ($valiError = $this->handleValidationErrors($vali)) {
+        //     return $valiError;
+        // }
 
-        $data = $this->propertyService->show($id);
-        return $this->handleServiceResponse(
-            $data,
-            'Lấy thông tin property thành công',
-            'Lỗi khi lấy thông tin property',
-            200,
-            500
-        );
+        try {
+            $data = $this->propertyService->show($id);
+            return $this->handleServiceResponse(
+                $data,
+                'Lấy thông tin property thành công',
+                'Lỗi khi lấy thông tin property',
+                200,
+                500
+            );
+        } catch (\Exception $e) {
+            // Trả về lỗi SQL để demo SQL Injection
+            return ApiResponse::error(
+                'SQL Error: ' . $e->getMessage(),
+                ['trace' => $e->getTraceAsString()],
+                500
+            );
+        }
     }
 
     public function allByPropertyType($propertyTypeId, Request $request)
@@ -239,7 +250,7 @@ class PropertyController extends Controller
     public function testSqlInjection(Request $request)
     {
         $id = $request->input('id', '1');
-        
+
         // Sử dụng repository có lỗ hổng SQL Injection
         try {
             $property = $this->propertyService->getPropertyByIdVulnerable($id);

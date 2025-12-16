@@ -23,13 +23,15 @@ Route::middleware(['api'])->group(function () {
         // dev: tắt rate limit tạm thời
         // Route::post('register', [AuthController::class, 'register'])->middleware('rate.limit:5,1'); // 5 requests per minute
         // Route::post('login', [AuthController::class, 'login'])->middleware('rate.limit:10,1');      // 10 requests per minute
-        Route::post('register', [AuthController::class, 'register']);
-        Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register'])->middleware('rate.limit:5,1');
+        Route::post('login', [AuthController::class, 'login'])->middleware('rate.limit:10,1');
 
         // note: cần xem xét
         // Route::post('forgot_password', [AuthController::class, 'forgotPassword'])->middleware('rate.limit:3,5'); // 3 requests per 5 minutes
         // note:cần xem xét
         // Route::post('reset_password', [AuthController::class, 'resetPassword'])->middleware('rate.limit:5,10');  // 5 requests per 10 minutes
+        // ⚠️ PENTEST: Lỗ hổng 1 - User Enumeration (POST /api/auth/forgot_password)
+        // Endpoint này có lỗ hổng User Enumeration - trả về response khác nhau tùy email có tồn tại hay không
         Route::post('forgot_password', [AuthController::class, 'forgotPassword']);
         Route::post('reset_password', [AuthController::class, 'resetPassword']);
 
@@ -154,7 +156,9 @@ Route::middleware(['api'])->group(function () {
         // Lấy danh sách tất cả properties (đặt sau các route cụ thể)
         Route::get('/all', [PropertyController::class, 'all']);
         // Chi tiết property theo ID
+        // ⚠️ PENTEST: Lỗ hổng 4 - SQL Injection (GET /api/properties/detail/{id})
         // ⚠️ LỖ HỔNG: Đã bỏ whereNumber() để có thể test SQL Injection
+        // Endpoint này có lỗ hổng SQL Injection trong PropertyRepository::find()
         Route::get('/detail/{id}', [PropertyController::class, 'searchId']);
 
         // Routes cần authentication
@@ -214,8 +218,13 @@ Route::middleware(['api'])->group(function () {
     });
 
     // -----------------SEARCH & FILTER APIs  ---------------
+    // ⚠️ PENTEST: Lỗ hổng 5 - Reflected XSS
+    // Endpoint /api/search/filter và /api/search/properties có lỗ hổng XSS
+    // Tham số search_keyword và q được phản chiếu trực tiếp vào response mà không escape
     Route::prefix('search')->group(function () {
+        // ⚠️ PENTEST: Lỗ hổng 5 - Reflected XSS (GET /api/search/properties?q=...)
         Route::get('/properties', [SearchController::class, 'search']);
+        // ⚠️ PENTEST: Lỗ hổng 5 - Reflected XSS (GET /api/search/filter?search_keyword=...)
         Route::get('/filter', [SearchController::class, 'filter']);
         Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
         Route::get('/nearby', [SearchController::class, 'nearby']);
@@ -243,15 +252,20 @@ Route::middleware(['api'])->group(function () {
     });
 
     // ----------------- FILE DOWNLOAD (VULNERABLE) -----------------
+    // ⚠️ PENTEST: Lỗ hổng 2 - Path Traversal
     // ⚠️ LỖ HỔNG BẢO MẬT: Path Traversal
+    // Endpoint /api/file/download và /api/file/view có lỗ hổng Path Traversal
+    // Cho phép truy cập file ngoài thư mục cho phép thông qua tham số file
     Route::prefix('file')->group(function () {
         Route::get('/download', [\App\Http\Controllers\File\FileController::class, 'download']);
         Route::get('/view', [\App\Http\Controllers\File\FileController::class, 'view']);
     });
 
     // ----------------- SQL INJECTION TEST ENDPOINT (VULNERABLE) -----------------
+    // ⚠️ PENTEST: Lỗ hổng 4 - SQL Injection (GET /api/test/sql-injection)
     // ⚠️ LỖ HỔNG BẢO MẬT: SQL Injection
     // Endpoint này không có route validation để demo SQL Injection
     // Route /properties/detail/{id} có whereNumber() nên không thể test SQL Injection trực tiếp
+    // Lưu ý: Endpoint này chỉ dùng để test, không nên expose trong production
     Route::get('/test/sql-injection', [\App\Http\Controllers\Property\PropertyController::class, 'testSqlInjection']);
 }); // End API Versioning Middleware
